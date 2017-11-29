@@ -1,0 +1,13 @@
+<resources>
+    <string name="profile">Profile</string>
+    <string name="profile_edit">Profile Edit</string>
+    <string name="recommend">Recommend</string>
+    <string name="message">Message</string>
+    <string name="setting">Setting</string>
+    <string name="searching_user">Searching</string>
+    <string name="event">Event</string>
+    <string name="event_setting">Event Setting</string>
+    <string name="hosting">Hosting</string>
+    <string name="hosting_setting">Hosting Setting</string>
+
+</resources>
