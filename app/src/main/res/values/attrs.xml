@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="ImageTextButton">
+        <attr name="image" format="reference|integer" />
+        <attr name="imageTint" format="reference|integer" />
+        <attr name="text" format="reference|string" />
+        <attr name="textColor" format="reference|integer" />
+    </declare-styleable>
+</resources>

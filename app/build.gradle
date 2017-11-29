@@ -41,4 +41,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
 
     compile 'com.yalantis:contextmenu:1.0.7'
+    implementation 'com.android.support:design:26.1.0'
 }
