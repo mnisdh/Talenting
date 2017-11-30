@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".controller.setting.profile.ProfileActivity" />
         <activity android:name=".controller.setting.hosting.HostingListActivity"></activity>
+        <activity android:name=".controller.setting.hosting.HostingActivity"></activity>
     </application>
 
 </manifest>

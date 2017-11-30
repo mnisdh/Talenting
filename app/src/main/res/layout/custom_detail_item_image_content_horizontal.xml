@@ -25,7 +25,9 @@
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="right"
-            app:circle_image_url="@{item.imageUrl}" />
+            android:scaleType="centerCrop"
+            app:image_url="@{item.imageUrl}"
+            android:onClick="@{item::onClick}"/>
 
         <TextView
             android:id="@+id/tvTitle"
@@ -34,11 +36,11 @@
             android:layout_toRightOf="@+id/imageView"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
-            android:text="@{item.content}"
-            android:textColor="@{item.contentColor}"
-            android:textSize="@{item.contentSize}"
+            android:text="@{item.title}"
+            android:textColor="@{item.titleColor}"
+            android:textSize="@{item.titleSize}"
             android:textStyle="bold"
-            bind:text="타이틀내용" />
+            android:onClick="@{item::onClick}"/>
 
         <TextView
             android:id="@+id/tvContent"
@@ -47,8 +49,24 @@
             android:layout_below="@+id/tvTitle"
             android:layout_toRightOf="@+id/imageView"
             android:paddingLeft="10dp"
-            android:text="TextView"
-            bind:text="sdfasdflkj\nasdkljf" />
+            android:text="@{item.content}"
+            android:textColor="@{item.contentColor}"
+            android:textSize="@{item.contentSize}"
+            android:onClick="@{item::onClick}"/>
+
+        <ToggleButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_alignEnd="@+id/imageView"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/btn_favorite_bg"
+            android:checked="@{item.isFavorite}"
+            android:textOff=""
+            android:textOn=""
+            android:onClick="@{item::onFavoriteClick}"/>
 
     </RelativeLayout>
 </layout>
