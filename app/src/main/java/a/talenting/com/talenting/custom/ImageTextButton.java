@@ -1,7 +1,5 @@
 package a.talenting.com.talenting.custom;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -12,7 +10,6 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,9 +65,6 @@ public class ImageTextButton extends FrameLayout {
     }
 
     private OnClickListener onClickListener = v -> {
-        move(3);
-        move(-3);
-
         if(setedOnClickListener != null) setedOnClickListener.onClick(v);
     };
 
@@ -106,32 +100,15 @@ public class ImageTextButton extends FrameLayout {
         typedArray.recycle();
     }
 
-    public void move(int val){
-        ObjectAnimator ivX = ObjectAnimator.ofFloat(imageView, TRANSLATION_X, val);
-        //ObjectAnimator ivY = ObjectAnimator.ofFloat(imageView, TRANSLATION_Y, 5);
-        ObjectAnimator tvX = ObjectAnimator.ofFloat(textView, TRANSLATION_X, val);
-        //ObjectAnimator tvY = ObjectAnimator.ofFloat(textView, TRANSLATION_Y, 5);
-
-        //애니메이션 셋에 담아서 동시에 실행 할 수 있다
-        AnimatorSet aniSet = new AnimatorSet();
-        aniSet.playTogether(ivX, tvX);
-        aniSet.setDuration(100);
-
-        aniSet.setInterpolator(new LinearInterpolator());
-        // LinearInterpolator : 일정한 속도를 유지
-        // AccelerateInterpolator : 점점빠르게
-        // DecelerateInterpolator : 점점느리게
-        // AccelerateInterpolator : 위 둘을 동시에
-        // anticipateInterpolator : 시작위치에서 조금 뒤로 당겼다 이동
-        // OvershootInterpolator : 도착위치를 조금 지나쳤다가 도착위치로 이동
-        // AnticipateOvershootInterpolator : 위둘을 동시에
-        // BounceInterpolator : 도착위치에서 튕김
-        aniSet.start();
-    }
-
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         if(l == onClickListener) super.setOnClickListener(l);
         else setedOnClickListener = l;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void changeColor(int color){
+        textView.setTextColor(color);
+        imageView.setImageTintList(ColorStateList.valueOf(color));
     }
 }

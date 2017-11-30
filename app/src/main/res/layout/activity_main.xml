@@ -10,8 +10,10 @@
         android:id="@+id/menuBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_top"
+        android:onClick="onBtnClick"
         android:orientation="horizontal"
-        android:weightSum="8"
+        android:weightSum="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -20,61 +22,61 @@
             android:id="@+id/btnHosting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onHosting"
+            android:layout_weight="1"
+            android:onClick="onBtnClick"
             android:padding="10dp"
             app:image="@drawable/hosting"
-            app:imageTint="@color/colorAccent"
+            app:imageTint="@android:color/darker_gray"
             app:text="@string/hosting"
-            app:textColor="@color/colorPrimaryDark" />
+            app:textColor="@android:color/darker_gray" />
 
         <a.talenting.com.talenting.custom.ImageTextButton
             android:id="@+id/btnUsers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onSearching"
+            android:layout_weight="1"
+            android:onClick="onBtnClick"
             android:padding="10dp"
             app:image="@drawable/users"
-            app:imageTint="@color/colorAccent"
+            app:imageTint="@android:color/darker_gray"
             app:text="@string/searching_user"
-            app:textColor="@color/colorPrimaryDark" />
+            app:textColor="@android:color/darker_gray" />
 
         <a.talenting.com.talenting.custom.ImageTextButton
             android:id="@+id/btnEvent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:onClick="onEvent"
+            android:layout_weight="1"
+            android:onClick="onBtnClick"
             android:padding="10dp"
             app:image="@drawable/event"
-            app:imageTint="@color/colorAccent"
+            app:imageTint="@android:color/darker_gray"
             app:text="@string/event"
-            app:textColor="@color/colorPrimaryDark" />
+            app:textColor="@android:color/darker_gray" />
 
         <a.talenting.com.talenting.custom.ImageTextButton
             android:id="@+id/btnMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onMessage"
+            android:layout_weight="1"
+            android:onClick="onBtnClick"
             android:padding="10dp"
             app:image="@drawable/message"
-            app:imageTint="@color/colorAccent"
+            app:imageTint="@android:color/darker_gray"
             app:text="@string/message"
-            app:textColor="@color/colorPrimaryDark" />
+            app:textColor="@android:color/darker_gray" />
 
         <a.talenting.com.talenting.custom.ImageTextButton
             android:id="@+id/btnSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:onClick="onSetting"
+            android:layout_weight="1"
+            android:onClick="onBtnClick"
             android:padding="10dp"
             app:image="@drawable/setting"
-            app:imageTint="@color/colorAccent"
+            app:imageTint="@android:color/darker_gray"
             app:text="@string/setting"
-            app:textColor="@color/colorPrimaryDark" />
+            app:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
 

@@ -1,6 +1,9 @@
 package a.talenting.com.talenting.controller;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +13,11 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.SigninActivity;
 import a.talenting.com.talenting.controller.setting.hosting.HostingListActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
+import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
     private FrameLayout settingMenu;
+    private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,28 +29,68 @@ public class MainActivity extends AppCompatActivity {
         initView();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initView(){
         settingMenu = findViewById(R.id.settingMenu);
 
+        btnHosting = findViewById(R.id.btnHosting);
+        btnUsers = findViewById(R.id.btnUsers);
+        btnEvent = findViewById(R.id.btnEvent);
+        btnMessage = findViewById(R.id.btnMessage);
+        btnSetting = findViewById(R.id.btnSetting);
+
+        onBtnClick(btnHosting);
     }
 
-    public void onHosting(View v){
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void onBtnClick(View v){
+        btnHosting.changeColor(Color.DKGRAY);
+        btnUsers.changeColor(Color.DKGRAY);
+        btnEvent.changeColor(Color.DKGRAY);
+        btnMessage.changeColor(Color.DKGRAY);
+        btnSetting.changeColor(Color.DKGRAY);
+
+        switch (v.getId()){
+            case R.id.btnHosting:
+                btnHosting.changeColor(Color.MAGENTA);
+                onHosting();
+                break;
+            case R.id.btnUsers:
+                btnUsers.changeColor(Color.MAGENTA);
+                onSearching();
+                break;
+            case R.id.btnEvent:
+                btnEvent.changeColor(Color.MAGENTA);
+                onEvent();
+                break;
+            case R.id.btnMessage:
+                btnMessage.changeColor(Color.MAGENTA);
+                onMessage();
+                break;
+            case R.id.btnSetting:
+                btnSetting.changeColor(Color.MAGENTA);
+                onSetting();
+                break;
+        }
+    }
+
+    private void onHosting(){
 
     }
 
-    public void onSearching(View v){
+    private void onSearching(){
 
     }
 
-    public void onEvent(View v){
+    private void onEvent(){
 
     }
 
-    public void onMessage(View v){
+    private void onMessage(){
 
     }
 
-    public void onSetting(View v){
+    private void onSetting(){
         settingMenu.setVisibility(View.VISIBLE);
     }
 
