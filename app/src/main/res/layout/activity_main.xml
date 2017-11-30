@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:onClick="onBtnClick"
             android:padding="10dp"
-            app:image="@drawable/hosting"
+            app:image="@drawable/hosting_off"
             app:imageTint="@android:color/darker_gray"
             app:text="@string/hosting"
             app:textColor="@android:color/darker_gray" />
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:onClick="onBtnClick"
             android:padding="10dp"
-            app:image="@drawable/users"
+            app:image="@drawable/users_off"
             app:imageTint="@android:color/darker_gray"
             app:text="@string/searching_user"
             app:textColor="@android:color/darker_gray" />
@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:onClick="onBtnClick"
             android:padding="10dp"
-            app:image="@drawable/event"
+            app:image="@drawable/event_off"
             app:imageTint="@android:color/darker_gray"
             app:text="@string/event"
             app:textColor="@android:color/darker_gray" />
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:onClick="onBtnClick"
             android:padding="10dp"
-            app:image="@drawable/message"
+            app:image="@drawable/message_off"
             app:imageTint="@android:color/darker_gray"
             app:text="@string/message"
             app:textColor="@android:color/darker_gray" />
@@ -73,7 +73,7 @@
             android:layout_weight="1"
             android:onClick="onBtnClick"
             android:padding="10dp"
-            app:image="@drawable/setting"
+            app:image="@drawable/more_off"
             app:imageTint="@android:color/darker_gray"
             app:text="@string/setting"
             app:textColor="@android:color/darker_gray" />
