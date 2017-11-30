@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@{item.topPadding}"
+        android:paddingLeft="@{item.leftPadding}"
+        android:paddingRight="@{item.rightPadding}"
+        android:paddingBottom="@{item.bottomPadding}"
+        android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_gravity="right"
+            app:circle_image_url="@{item.imageUrl}" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageView"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:text="@{item.content}"
+            android:textColor="@{item.contentColor}"
+            android:textSize="@{item.contentSize}"
+            android:textStyle="bold"
+            bind:text="타이틀내용" />
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitle"
+            android:layout_toRightOf="@+id/imageView"
+            android:paddingLeft="10dp"
+            android:text="TextView"
+            bind:text="sdfasdflkj\nasdkljf" />
+
+    </RelativeLayout>
+</layout>

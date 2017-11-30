@@ -1,10 +1,14 @@
-package a.talenting.com.talenting;
+package a.talenting.com.talenting.controller;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.SigninActivity;
+import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
 
 public class MainActivity extends AppCompatActivity {
     private FrameLayout settingMenu;
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goProfile(View v){
-        Intent intent = new Intent(this, SigninActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
