@@ -16,21 +16,66 @@ import a.talenting.com.talenting.databinding.CustomDetailItemImageContentVertica
 
 public class ImageContentItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.IMAGE_CONTENT;
-    private View.OnClickListener onClickListener;
     private boolean isHorizontal = false;
 
+    private String title = "";
     private String content = "";
     private int topPadding = 50;
     private int leftPadding = 50;
     private int rightPadding = 50;
     private int bottomPadding = 50;
-    private int contentColor = Color.BLACK;
-    private float contentSize = 50;
+    private int titleColor = Color.BLACK;
+    private float titleSize = 50;
+    private int contentColor = Color.DKGRAY;
+    private float contentSize = 40;
     private String imageUrl = "";
     private boolean useBottomLine = false;
+    private boolean isFavorite = false;
+    private IItemClickListener onClickListener;
+    private IItemClickListener onFavoriteClickListener;
 
     public ImageContentItem(boolean useHorizontal){
         isHorizontal = useHorizontal;
+    }
+
+    public void setOnClickListener(IItemClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public void setOnFavoriteClickListener(IItemClickListener onFavoriteClickListener) {
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public float getTitleSize() {
+        return titleSize;
+    }
+
+    public void setTitleSize(float titleSize) {
+        this.titleSize = titleSize;
     }
 
     public boolean isUseBottomLine() {
@@ -103,7 +148,6 @@ public class ImageContentItem implements IDetailItem{
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-
     }
 
     @Override
@@ -131,7 +175,11 @@ public class ImageContentItem implements IDetailItem{
         return v;
     }
 
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void onClick(View v){
+        if(onClickListener != null) onClickListener.run(this);
+    }
+
+    public void onFavoriteClick(View v){
+        if(onFavoriteClickListener != null) onFavoriteClickListener.run(this);
     }
 }
