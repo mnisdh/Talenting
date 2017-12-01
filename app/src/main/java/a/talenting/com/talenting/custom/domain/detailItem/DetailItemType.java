@@ -5,5 +5,11 @@ package a.talenting.com.talenting.custom.domain.detailItem;
  */
 
 public enum  DetailItemType {
-    TEXT_CONTENT, TITLE_AND_VALUE, PROFILE, THUMBNAIL, IMAGE_CONTENT
+    TEXT_CONTENT,
+    TITLE_AND_VALUE,
+    PROFILE,
+    THUMBNAIL,
+    IMAGE_CONTENT,
+    THUMBNAILS,
+    TITLE_AND_EDITTEXT
 }

@@ -23,8 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.setting.profile.ProfileActivity" />
-        <activity android:name=".controller.setting.hosting.HostingListActivity"></activity>
-        <activity android:name=".controller.setting.hosting.HostingActivity"></activity>
+        <activity android:name=".controller.setting.hosting.HostingListActivity" />
+        <activity android:name=".controller.setting.hosting.HostingActivity" />
+        <activity android:name=".controller.setting.profile.ProfileEditActivity"></activity>
     </application>
 
 </manifest>
