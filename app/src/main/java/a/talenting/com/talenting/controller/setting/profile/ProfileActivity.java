@@ -14,6 +14,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
+import a.talenting.com.talenting.custom.domain.detailItem.TitleAndEditTextItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 
@@ -59,6 +60,21 @@ public class ProfileActivity extends AppCompatActivity {
         profileItem.setContent("profile");
         profileItem.setImageUrl(sampleImage);
         items.add(profileItem);
+
+        TitleAndEditTextItem edititem = new TitleAndEditTextItem();
+        edititem.setTitle("First name");
+        edititem.setEditText("daeho");
+        items.add(edititem);
+
+        edititem = new TitleAndEditTextItem();
+        edititem.setTitle("Last name");
+        edititem.setEditText("shin");
+        items.add(edititem);
+
+        edititem = new TitleAndEditTextItem();
+        edititem.setTitle("Birth day");
+        edititem.setEditText("1986/01/09");
+        items.add(edititem);
 
         TitleAndValueItem item = new TitleAndValueItem();
         item.setTitle("title");

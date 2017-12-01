@@ -16,7 +16,7 @@ import a.talenting.com.talenting.custom.adapter.ThumbnailViewPagerAdapter;
  */
 
 public class ThumbnailsItem implements IDetailItem{
-    private final DetailItemType detailItemType = DetailItemType.THUMBNAIL;
+    private final DetailItemType detailItemType = DetailItemType.THUMBNAILS;
     private View.OnClickListener onClickListener;
     private List<ThumbnailItem> data = new ArrayList<>();
 
