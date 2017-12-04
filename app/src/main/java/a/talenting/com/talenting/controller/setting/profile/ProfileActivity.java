@@ -45,77 +45,77 @@ public class ProfileActivity extends AppCompatActivity {
 
         List<ThumbnailItem> thumbnails = new ArrayList<>();
         ThumbnailItem thumbnailItem = new ThumbnailItem();
-        thumbnailItem.setContent("image 1");
-        thumbnailItem.setImageUrl(sampleImage);
+        thumbnailItem.content = "image 1";
+        thumbnailItem.imageUrl = sampleImage;
         thumbnails.add(thumbnailItem);
 
         ThumbnailItem thumbnailItem2 = new ThumbnailItem();
-        thumbnailItem2.setContent("image 2");
-        thumbnailItem2.setImageUrl(sampleImage);
+        thumbnailItem2.content="image 2";
+        thumbnailItem2.imageUrl=sampleImage;
         thumbnails.add(thumbnailItem2);
 
         items.add(new ThumbnailsItem(thumbnails));
 
         ProfileItem profileItem = new ProfileItem();
-        profileItem.setContent("profile");
-        profileItem.setImageUrl(sampleImage);
+        profileItem.content="profile";
+        profileItem.imageUrl=sampleImage;
         items.add(profileItem);
 
         TitleAndEditTextItem edititem = new TitleAndEditTextItem();
-        edititem.setTitle("First name");
-        edititem.setEditText("daeho");
+        edititem.title="First name";
+        edititem.editText="daeho";
         items.add(edititem);
 
         edititem = new TitleAndEditTextItem();
-        edititem.setTitle("Last name");
-        edititem.setEditText("shin");
+        edititem.title="Last name";
+        edititem.editText="shin";
         items.add(edititem);
 
         edititem = new TitleAndEditTextItem();
-        edititem.setTitle("Birth day");
-        edititem.setEditText("1986/01/09");
+        edititem.title="Birth day";
+        edititem.editText="1986/01/09";
         items.add(edititem);
 
         TitleAndValueItem item = new TitleAndValueItem();
-        item.setTitle("title");
-        item.setValue("value");
+        item.title ="title";
+        item.value = "value";
         items.add(item);
 
         item = new TitleAndValueItem();
-        item.setTitle("title");
-        item.setValue("value");
-        item.setUseBottomLine(true);
+        item.title=("title");
+        item.value=("value");
+        item.useBottomLine=(true);
         items.add(item);
 
         item = new TitleAndValueItem();
-        item.setTitle("title");
-        item.setValue("value");
+        item.title=("title");
+        item.value=("value");
         items.add(item);
 
         TextContentItem textContentItem = new TextContentItem();
-        textContentItem.setContent("asdkj\naljsadklj\ndsjf");
-        textContentItem.setUseBottomLine(true);
+        textContentItem.content=("asdkj\naljsadklj\ndsjf");
+        textContentItem.useBottomLine=(true);
         items.add(textContentItem);
 
         profileItem = new ProfileItem();
-        profileItem.setContent("profile");
-        profileItem.setImageUrl(sampleImage);
+        profileItem.content=("profile");
+        profileItem.imageUrl=(sampleImage);
         items.add(profileItem);
 
         profileItem = new ProfileItem();
-        profileItem.setContent("profile");
-        profileItem.setImageUrl(sampleImage);
-        profileItem.setUseBottomLine(true);
+        profileItem.content=("profile");
+        profileItem.imageUrl=(sampleImage);
+        profileItem.useBottomLine=(true);
         items.add(profileItem);
 
         profileItem = new ProfileItem();
-        profileItem.setContent("profile");
-        profileItem.setImageUrl(sampleImage);
+        profileItem.content=("profile");
+        profileItem.imageUrl=(sampleImage);
         items.add(profileItem);
 
         profileItem = new ProfileItem();
-        profileItem.setContent("profile");
-        profileItem.setImageUrl(sampleImage);
+        profileItem.content=("profile");
+        profileItem.imageUrl=(sampleImage);
         items.add(profileItem);
 
         adapter.addDataAndRefresh(items);

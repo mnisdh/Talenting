@@ -11,10 +11,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@{item.topPadding}"
-        android:paddingLeft="@{item.leftPadding}"
-        android:paddingRight="@{item.rightPadding}"
-        android:paddingBottom="@{item.bottomPadding}"
+        android:paddingTop="@{item.padding.top}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingBottom="@{item.padding.bottom}"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
 
         <TextView
@@ -23,8 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="@{item.title}"
-            android:textColor="@{item.titleColor}"
-            android:textSize="@{item.titleSize}"/>
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}"
+            android:onClick="@{item::onClick}"/>
 
         <TextView
             android:id="@+id/tvValue"
@@ -32,8 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@{item.value}"
-            android:textColor="@{item.valueColor}"
-            android:textSize="@{item.valueSize}"/>
+            android:textColor="@{item.valueStyle.color}"
+            android:textSize="@{item.valueStyle.size}"
+            android:onClick="@{item::onClick}"/>
 
     </FrameLayout>
 </layout>

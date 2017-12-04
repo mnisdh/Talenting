@@ -14,10 +14,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@{item.topPadding}"
-        android:paddingLeft="@{item.leftPadding}"
-        android:paddingRight="@{item.rightPadding}"
-        android:paddingBottom="@{item.bottomPadding}"
+        android:paddingTop="@{item.padding.top}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingBottom="@{item.padding.bottom}"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
 
         <TextView
@@ -26,15 +26,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:text="@{item.content}"
-            android:textColor="@{item.contentColor}"
-            android:textSize="@{item.contentSize}" />
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}"
+            android:onClick="@{item::onClick}"/>
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="right"
-            app:circle_image_url="@{item.imageUrl}" />
+            app:circle_image_url="@{item.imageUrl}"
+            android:onClick="@{item::onClick}"/>
 
     </FrameLayout>
 </layout>

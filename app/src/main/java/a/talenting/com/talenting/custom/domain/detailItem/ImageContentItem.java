@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
+import a.talenting.com.talenting.custom.domain.style.TextStyle;
 import a.talenting.com.talenting.databinding.CustomDetailItemImageContentHorizontalBinding;
 import a.talenting.com.talenting.databinding.CustomDetailItemImageContentVerticalBinding;
 
@@ -16,138 +18,57 @@ import a.talenting.com.talenting.databinding.CustomDetailItemImageContentVertica
 
 public class ImageContentItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.IMAGE_CONTENT;
-    private boolean isHorizontal = false;
-
-    private String title = "";
-    private String content = "";
-    private int topPadding = 50;
-    private int leftPadding = 50;
-    private int rightPadding = 50;
-    private int bottomPadding = 50;
-    private int titleColor = Color.BLACK;
-    private float titleSize = 50;
-    private int contentColor = Color.DKGRAY;
-    private float contentSize = 40;
-    private String imageUrl = "";
-    private boolean useBottomLine = false;
-    private boolean isFavorite = false;
     private IItemClickListener onClickListener;
     private IItemClickListener onFavoriteClickListener;
+    private boolean isHorizontal = false;
+
+    public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
+
+    public String title = "";
+    public TextStyle titleStyle = new TextStyle(Color.BLACK);
+
+    public String content = "";
+    public TextStyle contentStyle = new TextStyle(Color.DKGRAY);
+
+    public String imageUrl = "";
+
+    public boolean useBottomLine = false;
+    public boolean useFavorite = true;
+    public boolean isFavorite = false;
+
+    public ImageContentItem(){
+
+    }
+
+    public ImageContentItem(String title, String content, String imageUrl){
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+    }
+    public ImageContentItem(String title, String content, String imageUrl, IItemClickListener onClickListener, IItemClickListener onFavoriteClickListener){
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.onClickListener = onClickListener;
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
 
     public ImageContentItem(boolean useHorizontal){
         isHorizontal = useHorizontal;
     }
 
+    public void onClick(View v){
+        if(onClickListener != null) onClickListener.run(this);
+    }
     public void setOnClickListener(IItemClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
+    public void onFavoriteClick(View v){
+        if(onFavoriteClickListener != null) onFavoriteClickListener.run(this);
+    }
     public void setOnFavoriteClickListener(IItemClickListener onFavoriteClickListener) {
         this.onFavoriteClickListener = onFavoriteClickListener;
-    }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getTitleColor() {
-        return titleColor;
-    }
-
-    public void setTitleColor(int titleColor) {
-        this.titleColor = titleColor;
-    }
-
-    public float getTitleSize() {
-        return titleSize;
-    }
-
-    public void setTitleSize(float titleSize) {
-        this.titleSize = titleSize;
-    }
-
-    public boolean isUseBottomLine() {
-        return useBottomLine;
-    }
-
-    public void setUseBottomLine(boolean useBottomLine) {
-        this.useBottomLine = useBottomLine;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getTopPadding() {
-        return topPadding;
-    }
-
-    public void setTopPadding(int topPadding) {
-        this.topPadding = topPadding;
-    }
-
-    public int getLeftPadding() {
-        return leftPadding;
-    }
-
-    public void setLeftPadding(int leftPadding) {
-        this.leftPadding = leftPadding;
-    }
-
-    public int getRightPadding() {
-        return rightPadding;
-    }
-
-    public void setRightPadding(int rightPadding) {
-        this.rightPadding = rightPadding;
-    }
-
-    public int getBottomPadding() {
-        return bottomPadding;
-    }
-
-    public void setBottomPadding(int bottomPadding) {
-        this.bottomPadding = bottomPadding;
-    }
-
-    public int getContentColor() {
-        return contentColor;
-    }
-
-    public void setContentColor(int contentColor) {
-        this.contentColor = contentColor;
-    }
-
-    public float getContentSize() {
-        return contentSize;
-    }
-
-    public void setContentSize(float contentSize) {
-        this.contentSize = contentSize;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -175,11 +96,7 @@ public class ImageContentItem implements IDetailItem{
         return v;
     }
 
-    public void onClick(View v){
-        if(onClickListener != null) onClickListener.run(this);
-    }
 
-    public void onFavoriteClick(View v){
-        if(onFavoriteClickListener != null) onFavoriteClickListener.run(this);
-    }
+
+
 }

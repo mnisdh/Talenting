@@ -11,5 +11,6 @@ public enum  DetailItemType {
     THUMBNAIL,
     IMAGE_CONTENT,
     THUMBNAILS,
-    TITLE_AND_EDITTEXT
+    TITLE_AND_EDITTEXT,
+    TITLE_AND_CHECK
 }

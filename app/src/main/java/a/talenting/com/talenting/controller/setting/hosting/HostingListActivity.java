@@ -15,6 +15,8 @@ import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
 public class HostingListActivity extends AppCompatActivity {
+    private static final int ADD_HOSTING = 900;
+    private static final int EDIT_HOSTING = 901;
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
 
@@ -43,13 +45,13 @@ public class HostingListActivity extends AppCompatActivity {
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
             item = new ImageContentItem(true);
-            item.setImageUrl(sampleImage);
-            item.setTitle("title" + i);
-            item.setContent("content" + i);
+            item.imageUrl = sampleImage;
+            item.title = "title" + i;
+            item.content = "content" + i;
 
             item.setOnClickListener(j -> {
                 Intent intent = new Intent(this, HostingActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, EDIT_HOSTING);
             });
 
             items.add(item);
@@ -59,6 +61,20 @@ public class HostingListActivity extends AppCompatActivity {
     }
 
     public void goAdd(View v){
+        Intent intent = new Intent(this, HostingAddActivity.class);
+        startActivityForResult(intent, ADD_HOSTING);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case ADD_HOSTING:
+            case EDIT_HOSTING:
+                if(resultCode == RESULT_OK){
+                    // TODO: 2017. 12. 1. 목록갱신코드 
+                }
+                break;
+
+        }
     }
 }

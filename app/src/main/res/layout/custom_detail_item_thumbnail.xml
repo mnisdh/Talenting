@@ -13,6 +13,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:paddingTop="@{item.padding.top}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingBottom="@{item.padding.bottom}"
         >
 
         <ImageView
@@ -28,9 +32,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
-            android:paddingBottom="@{item.bottomPadding}"
-            android:paddingLeft="@{item.leftPadding}"
+            android:paddingBottom="@{item.contentStyle.padding.bottom}"
+            android:paddingLeft="@{item.contentStyle.padding.left}"
             android:text="@{item.content}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}"
             android:textAlignment="textStart" />
 
     </FrameLayout>
