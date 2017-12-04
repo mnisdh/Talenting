@@ -5,10 +5,10 @@
 
         <variable
             name="item"
-            type="a.talenting.com.talenting.custom.domain.detailItem.TitleAndEditTextItem" />
+            type="a.talenting.com.talenting.custom.domain.detailItem.TitleAndCheckItem" />
     </data>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@{item.padding.top}"
@@ -21,23 +21,19 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_gravity="left"
             android:text="@{item.title}"
             android:textColor="@{item.titleStyle.color}"
             android:textSize="@{item.titleStyle.size}"
             android:onClick="@{item::onClick}"/>
 
-        <EditText
-            android:id="@+id/etValue"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/tvValue"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/tvTitle"
-            android:text="@{item.editText}"
-            android:hint="@{item.editTextHint}"
-            android:textAlignment="textEnd"
-            android:textColor="@{item.editTextStyle.color}"
-            android:textSize="@{item.editTextStyle.size}"
+            android:layout_gravity="right"
+            android:checked="@{item.isCheck}"
             android:onClick="@{item::onClick}"/>
 
-    </RelativeLayout>
+    </FrameLayout>
 </layout>

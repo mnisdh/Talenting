@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
+import a.talenting.com.talenting.custom.domain.style.TextStyle;
 import a.talenting.com.talenting.databinding.CustomDetailItemProfileBinding;
 
 /**
@@ -15,89 +17,35 @@ import a.talenting.com.talenting.databinding.CustomDetailItemProfileBinding;
 
 public class ProfileItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.PROFILE;
-    private View.OnClickListener onClickListener;
+    private IItemClickListener onClickListener;
 
-    private String content = "";
-    private int topPadding = 50;
-    private int leftPadding = 50;
-    private int rightPadding = 50;
-    private int bottomPadding = 50;
-    private int contentColor = Color.BLACK;
-    private float contentSize = 50;
-    private String imageUrl = "";
-    private boolean useBottomLine = false;
+    public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
-    public boolean isUseBottomLine() {
-        return useBottomLine;
+    public String content = "";
+    public TextStyle contentStyle = new TextStyle(Color.BLACK);
+
+    public String imageUrl = "";
+
+    public boolean useBottomLine = false;
+
+    public ProfileItem(){
+
     }
-
-    public void setUseBottomLine(boolean useBottomLine) {
-        this.useBottomLine = useBottomLine;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+    public ProfileItem(String content, String imageUrl){
         this.content = content;
-    }
-
-    public int getTopPadding() {
-        return topPadding;
-    }
-
-    public void setTopPadding(int topPadding) {
-        this.topPadding = topPadding;
-    }
-
-    public int getLeftPadding() {
-        return leftPadding;
-    }
-
-    public void setLeftPadding(int leftPadding) {
-        this.leftPadding = leftPadding;
-    }
-
-    public int getRightPadding() {
-        return rightPadding;
-    }
-
-    public void setRightPadding(int rightPadding) {
-        this.rightPadding = rightPadding;
-    }
-
-    public int getBottomPadding() {
-        return bottomPadding;
-    }
-
-    public void setBottomPadding(int bottomPadding) {
-        this.bottomPadding = bottomPadding;
-    }
-
-    public int getContentColor() {
-        return contentColor;
-    }
-
-    public void setContentColor(int contentColor) {
-        this.contentColor = contentColor;
-    }
-
-    public float getContentSize() {
-        return contentSize;
-    }
-
-    public void setContentSize(float contentSize) {
-        this.contentSize = contentSize;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+    public ProfileItem(String content, String imageUrl, IItemClickListener onClickListener){
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.onClickListener = onClickListener;
+    }
 
+    public void onClick(View v){
+        if(onClickListener != null) onClickListener.run(this);
+    }
+    public void setOnClickListener(IItemClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -111,9 +59,5 @@ public class ProfileItem implements IDetailItem{
         binding.setItem(this);
 
         return binding.getRoot();
-    }
-
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 }

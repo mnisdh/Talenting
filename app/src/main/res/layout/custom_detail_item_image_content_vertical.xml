@@ -4,7 +4,7 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="item"
             type="a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem" />
@@ -15,10 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}"
-        android:paddingBottom="@{item.bottomPadding}"
-        android:paddingLeft="@{item.leftPadding}"
-        android:paddingRight="@{item.rightPadding}"
-        android:paddingTop="@{item.topPadding}">
+        android:paddingBottom="@{item.padding.bottom}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingTop="@{item.padding.top}">
 
         <ImageView
             android:id="@+id/imageView"
@@ -37,8 +37,8 @@
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:text="@{item.title}"
-            android:textColor="@{item.titleColor}"
-            android:textSize="@{item.titleSize}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}"
             android:textStyle="bold"
             android:onClick="@{item::onClick}"/>
 
@@ -49,8 +49,8 @@
             android:layout_below="@+id/tvTitle"
             android:paddingLeft="10dp"
             android:text="@{item.content}"
-            android:textColor="@{item.contentColor}"
-            android:textSize="@{item.contentSize}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}"
             android:onClick="@{item::onClick}"/>
 
         <ToggleButton
@@ -65,6 +65,7 @@
             android:checked="@{item.isFavorite}"
             android:textOff=""
             android:textOn=""
+            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}"
             android:onClick="@{item::onFavoriteClick}"/>
 
     </RelativeLayout>

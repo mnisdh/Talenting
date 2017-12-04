@@ -5,85 +5,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
+import a.talenting.com.talenting.custom.domain.style.TextStyle;
+
 /**
  * Created by daeho on 2017. 11. 29..
  */
 
 public class ThumbnailItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.THUMBNAIL;
-    private View.OnClickListener onClickListener;
+    private IItemClickListener onClickListener;
 
-    private String content = "";
-    private int topPadding = 50;
-    private int leftPadding = 50;
-    private int rightPadding = 50;
-    private int bottomPadding = 50;
-    private int contentColor = Color.BLACK;
-    private float contentSize = 50;
-    private String imageUrl = "";
+    public PaddingStyle padding = new PaddingStyle();
 
-    public String getContent() {
-        return content;
+    public String content = "";
+    public TextStyle contentStyle = new TextStyle(Color.WHITE);
+
+    public String imageUrl = "";
+
+    public ThumbnailItem(){
+        contentStyle.getPadding().setLeft(10);
+        contentStyle.getPadding().setBottom(10);
     }
+    public ThumbnailItem(String content, String imageUrl){
+        contentStyle.getPadding().setLeft(10);
+        contentStyle.getPadding().setBottom(10);
 
-    public void setContent(String content) {
         this.content = content;
-    }
-
-    public int getTopPadding() {
-        return topPadding;
-    }
-
-    public void setTopPadding(int topPadding) {
-        this.topPadding = topPadding;
-    }
-
-    public int getLeftPadding() {
-        return leftPadding;
-    }
-
-    public void setLeftPadding(int leftPadding) {
-        this.leftPadding = leftPadding;
-    }
-
-    public int getRightPadding() {
-        return rightPadding;
-    }
-
-    public void setRightPadding(int rightPadding) {
-        this.rightPadding = rightPadding;
-    }
-
-    public int getBottomPadding() {
-        return bottomPadding;
-    }
-
-    public void setBottomPadding(int bottomPadding) {
-        this.bottomPadding = bottomPadding;
-    }
-
-    public int getContentColor() {
-        return contentColor;
-    }
-
-    public void setContentColor(int contentColor) {
-        this.contentColor = contentColor;
-    }
-
-    public float getContentSize() {
-        return contentSize;
-    }
-
-    public void setContentSize(float contentSize) {
-        this.contentSize = contentSize;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+    public ThumbnailItem(String content, String imageUrl, IItemClickListener onClickListener){
+        contentStyle.getPadding().setLeft(10);
+        contentStyle.getPadding().setBottom(10);
+
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.onClickListener = onClickListener;
+    }
+
+    public void onClick(View v){
+        if(onClickListener != null) onClickListener.run(this);
+    }
+    public void setOnClickListener(IItemClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -94,9 +58,5 @@ public class ThumbnailItem implements IDetailItem{
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
         return null;
-    }
-
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 }

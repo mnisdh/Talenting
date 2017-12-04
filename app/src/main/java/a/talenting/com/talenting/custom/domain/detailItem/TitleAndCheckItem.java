@@ -9,31 +9,35 @@ import android.view.ViewGroup;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
-import a.talenting.com.talenting.databinding.CustomDetailItemTextContentBinding;
+import a.talenting.com.talenting.databinding.CustomDetailItemTextAndCheckBinding;
 
 /**
  * Created by daeho on 2017. 11. 29..
  */
 
-public class TextContentItem implements IDetailItem{
-    private final DetailItemType detailItemType = DetailItemType.TEXT_CONTENT;
+public class TitleAndCheckItem implements IDetailItem{
+    private final DetailItemType detailItemType = DetailItemType.TITLE_AND_CHECK;
     private IItemClickListener onClickListener;
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
-    public String content = "";
-    public TextStyle contentStyle = new TextStyle(Color.BLACK);
+    public String title = "";
+    public TextStyle titleStyle = new TextStyle(Color.BLACK);
+
+    public boolean isCheck = false;
 
     public boolean useBottomLine = false;
 
-    public TextContentItem(){
+    public TitleAndCheckItem(){
 
     }
-    public TextContentItem(String content){
-        this.content = content;
+    public TitleAndCheckItem(String title, boolean isCheck){
+        this.title = title;
+        this.isCheck = isCheck;
     }
-    public TextContentItem(String content, IItemClickListener onClickListener){
-        this.content = content;
+    public TitleAndCheckItem(String title, boolean isCheck, IItemClickListener onClickListener){
+        this.title = title;
+        this.isCheck = isCheck;
         this.onClickListener = onClickListener;
     }
 
@@ -46,12 +50,12 @@ public class TextContentItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return detailItemType;
+        return null;
     }
 
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemTextContentBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_content, parent, false);
+        CustomDetailItemTextAndCheckBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_and_check, parent, false);
         binding.setItem(this);
 
         return binding.getRoot();
