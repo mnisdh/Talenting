@@ -1,0 +1,225 @@
+package a.talenting.com.talenting.controller.setting.signin;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.controller.LoginMainActivity;
+
+public class SigninActivity extends AppCompatActivity {
+
+    private boolean email=false;
+    private boolean pw=false;
+    private boolean pwcheck=false;
+    private boolean fname=false;
+    private boolean lname=false;
+    private EditText edit_signEmail;
+    private EditText edit_signPw;
+    private EditText edit_checkPw;
+    private EditText edit_fname;
+    private EditText edit_lname;
+    private TextView txt_signemail;
+    private TextView txt_signpw;
+    private TextView txt_checkpw;
+    private Button btn_signinFinal;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_signin);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initView();
+        initListener();
+    }
+
+    private void initView(){
+        edit_signEmail = findViewById(R.id.edit_signEmail);
+        edit_signPw = findViewById(R.id.edit_signPw);
+        edit_checkPw = findViewById(R.id.edit_checkPw);
+        edit_fname = findViewById(R.id.edit_fname);
+        edit_lname = findViewById(R.id.edit_lname);
+        txt_signemail = findViewById(R.id.txt_signemail);
+        txt_signpw = findViewById(R.id.txt_signpw);
+        txt_checkpw = findViewById(R.id.txt_checkpw);
+        btn_signinFinal = findViewById(R.id.btn_signinFinal);
+    }
+
+    public void signin(View view){
+        Intent intent = new Intent(this, SigninFirstActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                Intent intent = new Intent(this, LoginMainActivity.class);
+                startActivity(intent);
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initListener(){
+        edit_signEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(checkEmail(s.toString())!=true){
+                    txt_signemail.setVisibility(View.VISIBLE);
+                    email=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+                else{
+                    txt_signemail.setVisibility(View.INVISIBLE);
+                    email=true;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals("")){
+                    txt_signemail.setVisibility(View.INVISIBLE);
+                    email=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+        });
+        edit_signPw.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(checkPw(s.toString())!=true){
+                    txt_signpw.setVisibility(View.VISIBLE);
+                    pw=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }else{
+                    txt_signpw.setVisibility(View.INVISIBLE);
+                    pw=true;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals("")) {
+                    txt_signpw.setVisibility(View.INVISIBLE);
+                    pw = false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+        });
+        edit_checkPw.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals(edit_signPw.getText().toString())){
+                    txt_checkpw .setVisibility(View.INVISIBLE);
+                    pwcheck=true;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }else{
+                    txt_checkpw.setVisibility(View.VISIBLE);
+                    pwcheck=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+        });
+        edit_lname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().equals("")){
+                    lname=true;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }else{
+                    lname=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+        });
+        edit_fname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().equals("")){
+                    fname=true;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }else{
+                    fname=false;
+                    enableLogin(email,pw,pwcheck,lname,fname);
+                }
+            }
+        });
+    }
+
+    private void enableLogin(boolean email,boolean pw, boolean pwcheck, boolean lname, boolean fname){
+        if(email&&pw&&pwcheck&&fname&&lname==true){
+            btn_signinFinal.setEnabled(true);
+        }else{
+            btn_signinFinal.setEnabled(false);
+        }
+    }
+
+    private boolean checkEmail(String email){
+
+        String regex = "^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        boolean isNormal = m.matches();
+        return isNormal;
+    }
+
+    private boolean checkPw(String str) {
+        String Passwrod_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+).{8,16}$";
+        Pattern pattern = Pattern.compile(Passwrod_PATTERN);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
+}

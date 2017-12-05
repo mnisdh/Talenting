@@ -3,16 +3,16 @@ package a.talenting.com.talenting.controller;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.SigninActivity;
 import a.talenting.com.talenting.controller.setting.hosting.HostingListActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
+import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {

@@ -11,4 +11,9 @@ public class Constants {
     public static final String URL_SIGN_UP = URL_MEMBER + "sign-up/";
     public static final String URL_SIGN_IN = URL_MEMBER + "log-in/";
     public static final String URL_EMAIL_CHECK = URL_MEMBER + "email-check/";
+    public static final int CAMERA_PERMISSION_REQ = 902;
+    public static final int CAMERA_REQ = 800;
+    public static final int GALLERY_REQ = 801;
+    public static final int LOGIN_REQ = 900;
+    public static final int PERMISSION_REQ = 901;
 }
