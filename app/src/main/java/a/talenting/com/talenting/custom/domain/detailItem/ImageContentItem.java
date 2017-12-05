@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
@@ -90,7 +92,10 @@ public class ImageContentItem implements IDetailItem{
             CustomDetailItemImageContentVerticalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_vertical, parent, false);
             binding.setItem(this);
 
+            binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
             v = binding.getRoot();
+
+            v.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         }
 
         return v;

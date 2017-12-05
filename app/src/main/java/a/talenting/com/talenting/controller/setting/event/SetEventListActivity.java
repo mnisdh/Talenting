@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.controller.setting.hosting;
+package a.talenting.com.talenting.controller.setting.event;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.Constants;
+import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
+import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
-public class HostingListActivity extends AppCompatActivity {
-    private static final int ADD_HOSTING = 900;
-    private static final int EDIT_HOSTING = 901;
+public class SetEventListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
 
@@ -25,7 +26,7 @@ public class HostingListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hosting_list);
+        setContentView(R.layout.activity_set_event_list);
 
         init();
         setData();
@@ -50,8 +51,8 @@ public class HostingListActivity extends AppCompatActivity {
             item.content = "content" + i;
 
             item.setOnClickListener(j -> {
-                Intent intent = new Intent(this, HostingActivity.class);
-                startActivityForResult(intent, EDIT_HOSTING);
+                Intent intent = new Intent(this, SetEventActivity.class);
+                startActivityForResult(intent, Constants.REQ_EDIT_EVENT);
             });
 
             items.add(item);
@@ -61,17 +62,17 @@ public class HostingListActivity extends AppCompatActivity {
     }
 
     public void goAdd(View v){
-        Intent intent = new Intent(this, HostingAddActivity.class);
-        startActivityForResult(intent, ADD_HOSTING);
+        Intent intent = new Intent(this, SetEventAddActivity.class);
+        startActivityForResult(intent, Constants.REQ_ADD_EVENT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case ADD_HOSTING:
-            case EDIT_HOSTING:
+            case Constants.REQ_ADD_EVENT:
+            case Constants.REQ_EDIT_EVENT:
                 if(resultCode == RESULT_OK){
-                    // TODO: 2017. 12. 1. 목록갱신코드 
+                    // TODO: 2017. 12. 1. 목록갱신코드
                 }
                 break;
 

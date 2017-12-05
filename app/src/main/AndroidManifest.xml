@@ -23,10 +23,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.setting.profile.ProfileActivity" />
-        <activity android:name=".controller.setting.hosting.HostingListActivity" />
-        <activity android:name=".controller.setting.hosting.HostingActivity" />
+        <activity android:name=".controller.setting.hosting.SetHostingListActivity" />
+        <activity android:name=".controller.setting.hosting.SetHostingActivity" />
         <activity android:name=".controller.setting.profile.ProfileEditActivity" />
-        <activity android:name=".controller.setting.hosting.HostingAddActivity"></activity>
+        <activity android:name=".controller.setting.hosting.SetHostingAddActivity" />
+        <activity android:name=".controller.event.EventActivity" />
+        <activity android:name=".controller.setting.event.SetEventListActivity"/>
+        <activity android:name=".controller.setting.event.SetEventAddActivity"/>
+        <activity android:name=".controller.setting.event.SetEventActivity"/>
     </application>
 
 </manifest>

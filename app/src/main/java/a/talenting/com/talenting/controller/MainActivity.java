@@ -3,22 +3,33 @@ package a.talenting.com.talenting.controller;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.SigninActivity;
-import a.talenting.com.talenting.controller.setting.hosting.HostingListActivity;
+import a.talenting.com.talenting.controller.event.EventListView;
+import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
+import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
+import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
+import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
+    private FrameLayout stage;
     private FrameLayout settingMenu;
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
 
+    private EventListView hostingListView;
+    private EventListView usersListView;
+    private EventListView eventListView;
+    private EventListView messageListView;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +38,39 @@ public class MainActivity extends AppCompatActivity {
         // signin 확인
 
         initView();
+
+        initHosting();
+        initUsers();
+        initEvent();
+        initMessage();
+        initSetting();
+
+        onBtnClick(btnHosting);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initView(){
+        stage = findViewById(R.id.stage);
+    }
+
+    private void initHosting(){
+        hostingListView = new EventListView(this);
+    }
+
+    private void initUsers(){
+        usersListView = new EventListView(this);
+    }
+
+    private void initEvent(){
+        eventListView = new EventListView(this);
+        eventListView.setSampleData();
+    }
+
+    private void initMessage(){
+        messageListView = new EventListView(this);
+    }
+
+    private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
 
         btnHosting = findViewById(R.id.btnHosting);
@@ -38,12 +78,15 @@ public class MainActivity extends AppCompatActivity {
         btnEvent = findViewById(R.id.btnEvent);
         btnMessage = findViewById(R.id.btnMessage);
         btnSetting = findViewById(R.id.btnSetting);
-
-        onBtnClick(btnHosting);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void onBtnClick(View v){
+        if(v.getId() == R.id.btnSetting){
+            onSetting();
+            return;
+        }
+
         btnHosting.changeColor(Color.DKGRAY);
         btnUsers.changeColor(Color.DKGRAY);
         btnEvent.changeColor(Color.DKGRAY);
@@ -67,27 +110,27 @@ public class MainActivity extends AppCompatActivity {
                 btnMessage.changeColor(Color.MAGENTA);
                 onMessage();
                 break;
-            case R.id.btnSetting:
-                btnSetting.changeColor(Color.MAGENTA);
-                onSetting();
-                break;
         }
     }
 
     private void onHosting(){
-
+        stage.removeAllViews();
+        stage.addView(hostingListView);
     }
 
     private void onSearching(){
-
+        stage.removeAllViews();
+        stage.addView(usersListView);
     }
 
     private void onEvent(){
-
+        stage.removeAllViews();
+        stage.addView(eventListView);
     }
 
     private void onMessage(){
-
+        stage.removeAllViews();
+        stage.addView(messageListView);
     }
 
     private void onSetting(){
@@ -113,21 +156,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goHostingSetting(View v){
-        Intent intent = new Intent(this, HostingListActivity.class);
+        boolean exist = true;
+
+        Intent intent = null;
+        if(exist) intent = new Intent(this, SetHostingActivity.class);
+        else intent = new Intent(this, SetHostingAddActivity.class);
+
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
     }
 
     public void goEventSetting(View v){
-        Intent intent = new Intent(this, SigninActivity.class);
+        boolean exist = true;
+
+        Intent intent = null;
+        if(exist) intent = new Intent(this, SetEventListActivity.class);
+        else intent = new Intent(this, SetEventAddActivity.class);
+
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
-    }
-
-    public void goSignin(View v){
-        Intent intent = new Intent(this, SigninActivity.class);
-        startActivity(intent);
     }
 }
