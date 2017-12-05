@@ -57,7 +57,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </activity>
-
+        <activity android:name=".controller.setting.profile.ProfileActivity" />
+        <activity android:name=".controller.setting.hosting.SetHostingListActivity" />
+        <activity android:name=".controller.setting.hosting.SetHostingActivity" />
+        <activity android:name=".controller.setting.profile.ProfileEditActivity" />
+        <activity android:name=".controller.setting.hosting.SetHostingAddActivity" />
+        <activity android:name=".controller.event.EventActivity" />
+        <activity android:name=".controller.setting.event.SetEventListActivity"/>
+        <activity android:name=".controller.setting.event.SetEventAddActivity"/>
+        <activity android:name=".controller.setting.event.SetEventActivity"/>
     </application>
 
 </manifest>

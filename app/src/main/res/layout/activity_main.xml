@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="a.talenting.com.talenting.controller.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/stage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/menuBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/menuBar"
         android:layout_width="0dp"
@@ -85,6 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:elevation="2dp"
         android:onClick="closeSettingMenu"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -97,117 +109,60 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="80dp"
-            android:layout_marginEnd="25dp"
             android:elevation="2dp"
-            android:gravity="right"
+            android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/btnSetting"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <LinearLayout
+            <a.talenting.com.talenting.custom.ImageTextButton
+                android:id="@+id/btnSetProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="16dp">
+                android:layout_weight="1"
+                android:onClick="goProfile"
+                android:padding="10dp"
+                app:image="@drawable/profile"
+                app:imageTint="?android:attr/colorSecondary"
+                app:text="@string/profile"
+                app:textColor="?android:attr/colorSecondary" />
 
-                <TextView
-                    android:id="@+id/tvProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:onClick="goProfile"
-                    android:paddingRight="10dp"
-                    android:text="@string/profile" />
-
-                <ImageView
-                    android:id="@+id/btnProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="goProfile"
-                    android:tint="?android:attr/colorEdgeEffect"
-                    app:srcCompat="@drawable/profile" />
-            </LinearLayout>
-
-            <LinearLayout
+            <a.talenting.com.talenting.custom.ImageTextButton
+                android:id="@+id/btnSetHosting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="16dp">
+                android:layout_weight="1"
+                android:onClick="goHostingSetting"
+                android:padding="10dp"
+                app:image="@drawable/hosting_on"
+                app:imageTint="?android:attr/colorSecondary"
+                app:text="@string/hosting"
+                app:textColor="?android:attr/colorSecondary" />
 
-                <TextView
-                    android:id="@+id/tvRecommend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:onClick="goRecommend"
-                    android:paddingRight="10dp"
-                    android:text="@string/recommend" />
-
-                <ImageView
-                    android:id="@+id/btnRecommend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="goRecommend"
-                    android:tint="@android:color/holo_orange_dark"
-                    app:srcCompat="@drawable/recommend" />
-            </LinearLayout>
-
-            <LinearLayout
+            <a.talenting.com.talenting.custom.ImageTextButton
+                android:id="@+id/btnSetEvent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="16dp">
+                android:layout_weight="1"
+                android:onClick="goEventSetting"
+                android:padding="10dp"
+                app:image="@drawable/event_on"
+                app:imageTint="?android:attr/colorSecondary"
+                app:text="@string/event_setting"
+                app:textColor="?android:attr/colorSecondary" />
 
-                <TextView
-                    android:id="@+id/tvEventSetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:onClick="goEventSetting"
-                    android:paddingRight="10dp"
-                    android:text="@string/event_setting" />
-
-                <ImageView
-                    android:id="@+id/btnEventSetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="goEventSetting"
-                    android:tint="@android:color/holo_orange_dark"
-                    app:srcCompat="@drawable/event" />
-            </LinearLayout>
-
-            <LinearLayout
+            <a.talenting.com.talenting.custom.ImageTextButton
+                android:id="@+id/btnSetRecommend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="16dp">
-
-                <TextView
-                    android:id="@+id/tvHostingSetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:onClick="goHostingSetting"
-                    android:paddingRight="10dp"
-                    android:text="@string/hosting_setting" />
-
-                <ImageView
-                    android:id="@+id/btnHostingSetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="goHostingSetting"
-                    android:tint="@android:color/holo_orange_dark"
-                    app:srcCompat="@drawable/hosting" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:onClick="goRecommend"
+                android:padding="10dp"
+                app:image="@drawable/recommend"
+                app:imageTint="?android:attr/colorSecondary"
+                app:text="@string/recommend"
+                app:textColor="?android:attr/colorSecondary" />
 
         </LinearLayout>
 
