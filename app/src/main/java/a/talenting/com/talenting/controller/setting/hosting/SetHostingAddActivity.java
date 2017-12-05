@@ -18,7 +18,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndCheckItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndEditTextItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 
-public class HostingAddActivity extends AppCompatActivity {
+public class SetHostingAddActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
@@ -27,7 +27,7 @@ public class HostingAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hosting_add);
+        setContentView(R.layout.activity_set_hosting_add);
 
         init();
         initData();

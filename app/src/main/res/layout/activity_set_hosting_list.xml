@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="a.talenting.com.talenting.controller.setting.hosting.HostingListActivity">
+    tools:context="a.talenting.com.talenting.controller.setting.hosting.SetHostingListActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

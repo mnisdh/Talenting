@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.controller.setting.hosting;
+package a.talenting.com.talenting.controller.setting.event;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +17,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 
-public class HostingActivity extends AppCompatActivity {
+public class SetEventActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
