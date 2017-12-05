@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.controller.setting.hosting.HostingListActivity;
-import a.talenting.com.talenting.SigninActivity;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
