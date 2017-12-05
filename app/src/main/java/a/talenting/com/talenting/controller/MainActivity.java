@@ -178,4 +178,12 @@ public class MainActivity extends AppCompatActivity {
 
         settingMenu.setVisibility(View.GONE);
     }
+
+    public void goLoginTest(View v){
+        Intent intent =  new Intent(this, LoginMainActivity.class);
+
+        startActivity(intent);
+
+        settingMenu.setVisibility(View.GONE);
+    }
 }
