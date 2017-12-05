@@ -117,6 +117,18 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <a.talenting.com.talenting.custom.ImageTextButton
+                android:id="@+id/btnLoginTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="goLoginTest"
+                android:padding="10dp"
+                app:image="@drawable/googleicon"
+                app:imageTint="@android:color/holo_red_dark"
+                app:text="Login test"
+                app:textColor="@android:color/holo_red_dark" />
+
+            <a.talenting.com.talenting.custom.ImageTextButton
                 android:id="@+id/btnSetProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
