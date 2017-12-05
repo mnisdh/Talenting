@@ -6,8 +6,8 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -35,7 +35,6 @@ public class ImageTextButton extends FrameLayout {
         init(context);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ImageTextButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -43,7 +42,6 @@ public class ImageTextButton extends FrameLayout {
         getAttrs(attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ImageTextButton(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -68,7 +66,6 @@ public class ImageTextButton extends FrameLayout {
         if(setedOnClickListener != null) setedOnClickListener.onClick(v);
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void getAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ImageTextButton);
 
@@ -76,26 +73,36 @@ public class ImageTextButton extends FrameLayout {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void getAttrs(AttributeSet attrs, int defStyle) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ImageTextButton, defStyle, 0);
         setTypeArray(typedArray);
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setTypeArray(TypedArray typedArray) {
         int imgRes = typedArray.getResourceId(R.styleable.ImageTextButton_image, R.drawable.ic_launcher_foreground);
         imageView.setImageResource(imgRes);
 
-        int tintColor = typedArray.getColor(R.styleable.ImageTextButton_imageTint, 0);
-        imageView.setImageTintList(ColorStateList.valueOf(tintColor));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            try{
+                int tintColor = typedArray.getColor(R.styleable.ImageTextButton_imageTint, 0);
+                imageView.setImageTintList(ColorStateList.valueOf(tintColor));
+            }catch (Exception e){
+                Log.e("ImageTextButton", e.getMessage());
+            }
+
+        }
 
         String text_string = typedArray.getString(R.styleable.ImageTextButton_text);
         textView.setText(text_string);
 
-        int textColor = typedArray.getColor(R.styleable.ImageTextButton_textColor, 0);
-        textView.setTextColor(textColor);
+        try{
+            int textColor = typedArray.getColor(R.styleable.ImageTextButton_textColor, 0);
+            textView.setTextColor(textColor);
+        }catch (Exception e){
+            Log.e("ImageTextButton", e.getMessage());
+        }
+
 
         typedArray.recycle();
     }
@@ -106,9 +113,10 @@ public class ImageTextButton extends FrameLayout {
         else setedOnClickListener = l;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void changeColor(int color){
         textView.setTextColor(color);
-        imageView.setImageTintList(ColorStateList.valueOf(color));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            imageView.setImageTintList(ColorStateList.valueOf(color));
+        }
     }
 }
