@@ -14,13 +14,48 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SigninActivity" />
-        <activity android:name=".controller.MainActivity">
+        <activity android:name=".controller.MainActivity"/>
+        <activity android:name=".controller.setting.profile.ProfileActivity" />
+        <activity android:name=".controller.setting.hosting.HostingListActivity" />
+        <activity android:name=".controller.setting.hosting.HostingActivity" />
+        <activity android:name=".controller.setting.profile.ProfileEditActivity" />
+        <activity android:name=".controller.setting.hosting.HostingAddActivity"/>
+        <activity android:name=".controller.LoginMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <!-- 프로바이더가 사용하는 파일의 경로 -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.LoginMainActivity" />
+        </provider>
+        <activity android:name=".controller.setting.login.LoginActivity" />
+        <activity android:name=".controller.setting.login.FindPwActivity" />
+        <activity
+            android:name=".controller.setting.signin.SigninActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".controller.setting.signin.SigninFirstActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.LoginMainActivity" />
+        </activity>
+        <activity android:name=".controller.setting.signin.SigninSecondActivity" />
+        <activity android:name=".controller.setting.signin.SigninThirdActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.LoginMainActivity" />
         </activity>
         <activity android:name=".controller.setting.profile.ProfileActivity" />
         <activity android:name=".controller.setting.hosting.SetHostingListActivity" />
