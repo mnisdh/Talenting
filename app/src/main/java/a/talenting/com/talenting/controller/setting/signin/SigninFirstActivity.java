@@ -1,0 +1,311 @@
+package a.talenting.com.talenting.controller.setting.signin;
+
+import android.Manifest;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import a.talenting.com.talenting.BuildConfig;
+import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.adapter.CitySpinnerAdapter;
+import a.talenting.com.talenting.util.PermissionUtil;
+
+import static a.talenting.com.talenting.common.Constants.CAMERA_PERMISSION_REQ;
+import static a.talenting.com.talenting.common.Constants.CAMERA_REQ;
+import static a.talenting.com.talenting.common.Constants.GALLERY_REQ;
+
+
+public class SigninFirstActivity extends AppCompatActivity {
+
+    CitySpinnerAdapter adapter;
+    List<String> country = new ArrayList<>();
+    private Uri fileUri = null;
+    private Uri profileUri = null;
+    private ImageView ivProfile;
+    private ImageButton btnAddProfile;
+    private ImageButton btnCamera;
+    private ImageButton btnGallery;
+    private Button btn_firstNext;
+    private Button btn_later;
+    private RadioButton radio_male;
+    private RadioButton radio_female;
+    private EditText edit_birth;
+    private EditText edit_city;
+    private Spinner spinner_country;
+    private ConstraintLayout popupchoice;
+    private RadioGroup radioGroup;
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_signin_first);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initView();
+        initList();
+        initListener();
+    }
+
+    private void initView(){
+        ivProfile = findViewById(R.id.ivProfile);
+        btnAddProfile = findViewById(R.id.btnAddProfile);
+        btnCamera = findViewById(R.id.btnCamera);
+        btnGallery = findViewById(R.id.btnGallery);
+        btn_firstNext = findViewById(R.id.btn_firstNext);
+        btn_later = findViewById(R.id.btn_later);
+        radioGroup = findViewById(R.id.radioGroup);
+        radio_male = findViewById(R.id.radio_male);
+        radio_female = findViewById(R.id.radio_female);
+        edit_birth = findViewById(R.id.edit_birth);
+        edit_city = findViewById(R.id.edit_city);
+        spinner_country = findViewById(R.id.spinner_country);
+        popupchoice = findViewById(R.id.popupChoice);
+    }
+
+    public void birth(View view){
+        new DatePickerDialog(this,dateSetListener,2017,11,30).show();
+    }
+
+    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            String msg = String.format("%d / %d / %d", year, month+1, dayOfMonth);
+            edit_birth.setText(msg);
+        }
+    };
+
+    public void later(View view){
+        NavUtils.navigateUpFromSameTask(this);
+        finish();
+    }
+
+    public void firstNext(View view){
+        Intent intent = new Intent(this, SigninSecondActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(popupchoice.getVisibility() == View.VISIBLE) popupchoice.setVisibility(View.GONE);
+        else{
+            NavUtils.navigateUpFromSameTask(this);
+            finish();
+        }
+    }
+
+    public void addProfile(View view){
+        popupchoice.setVisibility(View.VISIBLE);
+    }
+
+    private void initList() {
+        Resources res = getResources();
+        String[] countryArray = res.getStringArray(R.array.country);
+
+        for (String s : countryArray) {
+            country.add(s);
+        }
+    }
+
+    public void onCamera(View v){
+        String[] Permission = new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
+        PermissionUtil pUtil = new PermissionUtil(CAMERA_PERMISSION_REQ, Permission);
+        pUtil.check(this, new PermissionUtil.IPermissionGrant() {
+            @Override
+            public void run() {
+                camera();
+            }
+
+            @Override
+            public void fail() {
+
+            }
+        });
+    }
+
+    /**
+     * 카메라 앱 띄워서 결과 이미지 저장하기
+     */
+    private void camera(){
+        // 1. Intent 만들기
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // 2. 호환성 처리 버전체크 - 롤리팝 이상
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            // 3. 실제 파일이 저장되는 파일 객체 < 빈 파일을 생성해 둔다
+            File photoFile = null;
+
+            // 3.1 실제 파일이 저장되는 곳에 권한이 부여되어 있어야 한다
+            //     롤리팝 부터는 File Provider를 선언해 줘야만한다 > Manifest에
+            try {
+                photoFile = createFile();
+
+                // 갤러리에서 나오지 않을때
+                refreshMedia(photoFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fileUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoFile);
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(intent, CAMERA_REQ);
+        }
+        else startActivityForResult(intent, CAMERA_REQ);
+    }
+
+    /**
+     * 미디어 파일 갱신
+     * @param file
+     */
+    private void refreshMedia(File file){
+        MediaScannerConnection.scanFile(this, new String[]{file.getAbsolutePath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+
+            }
+        });
+    }
+
+    private File createFile() throws IOException {
+        // 임시파일명 생성
+        String tempFileName = "Temp_" + System.currentTimeMillis();
+
+        // 임시파일 저장용 디렉토리 생성
+        File tempDir = new File(Environment.getExternalStorageDirectory() + File.separator + "tempPicture" + File.separator);
+
+        // 생성체크
+        if(!tempDir.exists()) tempDir.mkdirs();
+
+        //실제 임시파일을 생성
+        File tempFile = File.createTempFile(tempFileName, ".jpg", tempDir);
+
+        return tempFile;
+    }
+
+    public void onGallery(View v){
+        String[] Permission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
+
+        PermissionUtil pUtil = new PermissionUtil(CAMERA_PERMISSION_REQ, Permission);
+        pUtil.check(this, new PermissionUtil.IPermissionGrant() {
+            @Override
+            public void run() {
+//                btnAddProfile.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void fail() {
+//                btnAddProfile.setVisibility(View.GONE);
+            }
+        });
+
+        gallery();
+    }
+
+    private void gallery(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, GALLERY_REQ);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        profileUri = null;
+
+        switch (requestCode){
+            case CAMERA_REQ:
+                if(resultCode == RESULT_OK){
+                    // 버전체크
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) profileUri = fileUri;
+                    else profileUri = data.getData();
+                }
+                break;
+            case GALLERY_REQ:
+                // 갤러리 액티비티 종료시 호출 - 정상종료 된 경우만 이미지설정
+                if(resultCode == RESULT_OK) profileUri = data.getData();
+                break;
+        }
+
+        if(profileUri == null) ivProfile.setImageResource(R.drawable.ic_action_name);
+        else Glide.with(SigninFirstActivity.this).load(profileUri).apply(RequestOptions.circleCropTransform()).into(ivProfile);
+
+        if(resultCode == RESULT_OK) popupchoice.setVisibility(View.GONE);
+    }
+
+    private void initListener(){
+        popupchoice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                popupchoice.setVisibility(View.GONE);
+                return false;
+            }
+        });
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(group == radioGroup){
+                    if(checkedId==R.id.radio_male){
+
+                    }else{
+
+                    }
+                }
+            }
+        });
+        adapter = new CitySpinnerAdapter(this, country);
+        spinner_country.setAdapter(adapter);
+        spinner_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+}

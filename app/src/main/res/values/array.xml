@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="country">
+        <item>Country</item>
+        <item>Korea</item>
+        <item>Japan</item>
+        <item>USA</item>
+    </string-array>
+    <string-array name="Korea">
+        <item>City</item>
+        <item>Seoul</item>
+        <item>Incheon</item>
+        <item>Busan</item>
+    </string-array>
+    <string-array name="USA">
+        <item>City</item>
+        <item>LA</item>
+        <item>Washiton</item>
+        <item>NewYork</item>
+    </string-array>
+    <string-array name="Category">
+        <item>Category</item>
+        <item>Language</item>
+        <item>Physical</item>
+        <item>Music</item>
+    </string-array>
+    <string-array name="Language">
+        <item>Language</item>
+        <item>English</item>
+        <item>Chinese</item>
+        <item>Korean</item>
+    </string-array>
+</resources>

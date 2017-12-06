@@ -18,12 +18,14 @@ import com.google.android.gms.location.places.Places;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.SigninActivity;
 import a.talenting.com.talenting.common.Constants;
+
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
+import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -199,6 +201,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = null;
         if(exist) intent = new Intent(this, SetEventListActivity.class);
         else intent = new Intent(this, SetEventAddActivity.class);
+
+        startActivity(intent);
+
+        settingMenu.setVisibility(View.GONE);
+    }
+
+    public void goLoginTest(View v){
+        Intent intent =  new Intent(this, LoginMainActivity.class);
 
         startActivity(intent);
 
