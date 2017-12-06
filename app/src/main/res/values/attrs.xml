@@ -5,4 +5,5 @@
         <attr name="text" format="reference|string" />
         <attr name="textColor" format="reference|integer" />
     </declare-styleable>
+
 </resources>

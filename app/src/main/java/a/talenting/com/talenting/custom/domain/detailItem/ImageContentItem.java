@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.ItemListView;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
 import a.talenting.com.talenting.databinding.CustomDetailItemImageContentHorizontalBinding;
@@ -34,6 +38,8 @@ public class ImageContentItem implements IDetailItem{
 
     public String imageUrl = "";
 
+    public List<String> itemList = new ArrayList<>();
+
     public boolean useBottomLine = false;
     public boolean useFavorite = true;
     public boolean isFavorite = false;
@@ -47,6 +53,23 @@ public class ImageContentItem implements IDetailItem{
         this.content = content;
         this.imageUrl = imageUrl;
     }
+
+    public ImageContentItem(String title, String content, String imageUrl, List<String> itemList){
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.itemList = itemList;
+    }
+
+    public ImageContentItem(String title, String content, String imageUrl, List<String> itemList, IItemClickListener onClickListener, IItemClickListener onFavoriteClickListener){
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.itemList = itemList;
+        this.onClickListener = onClickListener;
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
+
     public ImageContentItem(String title, String content, String imageUrl, IItemClickListener onClickListener, IItemClickListener onFavoriteClickListener){
         this.title = title;
         this.content = content;
@@ -86,22 +109,24 @@ public class ImageContentItem implements IDetailItem{
             CustomDetailItemImageContentHorizontalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_horizontal, parent, false);
             binding.setItem(this);
 
+            if(!itemList.isEmpty()){
+                ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
+                itemListView.addItems(itemList);
+            }
+
             v = binding.getRoot();
         }
         else{
             CustomDetailItemImageContentVerticalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_vertical, parent, false);
             binding.setItem(this);
-
             binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            if(!itemList.isEmpty()){
+                ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
+                itemListView.addItems(itemList);
+            }
             v = binding.getRoot();
-
             v.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         }
-
         return v;
     }
-
-
-
-
 }
