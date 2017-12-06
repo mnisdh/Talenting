@@ -4,12 +4,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.SigninActivity;
+import a.talenting.com.talenting.common.Constants;
+
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
@@ -20,6 +29,8 @@ import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
+    private GoogleApiClient mGoogleApiClient;
+
     private FrameLayout stage;
     private FrameLayout settingMenu;
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
@@ -37,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
 
         // signin 확인
 
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d("MainActivity",connectionResult.getErrorMessage());
+                    }
+                })
+                .build();
+
         initView();
 
         initHosting();
@@ -48,28 +71,35 @@ public class MainActivity extends AppCompatActivity {
         onBtnClick(btnHosting);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initView(){
         stage = findViewById(R.id.stage);
     }
-
     private void initHosting(){
         hostingListView = new EventListView(this);
     }
-
     private void initUsers(){
         usersListView = new EventListView(this);
     }
-
     private void initEvent(){
         eventListView = new EventListView(this);
         eventListView.setSampleData();
     }
-
     private void initMessage(){
         messageListView = new EventListView(this);
     }
-
     private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
 
@@ -78,6 +108,13 @@ public class MainActivity extends AppCompatActivity {
         btnEvent = findViewById(R.id.btnEvent);
         btnMessage = findViewById(R.id.btnMessage);
         btnSetting = findViewById(R.id.btnSetting);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case Constants.REQ_EVENT_PLACE: eventListView.onActivityResult(resultCode, data); break;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -112,22 +149,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
     private void onHosting(){
         stage.removeAllViews();
         stage.addView(hostingListView);
     }
-
     private void onSearching(){
         stage.removeAllViews();
         stage.addView(usersListView);
     }
-
     private void onEvent(){
         stage.removeAllViews();
         stage.addView(eventListView);
     }
-
     private void onMessage(){
         stage.removeAllViews();
         stage.addView(messageListView);
@@ -136,25 +169,21 @@ public class MainActivity extends AppCompatActivity {
     private void onSetting(){
         settingMenu.setVisibility(View.VISIBLE);
     }
-
     public void closeSettingMenu(View v){
         settingMenu.setVisibility(View.GONE);
     }
-
     public void goProfile(View v){
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
     }
-
     public void goRecommend(View v){
         Intent intent = new Intent(this, SigninActivity.class);
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
     }
-
     public void goHostingSetting(View v){
         boolean exist = true;
 
@@ -166,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
 
         settingMenu.setVisibility(View.GONE);
     }
-
     public void goEventSetting(View v){
         boolean exist = true;
 

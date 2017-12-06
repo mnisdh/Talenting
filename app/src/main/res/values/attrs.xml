@@ -6,4 +6,9 @@
         <attr name="textColor" format="reference|integer" />
     </declare-styleable>
 
+    <declare-styleable name="AddressSearchTextView">
+        <attr name="searchText" format="reference|string" />
+        <attr name="searchTextColor" format="reference|integer" />
+    </declare-styleable>
+
 </resources>
