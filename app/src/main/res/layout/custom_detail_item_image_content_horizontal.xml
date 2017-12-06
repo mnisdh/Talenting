@@ -14,33 +14,33 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@{item.padding.top}"
+        android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}"
+        android:paddingBottom="@{item.padding.bottom}"
         android:paddingLeft="@{item.padding.left}"
         android:paddingRight="@{item.padding.right}"
-        android:paddingBottom="@{item.padding.bottom}"
-        android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
+        android:paddingTop="@{item.padding.top}">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="right"
+            android:onClick="@{item::onClick}"
             android:scaleType="centerCrop"
-            app:image_url="@{item.imageUrl}"
-            android:onClick="@{item::onClick}"/>
+            app:image_url="@{item.imageUrl}" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imageView"
+            android:onClick="@{item::onClick}"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:text="@{item.title}"
             android:textColor="@{item.titleStyle.color}"
             android:textSize="@{item.titleStyle.size}"
-            android:textStyle="bold"
-            android:onClick="@{item::onClick}"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvContent"
@@ -48,11 +48,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
             android:layout_toRightOf="@+id/imageView"
+            android:onClick="@{item::onClick}"
             android:paddingLeft="10dp"
             android:text="@{item.content}"
             android:textColor="@{item.contentStyle.color}"
-            android:textSize="@{item.contentStyle.size}"
-            android:onClick="@{item::onClick}"/>
+            android:textSize="@{item.contentStyle.size}" />
 
         <ToggleButton
             android:id="@+id/btnFavorite"
@@ -64,10 +64,19 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/btn_favorite_bg"
             android:checked="@{item.isFavorite}"
+            android:onClick="@{item::onFavoriteClick}"
             android:textOff=""
             android:textOn=""
-            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}"
-            android:onClick="@{item::onFavoriteClick}"/>
+            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}" />
+
+        <a.talenting.com.talenting.custom.ItemListView
+            android:id="@+id/itemList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_toRightOf="@+id/imageView"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp" />
 
     </RelativeLayout>
 </layout>

@@ -47,11 +47,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
+            android:onClick="@{item::onClick}"
             android:paddingLeft="10dp"
             android:text="@{item.content}"
             android:textColor="@{item.contentStyle.color}"
-            android:textSize="@{item.contentStyle.size}"
-            android:onClick="@{item::onClick}"/>
+            android:textSize="@{item.contentStyle.size}" />
 
         <ToggleButton
             android:id="@+id/btnFavorite"
@@ -67,6 +67,13 @@
             android:textOn=""
             android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}"
             android:onClick="@{item::onFavoriteClick}"/>
+
+        <a.talenting.com.talenting.custom.ItemListView
+            android:id="@+id/itemList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvContent"
+            android:paddingTop="10dp"></a.talenting.com.talenting.custom.ItemListView>
 
     </RelativeLayout>
 </layout>
