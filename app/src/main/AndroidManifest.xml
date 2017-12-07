@@ -15,10 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCG8mC5u906BADgsyDNuD7NI39zwE0gN18"/>
+            android:value="AIzaSyCG8mC5u906BADgsyDNuD7NI39zwE0gN18" />
 
-        <activity android:name=".SigninActivity" />
         <activity android:name=".controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.LoginMainActivity"/>
+        <activity android:name=".controller.LoginMainActivity" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -41,6 +44,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </provider>
+
         <activity android:name=".controller.setting.login.LoginActivity" />
         <activity android:name=".controller.setting.login.FindPwActivity" />
         <activity
@@ -63,9 +67,10 @@
         <activity android:name=".controller.setting.profile.ProfileEditActivity" />
         <activity android:name=".controller.setting.hosting.SetHostingAddActivity" />
         <activity android:name=".controller.event.EventActivity" />
-        <activity android:name=".controller.setting.event.SetEventListActivity"/>
-        <activity android:name=".controller.setting.event.SetEventAddActivity"/>
-        <activity android:name=".controller.setting.event.SetEventActivity"/>
+        <activity android:name=".controller.setting.event.SetEventListActivity" />
+        <activity android:name=".controller.setting.event.SetEventAddActivity" />
+        <activity android:name=".controller.setting.event.SetEventActivity" />
+        <activity android:name=".controller.common.LocationActivity"></activity>
     </application>
 
 </manifest>

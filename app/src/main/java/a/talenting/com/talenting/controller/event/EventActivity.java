@@ -1,5 +1,6 @@
 package a.talenting.com.talenting.controller.event;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.controller.common.LocationActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
@@ -107,7 +110,13 @@ public class EventActivity extends AppCompatActivity {
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
         googleStaticMap.addMarker(37.513098, 127.031701, Color.RED);
-        items.add(new MapPreviewItem(googleStaticMap));
+        items.add(new MapPreviewItem(googleStaticMap, mapItem -> {
+            Intent intent = new Intent(this, LocationActivity.class);
+            intent.putExtra(Constants.EXT_LAT, 37.513098);
+            intent.putExtra(Constants.EXT_LNG, 127.031701);
+            intent.putExtra(Constants.EXT_IS_DETAIL, false);
+            startActivity(intent);
+        }));
 
         adapter.addDataAndRefresh(items);
     }
