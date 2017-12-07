@@ -1,16 +1,24 @@
 package a.talenting.com.talenting.controller.setting.hosting;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.GooglePlaceApi;
+import a.talenting.com.talenting.common.GoogleStaticMap;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -18,6 +26,8 @@ import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 
 public class SetHostingActivity extends AppCompatActivity {
+    private ActivityResultManager activityResultManager;
+
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
@@ -27,6 +37,8 @@ public class SetHostingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        activityResultManager = new ActivityResultManager();
 
         init();
         setData();
@@ -102,6 +114,28 @@ public class SetHostingActivity extends AppCompatActivity {
         profileItem.imageUrl=(sampleImage);
         items.add(profileItem);
 
+        googleStaticMap = new GoogleStaticMap();
+        googleStaticMap.setLatlng(37.513098, 127.031701, Color.RED);
+        items.add(new MapPreviewItem(googleStaticMap, i -> {
+                MapPreviewItem mapPreviewItem = (MapPreviewItem) i;
+                LatLng latLng = mapPreviewItem.googleStaticMap.getLatLng();
+
+                GooglePlaceApi.startPlaceSelectMap(activityResultManager
+                        , p -> {
+                            mapPreviewItem.googleStaticMap.setLatlng(p.getLatLng(), Color.RED);
+                            adapter.notifyDataSetChanged();
+                        }
+                        , this
+                        , latLng);
+        }));
+
         adapter.addDataAndRefresh(items);
+    }
+
+    GoogleStaticMap googleStaticMap;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        activityResultManager.onActivityResult(requestCode, resultCode, data);
     }
 }

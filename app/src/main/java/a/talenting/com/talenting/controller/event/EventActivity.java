@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,11 +111,14 @@ public class EventActivity extends AppCompatActivity {
         items.add(profileItem);
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
-        googleStaticMap.addMarker(37.513098, 127.031701, Color.RED);
-        items.add(new MapPreviewItem(googleStaticMap, mapItem -> {
+        googleStaticMap.setLatlng(37.513098, 127.031701, Color.RED);
+        items.add(new MapPreviewItem(googleStaticMap, i -> {
+            MapPreviewItem mapPreviewItem = (MapPreviewItem) i;
+            LatLng latLng = mapPreviewItem.googleStaticMap.getLatLng();
+
             Intent intent = new Intent(this, LocationActivity.class);
-            intent.putExtra(Constants.EXT_LAT, 37.513098);
-            intent.putExtra(Constants.EXT_LNG, 127.031701);
+            intent.putExtra(Constants.EXT_LAT, latLng.latitude);
+            intent.putExtra(Constants.EXT_LNG, latLng.longitude);
             intent.putExtra(Constants.EXT_IS_DETAIL, false);
             startActivity(intent);
         }));

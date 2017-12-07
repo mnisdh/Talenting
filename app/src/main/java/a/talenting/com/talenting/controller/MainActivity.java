@@ -16,8 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.common.Constants;
-
+import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
@@ -28,6 +27,8 @@ import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityResultManager activityResultManager;
+
     private GoogleApiClient mGoogleApiClient;
 
     private FrameLayout stage;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        activityResultManager = new ActivityResultManager();
 
         // signin 확인
 
@@ -87,17 +90,17 @@ public class MainActivity extends AppCompatActivity {
         stage = findViewById(R.id.stage);
     }
     private void initHosting(){
-        hostingListView = new EventListView(this);
+        hostingListView = new EventListView(this, activityResultManager);
     }
     private void initUsers(){
-        usersListView = new EventListView(this);
+        usersListView = new EventListView(this, activityResultManager);
     }
     private void initEvent(){
-        eventListView = new EventListView(this);
+        eventListView = new EventListView(this, activityResultManager);
         eventListView.setSampleData();
     }
     private void initMessage(){
-        messageListView = new EventListView(this);
+        messageListView = new EventListView(this, activityResultManager);
     }
     private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
@@ -111,9 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case Constants.REQ_EVENT_PLACE: eventListView.onActivityResult(resultCode, data); break;
-        }
+        activityResultManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

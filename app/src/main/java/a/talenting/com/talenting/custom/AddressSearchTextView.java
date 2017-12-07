@@ -1,29 +1,22 @@
 package a.talenting.com.talenting.custom;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.common.Constants;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
+import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.GooglePlaceApi;
 
 
 /**
@@ -31,8 +24,8 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class AddressSearchTextView extends FrameLayout {
-    private AppCompatActivity parentActivity;
-    private GoogleApiClient googleApiClient;
+    private Activity parentActivity;
+    private ActivityResultManager manager;
 
     private Place place;
 
@@ -72,18 +65,17 @@ public class AddressSearchTextView extends FrameLayout {
     }
 
     private OnClickListener onClickListener = v -> {
-        try {
-            if(parentActivity != null) {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(parentActivity);
-                parentActivity.startActivityForResult(intent, Constants.REQ_EVENT_PLACE);
-            }
-        }catch (Exception e){
-            Log.e("EventListView", e.getMessage());
-        }
+        GooglePlaceApi.startAutoComplateAddress(manager
+                , p -> {
+                    place = p;
+                    textView.setText(place.getName());
+                }
+                ,parentActivity);
     };
 
-    public void setParentActivity(AppCompatActivity activity){
+    public void setParentActivity(Activity activity, ActivityResultManager manager){
         this.parentActivity = activity;
+        this.manager = manager;
     }
 
     private void getAttrs(AttributeSet attrs) {
@@ -110,21 +102,5 @@ public class AddressSearchTextView extends FrameLayout {
 
     public Place getPlace(){
         return place;
-    }
-
-    public void onActivityResult(int resultCode, Intent data){
-        place = null;
-
-        switch (resultCode){
-            case RESULT_OK:
-                place = PlaceAutocomplete.getPlace(parentActivity, data);
-                textView.setText(place.getName());
-                break;
-            case PlaceAutocomplete.RESULT_ERROR:
-                Status status = PlaceAutocomplete.getStatus(parentActivity, data);
-                break;
-            case RESULT_CANCELED:
-                break;
-        }
     }
 }
