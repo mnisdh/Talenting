@@ -1,5 +1,7 @@
 package a.talenting.com.talenting.common;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class GoogleStaticMap {
     private int height = 300;
     private String mapType = "roadmap";
     private String url = "";
-    private Map<String, String> markers = new HashMap<>();
+    private Map<LatLng, String> latlngs = new HashMap<>();
 
     public GoogleStaticMap(){
 
@@ -65,7 +67,7 @@ public class GoogleStaticMap {
     }
 
     private void updateUrl(){
-        if(markers.size() == 0) {
+        if(latlngs.size() == 0) {
             this.url = "";
             return;
         }
@@ -74,30 +76,46 @@ public class GoogleStaticMap {
         url += "&center=" + getLat() + "," + getLng();
         url += "&size=" + width + "x" + height;
         url += "&maptype=" + mapType;
-        for(String label : markers.keySet()){
-            String color = markers.get(label);
-            url += "&markers=color:" + color + " label:" + label;
+
+        for(LatLng latlng : latlngs.keySet()){
+            String color = latlngs.get(latlng);
+            url += "&markers=color:" + color + " label:" + latlng.latitude + "," + latlng.longitude;
         }
 
         this.url = url + "&key=" + STATIC_MAP_KEY;
     }
 
     public void clearMarker(){
-        markers.clear();
+        latlngs.clear();
         updateUrl();
     }
 
     private double minLat, maxLat, minLng, maxLng;
-    public void addMarker(double lat, double lng, int color){
-        markers.put(lat + "," + lng, FormatUtil.intColorToHexString(color));
+    public void setLatlng(double lat, double lng, int color){
+        latlngs.clear();
+        latlngs.put(new LatLng(lat, lng), FormatUtil.intColorToHexString(color));
         updateCoordinate(lat, lng);
         updateUrl();
     }
 
-    private void updateCoordinate(double lat, double lng){
-        if(markers.size() == 0) return;
+    public void setLatlng(LatLng latlng, int color){
+        latlngs.clear();
+        latlngs.put(latlng, FormatUtil.intColorToHexString(color));
+        updateCoordinate(latlng.latitude, latlng.longitude);
+        updateUrl();
+    }
 
-        if(markers.size() == 1){
+    public LatLng getLatLng(){
+        for(LatLng latlng : latlngs.keySet()){
+            return latlng;
+        }
+        return new LatLng(0, 0);
+    }
+
+    private void updateCoordinate(double lat, double lng){
+        if(latlngs.size() == 0) return;
+
+        if(latlngs.size() == 1){
             minLat = lat;
             maxLat = lat;
             minLng = lng;

@@ -12,6 +12,8 @@ public class Constants {
 
     public static final int REQ_EVENT_PLACE = 500;
 
+    public static final int REQ_SELECT_PLACE = 501;
+
     private static final String URL_API = "http://talenting-env.ap-northeast-2.elasticbeanstalk.com/api/";
     private static final String URL_MEMBER = URL_API + "member/";
 
