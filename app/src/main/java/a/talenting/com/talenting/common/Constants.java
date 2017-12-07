@@ -23,4 +23,8 @@ public class Constants {
     public static final int GALLERY_REQ = 801;
     public static final int LOGIN_REQ = 900;
     public static final int PERMISSION_REQ = 901;
+
+    public static final String EXT_LAT = "lat";
+    public static final String EXT_LNG = "lng";
+    public static final String EXT_IS_DETAIL = "isdetail";
 }
