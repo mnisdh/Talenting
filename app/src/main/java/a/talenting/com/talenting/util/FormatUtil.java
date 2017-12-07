@@ -60,4 +60,8 @@ public class FormatUtil {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "temp", null);
         return Uri.parse(path);
     }
+
+    public static String intColorToHexString(int intColor){
+        return String.format("#%06X", (0xFFFFFF & intColor));
+    }
 }

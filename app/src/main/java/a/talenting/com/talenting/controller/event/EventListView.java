@@ -26,7 +26,6 @@ public class EventListView extends FrameLayout {
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
     private AddressSearchTextView tvAddressSearch;
-
     private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     public EventListView(AppCompatActivity activity) {
