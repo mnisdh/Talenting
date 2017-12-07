@@ -16,7 +16,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.SigninActivity;
 import a.talenting.com.talenting.common.Constants;
 
 import a.talenting.com.talenting.controller.event.EventListView;

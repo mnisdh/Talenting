@@ -1,5 +1,6 @@
 package a.talenting.com.talenting.controller.event;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.GoogleStaticMap;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -101,6 +104,10 @@ public class EventActivity extends AppCompatActivity {
         profileItem.content=("profile");
         profileItem.imageUrl=(sampleImage);
         items.add(profileItem);
+
+        GoogleStaticMap googleStaticMap = new GoogleStaticMap();
+        googleStaticMap.addMarker(37.513098, 127.031701, Color.RED);
+        items.add(new MapPreviewItem(googleStaticMap));
 
         adapter.addDataAndRefresh(items);
     }
