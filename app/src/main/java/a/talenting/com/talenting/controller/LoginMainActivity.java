@@ -2,25 +2,78 @@ package a.talenting.com.talenting.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.setting.login.LoginActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupFirstActivity;
+import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.user.LoginResponse;
+import a.talenting.com.talenting.domain.user.UserLogin;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginMainActivity extends AppCompatActivity {
 
     long pressedTime = 0;
+    long time = 0;
+    private ConstraintLayout autoLoginLayout;
+    private ProgressBar progressBar;
+    private Handler handler = new Handler();
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_main);
+        autoLoginLayout = findViewById(R.id.autoLoginLayout);
+        progressBar = findViewById(R.id.progressBar);
+        textView = findViewById(R.id.textView);
+        autoLoginLayout.setVisibility(View.VISIBLE);
+
+        autoLoginLayout.postDelayed(new Runnable() {
+            public void run() {
+                autoLoginLayout.setVisibility(View.GONE);
+                if (SharedPreferenceManager.getInstance().getEmail() != "" && SharedPreferenceManager.getInstance().getPw() != "") {
+                    autologin();
+                }
+            }
+        }, 2000);
+
     }
 
+
+    private void autologin() {
+        UserLogin userLogin = new UserLogin();
+        userLogin.setEmail(SharedPreferenceManager.getInstance().getEmail());
+        userLogin.setPassword(SharedPreferenceManager.getInstance().getPw());
+        Observable<LoginResponse> observable = DomainManager.getDomainApiService().login(userLogin);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess()) {
+                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                        success();
+                    } else {
+                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void success(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public void onBackPressed() {
@@ -81,4 +134,5 @@ public class LoginMainActivity extends AppCompatActivity {
             }
         }
     }
+
 }

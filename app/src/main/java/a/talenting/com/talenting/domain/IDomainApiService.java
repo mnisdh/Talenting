@@ -1,6 +1,8 @@
 package a.talenting.com.talenting.domain;
 
+import a.talenting.com.talenting.domain.user.LoginResponse;
 import a.talenting.com.talenting.domain.user.SignupResponse;
+import a.talenting.com.talenting.domain.user.UserLogin;
 import a.talenting.com.talenting.domain.user.UserSignup;
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -15,4 +17,8 @@ public interface IDomainApiService {
 
     @POST("/member/sign-up/")
     Observable<SignupResponse> signUp(@Body UserSignup user_signup);
+
+    @POST("/member/log-in/")
+    Observable<LoginResponse> login(@Body UserLogin user_login);
+
 }
