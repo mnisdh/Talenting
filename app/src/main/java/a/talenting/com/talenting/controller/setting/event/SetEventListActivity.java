@@ -12,8 +12,6 @@ import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.Constants;
-import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
-import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
@@ -34,7 +32,7 @@ public class SetEventListActivity extends AppCompatActivity {
 
     private void init(){
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new ListRecyclerViewAdapter();
+        adapter = new ListRecyclerViewAdapter(true);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

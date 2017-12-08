@@ -10,26 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
+import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 
 /**
  * Created by daeho on 2017. 11. 30..
  */
 
-public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerViewAdapter.Holder> {
-    private List<ImageContentItem> data = new ArrayList<>();
-    private boolean useWidthMatchParent = false;
+public class MultiListRecyclerViewAdapter extends RecyclerView.Adapter<MultiListRecyclerViewAdapter.Holder> {
+    private List<RecyclerItem> data = new ArrayList<>();
 
-    public ListRecyclerViewAdapter(boolean useWidthMatchParent){
-        this.useWidthMatchParent = useWidthMatchParent;
-    }
-
-    public void addDataAndRefresh(ImageContentItem item){
+    public void addDataAndRefresh(RecyclerItem item){
         data.add(item);
         notifyDataSetChanged();
     }
 
-    public void addDataAndRefresh(List<ImageContentItem> items){
+    public void addDataAndRefresh(List<RecyclerItem> items){
         data.addAll(items);
         notifyDataSetChanged();
     }
@@ -37,11 +32,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-
-        View v;
-        if(useWidthMatchParent) v = layoutInflater.inflate(R.layout.custom_detail_recycler_item, parent, false);
-        else v = layoutInflater.inflate(R.layout.custom_detail_multi_recycler_item, parent, false);
-
+        View v = layoutInflater.inflate(R.layout.custom_detail_recycler_item, parent, false);
         Holder holder = new Holder(v);
         holder.init(layoutInflater, parent);
 
@@ -75,7 +66,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             this.parent = parent;
         }
 
-        public void setDetailItem(ImageContentItem item){
+        public void setDetailItem(RecyclerItem item){
             stage.removeAllViews();
             stage.addView(item.getLayoutView(layoutInflater, parent));
         }

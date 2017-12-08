@@ -70,7 +70,8 @@
         <activity android:name=".controller.setting.event.SetEventListActivity" />
         <activity android:name=".controller.setting.event.SetEventAddActivity" />
         <activity android:name=".controller.setting.event.SetEventActivity" />
-        <activity android:name=".controller.common.LocationActivity"></activity>
+        <activity android:name=".controller.common.LocationActivity" />
+        <activity android:name=".controller.hosting.HostingActivity"></activity>
     </application>
 
 </manifest>

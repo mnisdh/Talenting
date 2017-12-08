@@ -13,5 +13,6 @@ public enum  DetailItemType {
     THUMBNAILS,
     TITLE_AND_EDITTEXT,
     TITLE_AND_CHECK,
-    MAP_PREVIEW
+    MAP_PREVIEW,
+    RECYCLER
 }
