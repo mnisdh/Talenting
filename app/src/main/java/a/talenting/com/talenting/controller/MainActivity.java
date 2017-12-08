@@ -18,6 +18,7 @@ import com.google.android.gms.location.places.Places;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.controller.event.EventListView;
+import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout settingMenu;
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
 
-    private EventListView hostingListView;
+    private HostingListView hostingListView;
     private UserListView usersListView;
     private EventListView eventListView;
     private EventListView messageListView;
@@ -91,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         stage = findViewById(R.id.stage);
     }
     private void initHosting(){
-        hostingListView = new EventListView(this, activityResultManager);
+        hostingListView = new HostingListView(this, activityResultManager);
+        hostingListView.setSampleDataTemp();
     }
     private void initUsers(){
         usersListView = new UserListView(this, activityResultManager);

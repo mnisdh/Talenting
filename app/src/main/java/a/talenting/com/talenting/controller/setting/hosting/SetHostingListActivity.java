@@ -32,7 +32,7 @@ public class SetHostingListActivity extends AppCompatActivity {
 
     private void init(){
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new ListRecyclerViewAdapter();
+        adapter = new ListRecyclerViewAdapter(true);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

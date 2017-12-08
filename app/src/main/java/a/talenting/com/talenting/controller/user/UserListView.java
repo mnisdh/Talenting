@@ -46,7 +46,7 @@ public class UserListView extends FrameLayout {
         this.addView(v);
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        adapter = new ListRecyclerViewAdapter();
+        adapter = new ListRecyclerViewAdapter(true);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
