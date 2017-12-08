@@ -6,16 +6,17 @@ package a.talenting.com.talenting.domain.user;
 
 public class SignupResponse {
     private String code;
-
     private String msg;
-
     private User user;
+
+    public boolean isSuccess(){
+        return "201".equals(code);
+    }
 
     public String getCode ()
     {
         return code;
     }
-
     public void setCode (String code)
     {
         this.code = code;
@@ -25,7 +26,6 @@ public class SignupResponse {
     {
         return msg;
     }
-
     public void setMsg (String msg)
     {
         this.msg = msg;
@@ -35,7 +35,6 @@ public class SignupResponse {
     {
         return user;
     }
-
     public void setUser (User user)
     {
         this.user = user;

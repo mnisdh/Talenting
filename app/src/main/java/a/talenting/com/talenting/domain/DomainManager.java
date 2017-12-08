@@ -1,11 +1,7 @@
 package a.talenting.com.talenting.domain;
 
-import a.talenting.com.talenting.domain.user.SignupResponse;
-import a.talenting.com.talenting.domain.user.UserSignup;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -13,39 +9,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DomainManager {
-    private static DomainManager domainManager = null;
+    private static Retrofit retrofit;
+    private static IDomainApiService iDomainApiService;
+    public static IDomainApiService getDomainApiService(){
+        if(retrofit == null){
+            retrofit = new Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(IDomainApiService.Base_URL)
+                    .build();
+        }
 
-    private IDomainApiService apiService;
-    private Retrofit retrofit;
+        if(iDomainApiService == null) iDomainApiService = retrofit.create(IDomainApiService.class);
 
-    public static DomainManager getInstance() {
-        if (domainManager == null) domainManager = new DomainManager(IDomainApiService.Base_URL);
-
-        return domainManager;
-    }
-
-    private DomainManager(String baseUrl) {
-        retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(baseUrl)
-                .build();
-
-        apiService = retrofit.create(IDomainApiService.class);
-    }
-
-    public void signUp(UserSignup user_signup, final IDomainCallback callback) {
-        apiService.signUp(user_signup).enqueue(new Callback<SignupResponse>() {
-            @Override public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess(response.code(), response.body());
-                }else {
-                    callback.onFailure(response.code(), response.body());
-                }
-            }
-
-            @Override public void onFailure(Call<SignupResponse> call, Throwable t) {
-                callback.onError(t);
-            }
-        });
+        return iDomainApiService;
     }
 }
