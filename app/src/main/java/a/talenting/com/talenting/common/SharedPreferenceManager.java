@@ -21,7 +21,8 @@ public class SharedPreferenceManager {
 
 
     public static SharedPreferenceManager getInstance() {
-        if (sharedPreferenceManager == null) sharedPreferenceManager = new SharedPreferenceManager();
+        if (sharedPreferenceManager == null)
+            sharedPreferenceManager = new SharedPreferenceManager();
 
         return sharedPreferenceManager;
     }
@@ -29,6 +30,7 @@ public class SharedPreferenceManager {
     private Context context;
     private SharedPreferences autoSpf;
     private SharedPreferences settingSpf;
+
     private SharedPreferenceManager() {
         context = ApplicationInitializer.getAppContext();
         autoSpf = context.getSharedPreferences(AUTO, Context.MODE_PRIVATE);
@@ -38,26 +40,25 @@ public class SharedPreferenceManager {
     }
 
 
-
-    public void setEmail(String email){
+    public void setEmail(String email) {
         autoEditor.putString(AUTO_EMAIL, email);
         autoEditor.commit();
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return autoSpf.getString(AUTO_EMAIL, "");
     }
 
-    public void setPw(String pw){
+    public void setPw(String pw) {
         autoEditor.putString(AUTO_PW, pw);
         autoEditor.commit();
     }
 
-    public String getPw(){
-        return autoSpf.getString(AUTO_PW,"");
+    public String getPw() {
+        return autoSpf.getString(AUTO_PW, "");
     }
 
-    public void logout(){
+    public void logout() {
         autoEditor.clear();
         autoEditor.commit();
     }
