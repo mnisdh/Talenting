@@ -18,17 +18,19 @@ import java.util.regex.Pattern;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
-import a.talenting.com.talenting.domain.IDomainCallback;
 import a.talenting.com.talenting.domain.user.SignupResponse;
 import a.talenting.com.talenting.domain.user.UserSignup;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private boolean email=false;
-    private boolean pw=false;
-    private boolean pwcheck=false;
-    private boolean fname=false;
-    private boolean lname=false;
+    private boolean email = false;
+    private boolean pw = false;
+    private boolean pwcheck = false;
+    private boolean fname = false;
+    private boolean lname = false;
     private EditText edit_signEmail;
     private EditText edit_signPw;
     private EditText edit_checkPw;
@@ -38,21 +40,15 @@ public class SignupActivity extends AppCompatActivity {
     private TextView txt_signpw;
     private TextView txt_checkpw;
     private Button btn_signinFinal;
-    private DomainManager domainManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initRetro();
+
         initView();
         initListener();
-    }
-
-    private void initRetro(){
-        domainManager = DomainManager.getInstance();
     }
 
     private void initView(){
@@ -74,29 +70,17 @@ public class SignupActivity extends AppCompatActivity {
         user_signup.setPassword2(edit_checkPw.getText().toString());
         user_signup.setFirst_name(edit_fname.getText().toString());
         user_signup.setLast_name(edit_lname.getText().toString());
-        domainManager.signUp(user_signup, new IDomainCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(),"Error!",Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                SignupResponse data = (SignupResponse)receivedData;
-                if(code==201){
-                    Toast.makeText(getApplicationContext(),"SUCCESS!",Toast.LENGTH_SHORT).show();
-                    success();
-                }else if(code==400){
-                    Toast.makeText(getApplicationContext(),data.getMsg(),Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(int code, Object receivedDate) {
-                Toast.makeText(getApplicationContext(),"Fail!",Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        Observable<SignupResponse> observable = DomainManager.getDomainApiService().signUp(user_signup);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if(result.isSuccess()){
+                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                        success();
+                    }
+                    else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void success(){
