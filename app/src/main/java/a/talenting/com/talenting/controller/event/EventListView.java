@@ -57,17 +57,12 @@ public class EventListView extends FrameLayout {
     public void setSampleData(){
         List<ImageContentItem> items = new ArrayList<>();
 
-        List<String> itemList = new ArrayList<>();
-        itemList.add("None");
-        itemList.add("none");
-
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
             item = new ImageContentItem(false);
             item.imageUrl = sampleImage;
             item.title = "title" + i;
             item.content = "content" + i;
-            item.itemList = itemList;
 
             item.setOnClickListener(j -> {
                 Intent intent = new Intent(this.getContext(), EventActivity.class);

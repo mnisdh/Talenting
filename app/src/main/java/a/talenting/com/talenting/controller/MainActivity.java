@@ -24,6 +24,7 @@ import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
 import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
+import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
 
     private EventListView hostingListView;
-    private EventListView usersListView;
+    private UserListView usersListView;
     private EventListView eventListView;
     private EventListView messageListView;
 
@@ -93,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
         hostingListView = new EventListView(this, activityResultManager);
     }
     private void initUsers(){
-        usersListView = new EventListView(this, activityResultManager);
+        usersListView = new UserListView(this, activityResultManager);
+        usersListView.setSampleData();
     }
     private void initEvent(){
         eventListView = new EventListView(this, activityResultManager);
