@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.IDomainCallback;
@@ -39,6 +40,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView txt_checkpw;
     private Button btn_signinFinal;
     private DomainManager domainManager;
+
 
 
     @Override
@@ -77,23 +79,26 @@ public class SignupActivity extends AppCompatActivity {
         domainManager.signUp(user_signup, new IDomainCallback() {
             @Override
             public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(),"Error!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"SignUp Error!",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(int code, Object receivedData) {
                 SignupResponse data = (SignupResponse)receivedData;
                 if(code==201){
-                    Toast.makeText(getApplicationContext(),"SUCCESS!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"SignUp SUCCESS!",Toast.LENGTH_SHORT).show();
+                    SharedPreferenceManager.getInstance().setEmail(data.getUser().getEmail());
+                    SharedPreferenceManager.getInstance().setPw(user_signup.getPassword1());
                     success();
                 }else if(code==400){
                     Toast.makeText(getApplicationContext(),data.getMsg(),Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
             public void onFailure(int code, Object receivedDate) {
-                Toast.makeText(getApplicationContext(),"Fail!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"SignUp Fail!",Toast.LENGTH_SHORT).show();
             }
         });
 
