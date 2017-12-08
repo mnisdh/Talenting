@@ -15,6 +15,7 @@ public class ApplicationInitializer extends Application {
 
     public void onCreate() {
         super.onCreate();
+
         ApplicationInitializer.context = getApplicationContext();
         SharedPreferenceManager.getInstance();
     }
