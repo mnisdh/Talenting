@@ -1,6 +1,8 @@
 package a.talenting.com.talenting.domain;
 
+import a.talenting.com.talenting.domain.user.LoginResponse;
 import a.talenting.com.talenting.domain.user.SignupResponse;
+import a.talenting.com.talenting.domain.user.UserLogin;
 import a.talenting.com.talenting.domain.user.UserSignup;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +46,22 @@ public class DomainManager {
             }
 
             @Override public void onFailure(Call<SignupResponse> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void login(UserLogin user_login, final IDomainCallback callback) {
+        apiService.login(user_login).enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                }else {
+                    callback.onFailure(response.code(), response.body());
+                }
+            }
+
+            @Override public void onFailure(Call<LoginResponse> call, Throwable t) {
                 callback.onError(t);
             }
         });
