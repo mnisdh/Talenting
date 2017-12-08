@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.controller.setting.signin;
+package a.talenting.com.talenting.controller.setting.signup;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -18,7 +18,7 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.CategorySpinnerAdapter;
 import a.talenting.com.talenting.custom.adapter.TalentListAdapter;
 
-public class SigninSecondActivity extends AppCompatActivity {
+public class SignupSecondActivity extends AppCompatActivity {
 
     private List<String> category = new ArrayList<>();
     private List<String> Ncategory = new ArrayList<>();
@@ -33,7 +33,7 @@ public class SigninSecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin_second);
+        setContentView(R.layout.activity_signup_second);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
@@ -43,7 +43,7 @@ public class SigninSecondActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this,SigninFirstActivity.class);
+        Intent intent = new Intent(this,SignupFirstActivity.class);
         startActivity(intent);
         }
 
@@ -52,12 +52,12 @@ public class SigninSecondActivity extends AppCompatActivity {
     }
 
     public void secondPrev(View view){
-        Intent intent = new Intent(this,SigninFirstActivity.class);
+        Intent intent = new Intent(this,SignupFirstActivity.class);
         startActivity(intent);
     }
 
     public void secondNext(View view){
-        Intent intent = new Intent(this,SigninThirdActivity.class);
+        Intent intent = new Intent(this,SignupThirdActivity.class);
         startActivity(intent);
     }
 
@@ -91,7 +91,7 @@ public class SigninSecondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
-                Intent intent = new Intent(this,SigninFirstActivity.class);
+                Intent intent = new Intent(this,SignupFirstActivity.class);
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

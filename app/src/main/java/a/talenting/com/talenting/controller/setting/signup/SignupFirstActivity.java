@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.controller.setting.signin;
+package a.talenting.com.talenting.controller.setting.signup;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -45,7 +45,7 @@ import static a.talenting.com.talenting.common.Constants.CAMERA_REQ;
 import static a.talenting.com.talenting.common.Constants.GALLERY_REQ;
 
 
-public class SigninFirstActivity extends AppCompatActivity {
+public class SignupFirstActivity extends AppCompatActivity {
 
     CitySpinnerAdapter adapter;
     List<String> country = new ArrayList<>();
@@ -71,7 +71,7 @@ public class SigninFirstActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin_first);
+        setContentView(R.layout.activity_signup_first);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
@@ -112,7 +112,7 @@ public class SigninFirstActivity extends AppCompatActivity {
     }
 
     public void firstNext(View view){
-        Intent intent = new Intent(this, SigninSecondActivity.class);
+        Intent intent = new Intent(this, SignupSecondActivity.class);
         startActivity(intent);
     }
 
@@ -269,7 +269,7 @@ public class SigninFirstActivity extends AppCompatActivity {
         }
 
         if(profileUri == null) ivProfile.setImageResource(R.drawable.ic_action_name);
-        else Glide.with(SigninFirstActivity.this).load(profileUri).apply(RequestOptions.circleCropTransform()).into(ivProfile);
+        else Glide.with(SignupFirstActivity.this).load(profileUri).apply(RequestOptions.circleCropTransform()).into(ivProfile);
 
         if(resultCode == RESULT_OK) popupchoice.setVisibility(View.GONE);
     }

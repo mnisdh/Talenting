@@ -23,7 +23,7 @@ import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
-import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
+import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
 
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         settingMenu.setVisibility(View.GONE);
     }
     public void goRecommend(View v){
-        Intent intent = new Intent(this, SigninActivity.class);
+        Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);

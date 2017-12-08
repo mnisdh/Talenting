@@ -48,15 +48,15 @@
         <activity android:name=".controller.setting.login.LoginActivity" />
         <activity android:name=".controller.setting.login.FindPwActivity" />
         <activity
-            android:name=".controller.setting.signin.SigninActivity"
+            android:name=".controller.setting.signup.SignupActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".controller.setting.signin.SigninFirstActivity">
+        <activity android:name=".controller.setting.signup.SignupFirstActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </activity>
-        <activity android:name=".controller.setting.signin.SigninSecondActivity" />
-        <activity android:name=".controller.setting.signin.SigninThirdActivity">
+        <activity android:name=".controller.setting.signup.SignupSecondActivity" />
+        <activity android:name=".controller.setting.signup.SignupThirdActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />

@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.controller.setting.login.LoginActivity;
-import a.talenting.com.talenting.controller.setting.signin.SigninActivity;
-import a.talenting.com.talenting.controller.setting.signin.SigninFirstActivity;
+import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
+import a.talenting.com.talenting.controller.setting.signup.SignupFirstActivity;
 
 public class LoginMainActivity extends AppCompatActivity {
 
@@ -49,12 +49,12 @@ public class LoginMainActivity extends AppCompatActivity {
     }
 
     public void signin(View view){
-        Intent intent = new Intent(this, SigninActivity.class);
+        Intent intent = new Intent(this, SignupActivity.class);
         startActivityForResult(intent,300);
     }
 
     public void option(View view){
-        Intent intent = new Intent(this, SigninFirstActivity.class);
+        Intent intent = new Intent(this, SignupFirstActivity.class);
         startActivityForResult(intent, 400);
     }
 
