@@ -46,7 +46,11 @@
                 android:value=".controller.LoginMainActivity" />
         </provider>
 
-        <activity android:name=".controller.setting.login.LoginActivity" />
+        <activity android:name=".controller.setting.login.LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controller.MainActivity" />
+        </activity>
         <activity android:name=".controller.setting.login.FindPwActivity" />
         <activity
             android:name=".controller.setting.signup.SignupActivity"

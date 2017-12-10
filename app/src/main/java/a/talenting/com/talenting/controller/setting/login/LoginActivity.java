@@ -2,6 +2,7 @@ package a.talenting.com.talenting.controller.setting.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,12 +11,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.LoginMainActivity;
+import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.user.LoginResponse;
+import a.talenting.com.talenting.domain.user.UserLogin;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,6 +54,26 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_findPw = findViewById(R.id.btn_findPw);
 
+    }
+
+    public void login(View view){
+        UserLogin userLogin = new UserLogin();
+        userLogin.setEmail(edit_email.getText().toString());
+        userLogin.setPassword(edit_pw.getText().toString());
+        Observable<LoginResponse> observable = DomainManager.getDomainApiService().login(userLogin);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess()) {
+                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                        SharedPreferenceManager.getInstance().setEmail(edit_email.getText().toString());
+                        SharedPreferenceManager.getInstance().setPw(edit_pw.getText().toString());
+                        NavUtils.navigateUpFromSameTask(this);
+                        finish();
+                    } else {
+                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

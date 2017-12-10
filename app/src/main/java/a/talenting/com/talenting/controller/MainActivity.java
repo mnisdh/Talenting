@@ -1,22 +1,27 @@
 package a.talenting.com.talenting.controller;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
+import a.talenting.com.talenting.ApplicationInitializer;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
@@ -211,7 +216,23 @@ public class MainActivity extends AppCompatActivity {
         settingMenu.setVisibility(View.GONE);
     }
     public void goLogout(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout");
+        builder.setMessage("Really you want Logout?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferenceManager.getInstance().logout();
+                Toast.makeText(ApplicationInitializer.getAppContext(),"Logout!",Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+            }
+        });
+        builder.show();
     }
 
     public void goLoginTest(View v){
