@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#FF4081</color>
     <color name="circleLocation">#5601fffb</color>
+    <color name="popupBacgroundColor">#a4ffffff</color>
 </resources>
