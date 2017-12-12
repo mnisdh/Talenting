@@ -4,6 +4,7 @@ import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -14,17 +15,23 @@ import retrofit2.http.Path;
 
 public interface IHostingApiService {
     @GET("/hosting/")
-    Observable<Hosting> select();
+    Observable<GetHostingList> selects();
+
+    @GET("/hosting/")
+    Observable<GetHostingList> selects(@Header("Authorization") String token);
 
     @GET("/hosting/{pk}/")
-    Observable<Hosting> select(@Path("pk") String pk);
+    Observable<GetHosting> select(@Path("pk") String pk);
+
+    @GET("/hosting/{pk}/")
+    Observable<GetHosting> select(@Header("Authorization") String token, @Path("pk") String pk);
 
     @POST("/hosting/")
-    Observable<GetHostingList> insert(@Body Hosting hosting);
+    Observable<GetHosting> insert(@Header("Authorization") String token, @Body Hosting hosting);
 
     @PUT("/hosting/")
-    Observable<Hosting> update(@Body Hosting hosting);
+    Observable<GetHosting> update(@Header("Authorization") String token, @Body Hosting hosting);
 
     @DELETE("/hosting/{pk}/")
-    Observable<Boolean> delete(@Path("pk") String pk);
+    Observable<Boolean> delete(@Header("Authorization") String token, @Path("pk") String pk);
 }

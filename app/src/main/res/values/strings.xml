@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Talenting</string>
+
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
 </resources>

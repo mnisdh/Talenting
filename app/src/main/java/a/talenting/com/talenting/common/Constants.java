@@ -36,4 +36,6 @@ public class Constants {
     public static final String EXT_LNG = "lng";
     public static final String EXT_IS_DETAIL = "isdetail";
 
+    public static final String EXT_HOSTING_PK = "hosting_pk";
+
 }

@@ -1,30 +1,18 @@
 package a.talenting.com.talenting.domain.hosting;
 
-import com.google.gson.annotations.Expose;
-
 /**
  * Created by daeho on 2017. 12. 11..
  */
 
-public class Hosting {
-    @Expose(serialize = false)
-    private String pk;
-    @Expose(serialize = false)
-    private String owner;
-    @Expose(serialize = false)
-    private String created_at;
-    @Expose(serialize = false)
-    private String published;
-    @Expose(serialize = false)
-    private String recommend_counter;
-    @Expose(serialize = false)
-    private String updated_at;
-
+public class HostingAdd {
     private String summary;
+    private String street = "empty";
     private String max_stay;
     private String transportation;
     private String room_type;
     private String min_lat;
+    private String distinct = "empty";
+    private String city = "empty";
     private String title;
     private String max_lat;
     private String house_type;
@@ -35,22 +23,17 @@ public class Hosting {
     private String exchange;
     private String meal_type;
     private String neighborhood;
+    private String postcode = "empty";
     private String rules;
+    private String country = "KR";
     private String category;
+    private String address = "empty";
     private String pet;
     private String max_lon;
     private String min_stay;
     private String language;
     private String internet;
     private String min_lon;
-
-    private String country = "KR";
-    private String street = "empty";
-    private String address = "empty";
-    private String postcode = "empty";
-    private String city = "empty";
-    private String distinct = "empty";
-
 
     public String getSummary ()
     {
@@ -167,10 +150,6 @@ public class Hosting {
         return smoking;
     }
 
-    public boolean isSmoking(){
-        return "true".equals(smoking);
-    }
-
     public void setSmoking (String smoking)
     {
         this.smoking = smoking;
@@ -184,16 +163,6 @@ public class Hosting {
     public void setDescription (String description)
     {
         this.description = description;
-    }
-
-    public String getCreated_at ()
-    {
-        return created_at;
-    }
-
-    public void setCreated_at (String created_at)
-    {
-        this.created_at = created_at;
     }
 
     public String getCapacity ()
@@ -216,16 +185,6 @@ public class Hosting {
         this.to_do = to_do;
     }
 
-    public String getPublished ()
-    {
-        return published;
-    }
-
-    public void setPublished (String published)
-    {
-        this.published = published;
-    }
-
     public String getExchange ()
     {
         return exchange;
@@ -244,16 +203,6 @@ public class Hosting {
     public void setMeal_type (String meal_type)
     {
         this.meal_type = meal_type;
-    }
-
-    public String getRecommend_counter ()
-    {
-        return recommend_counter;
-    }
-
-    public void setRecommend_counter (String recommend_counter)
-    {
-        this.recommend_counter = recommend_counter;
     }
 
     public String getNeighborhood ()
@@ -306,16 +255,6 @@ public class Hosting {
         this.category = category;
     }
 
-    public String getUpdated_at ()
-    {
-        return updated_at;
-    }
-
-    public void setUpdated_at (String updated_at)
-    {
-        this.updated_at = updated_at;
-    }
-
     public String getAddress ()
     {
         return address;
@@ -331,10 +270,6 @@ public class Hosting {
         return pet;
     }
 
-    public boolean isPet(){
-        return "true".equals(pet);
-    }
-
     public void setPet (String pet)
     {
         this.pet = pet;
@@ -348,16 +283,6 @@ public class Hosting {
     public void setMax_lon (String max_lon)
     {
         this.max_lon = max_lon;
-    }
-
-    public String getOwner ()
-    {
-        return owner;
-    }
-
-    public void setOwner (String owner)
-    {
-        this.owner = owner;
     }
 
     public String getMin_stay ()
@@ -400,19 +325,9 @@ public class Hosting {
         this.min_lon = min_lon;
     }
 
-    public String getPk ()
-    {
-        return pk;
-    }
-
-    public void setPk (String pk)
-    {
-        this.pk = pk;
-    }
-
     @Override
     public String toString()
     {
-        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", min_lat = "+min_lat+", distinct = "+distinct+", city = "+city+", title = "+title+", max_lat = "+max_lat+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", created_at = "+created_at+", capacity = "+capacity+", to_do = "+to_do+", published = "+published+", exchange = "+exchange+", meal_type = "+meal_type+", recommend_counter = "+recommend_counter+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", updated_at = "+updated_at+", address = "+address+", pet = "+pet+", max_lon = "+max_lon+", owner = "+owner+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+", min_lon = "+min_lon+", pk = "+pk+"]";
+        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", min_lat = "+min_lat+", distinct = "+distinct+", city = "+city+", title = "+title+", max_lat = "+max_lat+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", capacity = "+capacity+", to_do = "+to_do+", exchange = "+exchange+", meal_type = "+meal_type+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", address = "+address+", pet = "+pet+", max_lon = "+max_lon+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+", min_lon = "+min_lon+"]";
     }
 }
