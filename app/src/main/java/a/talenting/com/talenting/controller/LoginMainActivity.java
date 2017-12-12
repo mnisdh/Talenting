@@ -86,21 +86,14 @@ public class LoginMainActivity extends AppCompatActivity {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (result.isSuccess()) {
+                    if(result.isSuccess()) {
                         SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
                         SharedPreferenceManager.getInstance().setToken(result.getToken());
-                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
-                        success();
-                    } else {
-                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
-    private void success(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+                        finish();
+                    }
+                    else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

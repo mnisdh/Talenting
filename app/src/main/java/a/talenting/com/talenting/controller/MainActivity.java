@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         activityResultManager = new ActivityResultManager();
 
-        // signin 확인
-
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -67,10 +65,18 @@ public class MainActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.d("MainActivity",connectionResult.getErrorMessage());
+                        Log.d("MainActivity", connectionResult.getErrorMessage());
                     }
                 })
                 .build();
+
+        Intent intent =  new Intent(this, LoginMainActivity.class);
+        startActivityForResult(intent, Constants.REQ_LOG_IN_ACTIVITY);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void init(){
+
 
         initView();
 
@@ -124,8 +130,14 @@ public class MainActivity extends AppCompatActivity {
         btnSetting = findViewById(R.id.btnSetting);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == Constants.REQ_LOG_IN_ACTIVITY){
+            init();
+            return;
+        }
+
         activityResultManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -246,9 +258,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goLoginTest(View v){
-        Intent intent =  new Intent(this, LoginMainActivity.class);
 
-        startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);
     }
