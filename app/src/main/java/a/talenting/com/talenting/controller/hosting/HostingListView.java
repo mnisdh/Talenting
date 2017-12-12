@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,9 @@ import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.adapter.MultiListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
+import a.talenting.com.talenting.domain.DomainManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by daeho on 2017. 12. 5..
@@ -42,6 +46,8 @@ public class HostingListView extends FrameLayout {
         this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         init();
+
+        getData();
     }
 
     private void init(){
@@ -60,6 +66,20 @@ public class HostingListView extends FrameLayout {
 
         tvAddressSearch = v.findViewById(R.id.tvAddressSearch);
         tvAddressSearch.setParentActivity(activity, manager);
+    }
+
+    public void getData(){
+        DomainManager.getHostingApiService().selects()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                Toast.makeText(activity, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     public void setSampleData(){

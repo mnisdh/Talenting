@@ -14,6 +14,7 @@ import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.common.GoogleStaticMap;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
@@ -39,6 +40,8 @@ public class SetHostingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         activityResultManager = new ActivityResultManager();
+
+        String pk = getIntent().getStringExtra(Constants.EXT_HOSTING_PK);
 
         init();
         setData();

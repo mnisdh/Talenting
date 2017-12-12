@@ -1,13 +1,11 @@
 package a.talenting.com.talenting.domain.hosting;
 
-import java.util.List;
-
 /**
  * Created by daeho on 2017. 12. 11..
  */
 
-public class GetHostingList {
-    private List<Hosting> hosting;
+public class GetHosting {
+    private Hosting hosting;
     private String code;
     private String msg;
 
@@ -15,12 +13,12 @@ public class GetHostingList {
         return code.substring(0, 1).equals("2");
     }
 
-    public List<Hosting> getHosting ()
+    public Hosting getHosting ()
     {
         return hosting;
     }
 
-    public void setHosting (List<Hosting> hosting)
+    public void setHosting (Hosting hosting)
     {
         this.hosting = hosting;
     }

@@ -21,17 +21,20 @@ import com.google.android.gms.location.places.Places;
 import a.talenting.com.talenting.ApplicationInitializer;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
-import a.talenting.com.talenting.controller.setting.hosting.SetHostingActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
+import a.talenting.com.talenting.domain.DomainManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -194,15 +197,22 @@ public class MainActivity extends AppCompatActivity {
         settingMenu.setVisibility(View.GONE);
     }
     public void goHostingSetting(View v){
-        boolean exist = false;
+        DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                Intent intent = new Intent(this, SetHostingAddActivity.class);
 
-        Intent intent = null;
-        if(exist) intent = new Intent(this, SetHostingActivity.class);
-        else intent = new Intent(this, SetHostingAddActivity.class);
+                                if(result.getHosting().size() == 1) intent.putExtra(Constants.EXT_HOSTING_PK, result.getHosting().get(0).getPk());
 
-        startActivity(intent);
+                                startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+                                settingMenu.setVisibility(View.GONE);
+                            }
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
     public void goEventSetting(View v){
         boolean exist = true;
