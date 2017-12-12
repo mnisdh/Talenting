@@ -87,6 +87,7 @@ public class LoginMainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result.isSuccess()) {
+                        SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
                         Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
                         success();
                     } else {

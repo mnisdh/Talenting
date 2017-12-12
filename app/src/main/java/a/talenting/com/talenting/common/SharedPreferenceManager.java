@@ -13,6 +13,7 @@ public class SharedPreferenceManager {
     private static String AUTO = "auto";
     private static String AUTO_EMAIL = "auto_email";
     private static String AUTO_PW = "auto_pw";
+    private static String AUTO_PK = "auto_pk";
     private static String SETTING = "setting";
     private SharedPreferences.Editor autoEditor;
     private SharedPreferences.Editor settingEditor;
@@ -38,6 +39,14 @@ public class SharedPreferenceManager {
     }
 
 
+    public void setPk(String pk) {
+        autoEditor.putString(AUTO_PK, pk);
+        autoEditor.commit();
+    }
+
+    public String getPk() {
+        return autoSpf.getString(AUTO_PK,"");
+    }
 
     public void setEmail(String email){
         autoEditor.putString(AUTO_EMAIL, email);
