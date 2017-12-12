@@ -101,7 +101,7 @@ public class SignupFirstActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            String msg = String.format("%d / %d / %d", year, month+1, dayOfMonth);
+            String msg = String.format("%d - %d - %d", year, month+1, dayOfMonth);
             edit_birth.setText(msg);
         }
     };

@@ -35,4 +35,5 @@ public class Constants {
     public static final String EXT_LAT = "lat";
     public static final String EXT_LNG = "lng";
     public static final String EXT_IS_DETAIL = "isdetail";
+
 }
