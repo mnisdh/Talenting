@@ -5,6 +5,8 @@ package a.talenting.com.talenting.common;
  */
 
 public class Constants {
+    public static final int REQ_LOG_IN_ACTIVITY = 1;
+
     public static final int REQ_SIGN_UP = 100;
     public static final int REQ_LOG_IN = 110;
     public static final int REQ_LOG_IN_GOOGLE = 111;
