@@ -14,6 +14,7 @@ public class SharedPreferenceManager {
     private static String AUTO_EMAIL = "auto_email";
     private static String AUTO_PW = "auto_pw";
     private static String AUTO_PK = "auto_pk";
+    private static String AUTO_TOKEN = "auto_token";
     private static String SETTING = "setting";
     private SharedPreferences.Editor autoEditor;
     private SharedPreferences.Editor settingEditor;
@@ -38,6 +39,15 @@ public class SharedPreferenceManager {
         settingEditor = settingSpf.edit();
     }
 
+
+    public void setToken(String token) {
+        autoEditor.putString(AUTO_TOKEN, token);
+        autoEditor.commit();
+    }
+
+    public String getToken() {
+        return autoSpf.getString(AUTO_TOKEN,"");
+    }
 
     public void setPk(String pk) {
         autoEditor.putString(AUTO_PK, pk);

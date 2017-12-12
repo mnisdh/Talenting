@@ -88,6 +88,7 @@ public class LoginMainActivity extends AppCompatActivity {
                 .subscribe(result -> {
                     if (result.isSuccess()) {
                         SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
+                        SharedPreferenceManager.getInstance().setToken(result.getToken());
                         Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
                         success();
                     } else {
