@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         settingMenu.setVisibility(View.GONE);
     }
     public void goHostingSetting(View v){
-        boolean exist = true;
+        boolean exist = false;
 
         Intent intent = null;
         if(exist) intent = new Intent(this, SetHostingActivity.class);

@@ -33,23 +33,28 @@ public class RecyclerItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
+    private RecyclerView recyclerView;
+    private ListRecyclerViewAdapter adapter;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemRecyclerBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_recycler, parent, false);
-        binding.setItem(this);
+        //if(view == null) {
+            CustomDetailItemRecyclerBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_recycler, parent, false);
+            binding.setItem(this);
 
-        View v = binding.getRoot();
+            view = binding.getRoot();
 
-        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
-        ListRecyclerViewAdapter adapter = new ListRecyclerViewAdapter(false);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(layoutInflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
-//        recyclerView.setLayoutManager(new LinearLayoutManager(layoutInflater.getContext()));
-        adapter.addDataAndRefresh(data);
+            recyclerView = view.findViewById(R.id.recyclerView);
+            adapter = new ListRecyclerViewAdapter(false);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(layoutInflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        return v;
+            adapter.addDataAndRefresh(data);
+        //}
+
+        return view;
     }
 }

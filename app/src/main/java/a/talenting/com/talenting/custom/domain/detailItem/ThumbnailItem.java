@@ -1,12 +1,15 @@
 package a.talenting.com.talenting.custom.domain.detailItem;
 
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
+import a.talenting.com.talenting.databinding.CustomDetailItemThumbnailBinding;
 
 /**
  * Created by daeho on 2017. 11. 29..
@@ -52,11 +55,19 @@ public class ThumbnailItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        return null;
+        //if(view == null) {
+            CustomDetailItemThumbnailBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_thumbnail, parent, false);
+            binding.setItem(this);
+
+            view = binding.getRoot();
+        //}
+
+        return view;
     }
 }

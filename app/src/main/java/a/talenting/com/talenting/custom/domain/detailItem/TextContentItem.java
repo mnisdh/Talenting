@@ -21,18 +21,23 @@ public class TextContentItem implements IDetailItem{
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
+    public String title = "";
+    public TextStyle titleStyle = new TextStyle(Color.BLACK);
+
     public String content = "";
-    public TextStyle contentStyle = new TextStyle(Color.BLACK);
+    public TextStyle contentStyle = new TextStyle(Color.DKGRAY);
 
     public boolean useBottomLine = false;
 
     public TextContentItem(){
 
     }
-    public TextContentItem(String content){
+    public TextContentItem(String title, String content){
+        this.title = title;
         this.content = content;
     }
-    public TextContentItem(String content, IItemClickListener onClickListener){
+    public TextContentItem(String title, String content, IItemClickListener onClickListener){
+        this.title = title;
         this.content = content;
         this.onClickListener = onClickListener;
     }
@@ -49,11 +54,16 @@ public class TextContentItem implements IDetailItem{
         return detailItemType;
     }
 
+    private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemTextContentBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_content, parent, false);
-        binding.setItem(this);
+        //if(view == null) {
+            CustomDetailItemTextContentBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_content, parent, false);
+            binding.setItem(this);
 
-        return binding.getRoot();
+            view = binding.getRoot();
+        //}
+
+        return view;
     }
 }

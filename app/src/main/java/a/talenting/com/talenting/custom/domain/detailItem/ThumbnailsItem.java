@@ -29,6 +29,11 @@ public class ThumbnailsItem implements IDetailItem{
         data.addAll(items);
     }
 
+    public void addThumbnail(ThumbnailItem item){
+        data.add(item);
+        if(adapter != null) adapter.addItem(item);
+    }
+
     public void onAddClick(View v){
         if(onAddClickListener != null) onAddClickListener.run(this);
     }
@@ -45,20 +50,25 @@ public class ThumbnailsItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
+    private ViewPager viewPager;
+    private ThumbnailViewPagerAdapter adapter;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemThumbnailsBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_thumbnails, parent, false);
-        binding.setItem(this);
+        //if(view == null) {
+            CustomDetailItemThumbnailsBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_thumbnails, parent, false);
+            binding.setItem(this);
 
-        View v = binding.getRoot();
-        ViewPager viewPager = v.findViewById(R.id.viewPager);
-        ThumbnailViewPagerAdapter adapter = new ThumbnailViewPagerAdapter();
-        viewPager.setAdapter(adapter);
-        adapter.addItem(data);
+            view = binding.getRoot();
+            viewPager = view.findViewById(R.id.viewPager);
+            adapter = new ThumbnailViewPagerAdapter();
+            viewPager.setAdapter(adapter);
+            adapter.addItem(data);
+        //}
 
-        return v;
+        return view;
     }
 }

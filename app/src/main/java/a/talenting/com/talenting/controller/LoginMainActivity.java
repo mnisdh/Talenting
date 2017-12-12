@@ -82,7 +82,7 @@ public class LoginMainActivity extends AppCompatActivity {
         UserLogin userLogin = new UserLogin();
         userLogin.setEmail(SharedPreferenceManager.getInstance().getEmail());
         userLogin.setPassword(SharedPreferenceManager.getInstance().getPw());
-        Observable<LoginResponse> observable = DomainManager.getDomainApiService().login(userLogin);
+        Observable<LoginResponse> observable = DomainManager.getUserApiService().login(userLogin);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

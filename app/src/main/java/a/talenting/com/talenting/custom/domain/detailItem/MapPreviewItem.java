@@ -41,15 +41,20 @@ public class MapPreviewItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemMapPreviewBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_map_preview, parent, false);
-        binding.setItem(this);
+        //if(view == null) {
+            CustomDetailItemMapPreviewBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_map_preview, parent, false);
+            binding.setItem(this);
 
-        return binding.getRoot();
+            view = binding.getRoot();
+        //}
+
+        return view;
     }
 
 
