@@ -98,35 +98,36 @@ public class ImageContentItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        View v = null;
+        //if(view == null) {
+            if (isHorizontal) {
+                CustomDetailItemImageContentHorizontalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_horizontal, parent, false);
+                binding.setItem(this);
 
-        if(isHorizontal){
-            CustomDetailItemImageContentHorizontalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_horizontal, parent, false);
-            binding.setItem(this);
+                if (!itemList.isEmpty()) {
+                    ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
+                    itemListView.addItems(itemList);
+                }
 
-            if(!itemList.isEmpty()){
-                ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
-                itemListView.addItems(itemList);
+                view = binding.getRoot();
+            } else {
+                CustomDetailItemImageContentVerticalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_vertical, parent, false);
+                binding.setItem(this);
+                binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
+                if (!itemList.isEmpty()) {
+                    ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
+                    itemListView.addItems(itemList);
+                }
+                view = binding.getRoot();
+                view.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
             }
+        //}
 
-            v = binding.getRoot();
-        }
-        else{
-            CustomDetailItemImageContentVerticalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_vertical, parent, false);
-            binding.setItem(this);
-            binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            if(!itemList.isEmpty()){
-                ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
-                itemListView.addItems(itemList);
-            }
-            v = binding.getRoot();
-            v.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        }
-        return v;
+        return view;
     }
 }

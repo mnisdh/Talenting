@@ -1,0 +1,30 @@
+<resources>
+    <string name="hosting_input">Input</string>
+    <string name="hosting_category">Category</string>
+    <string name="hosting_recommend_counter">Recommend count</string>
+    <string name="hosting_title">Title</string>
+    <string name="hosting_summary">Summary</string>
+    <string name="hosting_house_type">House type</string>
+    <string name="hosting_room_type">Room type</string>
+    <string name="hosting_meal_type">Meal type</string>
+    <string name="hosting_internet">Internet</string>
+    <string name="hosting_smoking">Smoking</string>
+    <string name="hosting_pet">Pet</string>
+    <string name="hosting_rules">Rules</string>
+    <string name="hosting_language">Language</string>
+    <string name="hosting_capacity">Capacity</string>
+    <string name="hosting_min_stay">Stay min</string>
+    <string name="hosting_max_stay">Stay max</string>
+    <string name="hosting_description">Description</string>
+    <string name="hosting_to_do">Todo</string>
+    <string name="hosting_exchange">Exchange</string>
+    <string name="hosting_neighborhood">Neighborhood</string>
+    <string name="hosting_transportation">Transportation</string>
+    <string name="hosting_country">Country</string>
+    <string name="hosting_city">City</string>
+    <string name="hosting_distinct">Distinct</string>
+    <string name="hosting_street">Street</string>
+    <string name="hosting_address">Address</string>
+    <string name="hosting_postcode">Post code</string>
+    <string name="hosting_location">Location</string>
+</resources>

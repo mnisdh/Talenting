@@ -70,7 +70,7 @@ public class SignupActivity extends AppCompatActivity {
         user_signup.setFirst_name(edit_fname.getText().toString());
         user_signup.setLast_name(edit_lname.getText().toString());
 
-        Observable<SignupResponse> observable = DomainManager.getDomainApiService().signUp(user_signup);
+        Observable<SignupResponse> observable = DomainManager.getUserApiService().signUp(user_signup);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

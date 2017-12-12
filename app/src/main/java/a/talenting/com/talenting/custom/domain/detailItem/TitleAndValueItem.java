@@ -27,6 +27,8 @@ public class TitleAndValueItem implements IDetailItem{
     public String value = "";
     public TextStyle valueStyle = new TextStyle(Color.DKGRAY);
 
+    public String valueCode = "";
+
     public boolean useBottomLine = false;
 
     public TitleAndValueItem(){
@@ -51,14 +53,19 @@ public class TitleAndValueItem implements IDetailItem{
 
     @Override
     public DetailItemType getDetailItemType() {
-        return null;
+        return detailItemType;
     }
 
+    private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        CustomDetailItemTextAndValueBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_and_value, parent, false);
-        binding.setItem(this);
+        //if(view == null) {
+            CustomDetailItemTextAndValueBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_and_value, parent, false);
+            binding.setItem(this);
 
-        return binding.getRoot();
+            view = binding.getRoot();
+        //}
+
+        return view;
     }
 }

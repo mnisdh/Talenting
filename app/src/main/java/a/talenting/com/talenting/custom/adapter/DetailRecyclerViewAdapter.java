@@ -19,14 +19,30 @@ import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecyclerViewAdapter.Holder> {
     private List<IDetailItem> data = new ArrayList<>();
 
+    public void addData(IDetailItem item){
+        data.add(item);
+    }
+
+    public void addData(List<IDetailItem> items){
+        data.addAll(items);
+    }
+
+    public void refresh(){
+        notifyDataSetChanged();
+    }
+
+    public void refresh(IDetailItem item){
+        notifyItemChanged(data.indexOf(item));
+    }
+
     public void addDataAndRefresh(IDetailItem item){
         data.add(item);
-        notifyDataSetChanged();
+        refresh();
     }
 
     public void addDataAndRefresh(List<IDetailItem> items){
         data.addAll(items);
-        notifyDataSetChanged();
+        refresh();
     }
 
     @Override
@@ -67,7 +83,15 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
         }
 
         public void setDetailItem(IDetailItem item){
-            stage.removeAllViews();
+            for(int i = stage.getChildCount() - 1; i >= 0; i--){
+                View childView = stage.getChildAt(i);
+                ViewGroup parentGroup = (ViewGroup)childView.getParent();
+
+                if(parentGroup != null) parentGroup.removeView(childView);
+
+                stage.removeView(childView);
+            }
+
             stage.addView(item.getLayoutView(layoutInflater, parent));
         }
     }
