@@ -1,19 +1,17 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-08.
  */
 
 public class UserSignup {
-    private String first_name;
-
-    private String password1;
-
-    private String password2;
-
-    private String email;
-
-    private String last_name;
+    @Expose private String first_name;
+    @Expose private String password1;
+    @Expose private String password2;
+    @Expose private String email;
+    @Expose private String last_name;
 
     public String getFirst_name ()
     {

@@ -1,20 +1,19 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-08.
  */
 
 public class LoginResponse {
-    private String token;
-
-    private String code;
-
-    private String msg;
-
-    private User user;
+    @Expose private String token;
+    @Expose private String code;
+    @Expose private String msg;
+    @Expose private User user;
 
     public boolean isSuccess(){
-        return "201".equals(code);
+        return "2".equals(code.substring(0, 1));
     }
 
     public String getToken ()

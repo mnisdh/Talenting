@@ -43,6 +43,12 @@ public class TitleAndValueItem implements IDetailItem{
         this.value = value;
         this.onClickListener = onClickListener;
     }
+    public TitleAndValueItem(String title, String value, String valueCode, IItemClickListener onClickListener){
+        this.title = title;
+        this.value = value;
+        this.valueCode = valueCode;
+        this.onClickListener = onClickListener;
+    }
 
     public void onClick(View v){
         if(onClickListener != null) onClickListener.run(this);

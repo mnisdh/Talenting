@@ -2,6 +2,8 @@ package a.talenting.com.talenting.domain.hosting;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.List;
+
 /**
  * Created by daeho on 2017. 12. 11..
  */
@@ -20,36 +22,36 @@ public class Hosting {
     @Expose(serialize = false)
     private String updated_at;
 
-    private String summary;
-    private String max_stay;
-    private String transportation;
-    private String room_type;
-    private String min_lat;
-    private String title;
-    private String max_lat;
-    private String house_type;
-    private String smoking;
-    private String description;
-    private String capacity;
-    private String to_do;
-    private String exchange;
-    private String meal_type;
-    private String neighborhood;
-    private String rules;
-    private String category;
-    private String pet;
-    private String max_lon;
-    private String min_stay;
-    private String language;
-    private String internet;
-    private String min_lon;
+    @Expose private String summary;
+    @Expose private String max_stay;
+    @Expose private String transportation;
+    @Expose private String room_type;
+    @Expose private String min_lat;
+    @Expose private String title;
+    @Expose private String max_lat;
+    @Expose private String house_type;
+    @Expose private String smoking;
+    @Expose private String description;
+    @Expose private String capacity;
+    @Expose private String to_do;
+    @Expose private String exchange;
+    @Expose private String meal_type;
+    @Expose private String neighborhood;
+    @Expose private String rules;
+    @Expose private String category;
+    @Expose private String pet;
+    @Expose private String max_lon;
+    @Expose private String min_stay;
+    @Expose private List<String> language;
+    @Expose private String internet;
+    @Expose private String min_lon;
 
-    private String country = "KR";
-    private String street = "empty";
-    private String address = "empty";
-    private String postcode = "empty";
-    private String city = "empty";
-    private String distinct = "empty";
+    @Expose private String country = "KR";
+    @Expose private String street = "empty";
+    @Expose private String address = "empty";
+    @Expose private String postcode = "empty";
+    @Expose private String city = "empty";
+    @Expose private String distinct = "empty";
 
 
     public String getSummary ()
@@ -370,12 +372,12 @@ public class Hosting {
         this.min_stay = min_stay;
     }
 
-    public String getLanguage ()
+    public List<String> getLanguage ()
     {
         return language;
     }
 
-    public void setLanguage (String language)
+    public void setLanguage (List<String> language)
     {
         this.language = language;
     }

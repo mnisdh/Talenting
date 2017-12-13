@@ -1,13 +1,15 @@
 package a.talenting.com.talenting.domain.hosting;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by daeho on 2017. 12. 11..
  */
 
 public class GetHosting {
-    private Hosting hosting;
-    private String code;
-    private String msg;
+    @Expose private Hosting hosting;
+    @Expose private String code;
+    @Expose private String msg;
 
     public boolean isSuccess(){
         return code.substring(0, 1).equals("2");
