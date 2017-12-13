@@ -78,13 +78,15 @@ public class DialogManager {
                 .show();
     }
 
-    public static void showTypeListDialog(Context context, String title, Map<Integer, String> data, IDialogTypeEvent event){
+    public static void showTypeListDialog(Context context, String title, Map<String, String> data, IDialogTypeEvent event){
         int[] ids = new int[data.size()];
         List<String> items = new ArrayList<>();
         int index = 0;
-        for(int key : data.keySet()){
-            ids[index++] = key;
+        for(String key : data.keySet()){
+            ids[index] = index;
             items.add(data.get(key));
+
+            index++;
         }
 
         new MaterialDialog.Builder(context)
@@ -94,8 +96,47 @@ public class DialogManager {
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        event.callback(view.getId() + "", text.toString());
+                        int i = 0;
+                        for(String key : data.keySet()){
+                            if(i == view.getId()){
+                                event.callback(key, text.toString());
+                                return;
+                            }
+                            i++;
+                        }
                     }
+                })
+                .show();
+    }
+
+    public static void showListDialog(Context context, String title, List<String> data, IDialogStringEvent event){
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .items(data)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        event.callback(data.get(which));
+                        return true;
+                    }
+                })
+                .show();
+    }
+
+    public static void showNumTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
+        showNumTextDialog(context, item.title, item.value, event);
+    }
+    public static void showNumTextDialog(Context context, String title, String value, IDialogStringEvent event){
+        View v = LayoutInflater.from(context).inflate(R.layout.dialog_input_num_text, null, false);
+        EditText editText = v.findViewById(R.id.editText);
+        editText.setText(value);
+
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .customView(v, true)
+                .positiveText("Save")
+                .onAny((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    event.callback(editText.getText().toString());
                 })
                 .show();
     }

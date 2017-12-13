@@ -18,6 +18,7 @@ import a.talenting.com.talenting.controller.event.EventActivity;
 import a.talenting.com.talenting.custom.AddressSearchTextView;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.adapter.MultiListRecyclerViewAdapter;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.domain.DomainManager;
@@ -83,7 +84,7 @@ public class HostingListView extends FrameLayout {
     }
 
     public void setSampleData(){
-        List<ImageContentItem> items = new ArrayList<>();
+        List<IDetailItem> items = new ArrayList<>();
 
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
@@ -107,7 +108,7 @@ public class HostingListView extends FrameLayout {
         List<RecyclerItem> itemsTemp = new ArrayList<>();
 
         for(int j = 0; j < 5; j++) {
-            List<ImageContentItem> items = new ArrayList<>();
+            List<IDetailItem> items = new ArrayList<>();
 
             ImageContentItem item;
             for (int i = 0; i < 10; i++) {
@@ -134,7 +135,7 @@ public class HostingListView extends FrameLayout {
         adapter.addDataAndRefresh(item);
     }
 
-    public void addData(List<ImageContentItem> items){
+    public void addData(List<IDetailItem> items){
         adapter.addDataAndRefresh(items);
     }
 }

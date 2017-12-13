@@ -1,8 +1,6 @@
 package a.talenting.com.talenting.domain;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gson.GsonBuilder;
 
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
@@ -25,7 +23,7 @@ public class DomainManager {
     private static void initRetrofit(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .baseUrl(BASE_URL)
                     .build();

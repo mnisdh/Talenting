@@ -29,8 +29,8 @@ public interface IHostingApiService {
     @POST("/hosting/")
     Observable<GetHosting> insert(@Header("Authorization") String token, @Body Hosting hosting);
 
-    @PUT("/hosting/")
-    Observable<GetHosting> update(@Header("Authorization") String token, @Body Hosting hosting);
+    @PUT("/hosting/{pk}/")
+    Observable<GetHosting> update(@Header("Authorization") String token, @Path("pk") String pk, @Body Hosting hosting);
 
     @DELETE("/hosting/{pk}/")
     Observable<Boolean> delete(@Header("Authorization") String token, @Path("pk") String pk);

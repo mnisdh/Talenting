@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
@@ -17,12 +19,13 @@ import a.talenting.com.talenting.databinding.CustomDetailItemTextAndCheckBinding
 
 public class TitleAndCheckItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.TITLE_AND_CHECK;
-    private IItemClickListener onClickListener;
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
     public String title = "";
     public TextStyle titleStyle = new TextStyle(Color.BLACK);
+
+    public boolean isEditMode = false;
 
     public boolean isCheck = false;
 
@@ -34,18 +37,6 @@ public class TitleAndCheckItem implements IDetailItem{
     public TitleAndCheckItem(String title, boolean isCheck){
         this.title = title;
         this.isCheck = isCheck;
-    }
-    public TitleAndCheckItem(String title, boolean isCheck, IItemClickListener onClickListener){
-        this.title = title;
-        this.isCheck = isCheck;
-        this.onClickListener = onClickListener;
-    }
-
-    public void onClick(View v){
-        if(onClickListener != null) onClickListener.run(this);
-    }
-    public void setOnClickListener(IItemClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -59,6 +50,8 @@ public class TitleAndCheckItem implements IDetailItem{
         //if(view == null) {
             CustomDetailItemTextAndCheckBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_text_and_check, parent, false);
             binding.setItem(this);
+            ((CheckBox)binding.getRoot().findViewById(R.id.chkValue))
+                    .setOnCheckedChangeListener((CompoundButton compoundButton, boolean b) -> isCheck = b);
 
             view = binding.getRoot();
         //}

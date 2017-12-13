@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initListener();
@@ -68,12 +69,13 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
                         SharedPreferenceManager.getInstance().setEmail(edit_email.getText().toString());
                         SharedPreferenceManager.getInstance().setPw(edit_pw.getText().toString());
+                        SharedPreferenceManager.getInstance().setToken(result.getToken());
                         NavUtils.navigateUpFromSameTask(this);
                         finish();
-                    } else {
-                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                     }
-                });
+                    else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                },
+                e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override

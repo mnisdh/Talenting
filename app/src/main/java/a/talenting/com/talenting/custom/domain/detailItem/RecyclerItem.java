@@ -21,14 +21,33 @@ import a.talenting.com.talenting.databinding.CustomDetailItemRecyclerBinding;
 
 public class RecyclerItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.RECYCLER;
-    private List<ImageContentItem> data = new ArrayList<>();
+    private IItemClickListener onAddClickListener;
+    private IItemClickListener onRemoveClickListener;
+    private List<IDetailItem> data = new ArrayList<>();
 
     public String title;
     public PaddingStyle titlePadding = new PaddingStyle(50, 50, 50, 0);
 
-    public RecyclerItem(String title, List<ImageContentItem> items){
+    public boolean useAddMode = false;
+    public boolean useRemoveMode = false;
+
+    public RecyclerItem(String title, List<IDetailItem> items){
         this.title = title;
         data.addAll(items);
+    }
+
+    public void onAddClick(View v){
+        if(onAddClickListener != null) onAddClickListener.run(this);
+    }
+    public void setOnAddClickListener(IItemClickListener onClickListener) {
+        this.onAddClickListener = onClickListener;
+    }
+
+    public void onRemoveClick(View v){
+        if(onRemoveClickListener != null) onRemoveClickListener.run(this);
+    }
+    public void setOnRemoveClickListener(IItemClickListener onClickListener) {
+        this.onRemoveClickListener = onClickListener;
     }
 
     @Override

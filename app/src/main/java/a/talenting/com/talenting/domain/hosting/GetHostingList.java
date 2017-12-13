@@ -1,5 +1,7 @@
 package a.talenting.com.talenting.domain.hosting;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 /**
@@ -7,9 +9,9 @@ import java.util.List;
  */
 
 public class GetHostingList {
-    private List<Hosting> hosting;
-    private String code;
-    private String msg;
+    @Expose private List<Hosting> hosting;
+    @Expose private String code;
+    @Expose private String msg;
 
     public boolean isSuccess(){
         return code.substring(0, 1).equals("2");
