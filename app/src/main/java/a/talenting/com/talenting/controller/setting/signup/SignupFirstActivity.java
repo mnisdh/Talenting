@@ -95,7 +95,9 @@ public class SignupFirstActivity extends AppCompatActivity {
     }
 
     public void birth(View view){
-        new DatePickerDialog(this,dateSetListener,2017,11,30).show();
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(this,R.style.MySpinnerDatePickerStyle,dateSetListener,2017,11,30);
+                datePickerDialog.show();
     }
 
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
