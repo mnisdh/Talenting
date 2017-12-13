@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import a.talenting.com.talenting.R;
@@ -26,9 +27,11 @@ import a.talenting.com.talenting.common.GoogleStaticMap;
 import a.talenting.com.talenting.controller.common.LocationActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
+import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
@@ -58,9 +61,10 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private TextContentItem summary, rules, description, todo;
     private TitleAndCheckItem smoking, pet;
     private TitleAndValueItem title, category, houseType, roomType, mealType, internet,
-                                language, capacity, min_stay, max_stay,
-                                exchange, neighborhood, transportation, locationTitle;
+                                capacity, min_stay, max_stay, exchange, neighborhood,
+                                transportation, locationTitle;
     private MapPreviewItem location;
+    private RecyclerItem language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +144,10 @@ public class SetHostingAddActivity extends AppCompatActivity {
         boolean isEdit = isAddMode || isEditMode;
 
         thumbnailsItem.isEditMode = isEdit;
+        smoking.isEditMode = isEdit;
+        pet.isEditMode = isEdit;
+
+        adapter.refresh();
     }
 
     private void initData(){
@@ -229,11 +237,11 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.addData(rules);
         //endregion
         //region language type
-        language = new TitleAndValueItem(getResStrng(R.string.hosting_language)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        language.useBottomLine = true;
-        adapter.addData(language);
+//        language = new TitleAndValueItem(getResStrng(R.string.hosting_language)
+//                                        , getResStrng(R.string.hosting_input)
+//                                        , typeItemClickEvent);
+//        language.useBottomLine = true;
+//        adapter.addData(language);
         //endregion
         //region capacity
         capacity = new TitleAndValueItem(getResStrng(R.string.hosting_capacity)
@@ -358,6 +366,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region category type
         category = new TitleAndValueItem(getResStrng(R.string.hosting_category)
+                , BaseData.getHostigCategoryText(hosting.getCategory())
                 , hosting.getCategory()
                 , typeItemClickEvent);
         category.useBottomLine = true;
@@ -365,6 +374,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region house type
         houseType = new TitleAndValueItem(getResStrng(R.string.hosting_house_type)
+                , BaseData.getHostigHouseText(hosting.getHouse_type())
                 , hosting.getHouse_type()
                 , typeItemClickEvent);
         houseType.useBottomLine = true;
@@ -372,6 +382,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region room type
         roomType = new TitleAndValueItem(getResStrng(R.string.hosting_room_type)
+                , BaseData.getHostigRoomText(hosting.getRoom_type())
                 , hosting.getRoom_type()
                 , typeItemClickEvent);
         roomType.useBottomLine = true;
@@ -379,6 +390,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region meal type
         mealType = new TitleAndValueItem(getResStrng(R.string.hosting_meal_type)
+                , BaseData.getHostigMealText(hosting.getMeal_type())
                 , hosting.getMeal_type()
                 , typeItemClickEvent);
         mealType.useBottomLine = true;
@@ -386,6 +398,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region internet type
         internet = new TitleAndValueItem(getResStrng(R.string.hosting_internet)
+                , BaseData.getHostigInternetText(hosting.getInternet())
                 , hosting.getInternet()
                 , typeItemClickEvent);
         internet.useBottomLine = true;
@@ -409,34 +422,34 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.addData(rules);
         //endregion
         //region language type
-        language = new TitleAndValueItem(getResStrng(R.string.hosting_language)
-                , hosting.getLanguage()
-                , typeItemClickEvent);
-        language.useBottomLine = true;
+        List<IDetailItem> langItems = new ArrayList<>();
+        for(String lang : hosting.getLanguage()){
+            TextContentItem langItem = new TextContentItem();
+            langItem.title = lang;
+            langItems.add(langItem);
+        }
+        language = new RecyclerItem(getResStrng(R.string.hosting_language), langItems);
+        //language.useBottomLine = true;
         adapter.addData(language);
         //endregion
         //region capacity
         capacity = new TitleAndValueItem(getResStrng(R.string.hosting_capacity)
                 , hosting.getCapacity()
-                , typeItemClickEvent);
+                , numTitleAndValueItemClickEvent);
         capacity.useBottomLine = true;
         adapter.addData(capacity);
         //endregion
         //region min stay
         min_stay = new TitleAndValueItem(getResStrng(R.string.hosting_min_stay)
                                         , hosting.getMin_stay()
-                                        , item -> {
-
-        });
+                                        , numTitleAndValueItemClickEvent);
         min_stay.useBottomLine = true;
         adapter.addData(min_stay);
         //endregion
         //region max stay
         max_stay = new TitleAndValueItem(getResStrng(R.string.hosting_max_stay)
                                         , hosting.getMax_stay()
-                                        , item -> {
-
-        });
+                                        , numTitleAndValueItemClickEvent);
         max_stay.useBottomLine = true;
         adapter.addData(max_stay);
         //endregion
@@ -512,9 +525,9 @@ public class SetHostingAddActivity extends AppCompatActivity {
             TextContentItem item = (TextContentItem) i;
 
             if(item.content.equals(getResStrng(R.string.hosting_input))) item.content = "";
-            DialogManager.showMultiLineTextDialog(this, item.title, summary, value -> {
-                summary.content = value;
-                adapter.refresh(summary);
+            DialogManager.showMultiLineTextDialog(this, item.title, item, value -> {
+                item.content = value;
+                adapter.refresh(item);
             });
         }
     };
@@ -523,15 +536,15 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
             TitleAndValueItem item = (TitleAndValueItem) i;
-            Map<Integer, String> data = new LinkedHashMap<>();
+            Map<String, String> data = new LinkedHashMap<>();
             if(item == category) data = BaseData.getHostingCategory();
             else if(item == houseType) data = BaseData.getHostingHouseType();
             else if(item == roomType) data = BaseData.getHostingRoomType();
             else if(item == mealType) data = BaseData.getHostingMealType();
             else if(item == internet) data = BaseData.getHostingInternetType();
-            else if(item == language){
-
-            }
+//            else if(item == language){
+//
+//            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
                 {
@@ -564,6 +577,19 @@ public class SetHostingAddActivity extends AppCompatActivity {
             }
         }
     };
+    private IItemClickListener numTitleAndValueItemClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+            TitleAndValueItem item = (TitleAndValueItem) i;
+
+            if(item.value.equals(getResStrng(R.string.hosting_input))) item.value = "";
+            DialogManager.showNumTextDialog(this, item, value -> {
+                item.value = value;
+                adapter.refresh(item);
+            });
+        }
+    };
 
     private void updateHostingData(){
         if(baseHosting == null) baseHosting = new Hosting();
@@ -578,14 +604,13 @@ public class SetHostingAddActivity extends AppCompatActivity {
         baseHosting.setSmoking(smoking.isCheck + "");
         baseHosting.setPet(pet.isCheck + "");
         baseHosting.setRules(rules.content);
-        baseHosting.setLanguage(language.valueCode);
-        baseHosting.setLanguage("ko");
+        //baseHosting.setLanguage(language.valueCode);
+        List<String> lang = new ArrayList<>();
+        lang.add("ko");
+        baseHosting.setLanguage(lang);
         baseHosting.setCapacity(capacity.valueCode);
-        baseHosting.setCapacity("1");
         baseHosting.setMin_stay(min_stay.value);
-        baseHosting.setMin_stay("1");
         baseHosting.setMax_stay(max_stay.value);
-        baseHosting.setMax_stay("1");
         baseHosting.setDescription(description.content);
         baseHosting.setTo_do(todo.content);
         baseHosting.setExchange(exchange.value);
@@ -614,35 +639,34 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private void updateHosting(){
         updateHostingData();
 
-        DomainManager.getHostingApiService().update(DomainManager.getTokenHeader(), baseHosting)
+        DomainManager.getHostingApiService().update(DomainManager.getTokenHeader(), pk, baseHosting)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                             if (result.isSuccess()) updatePhoto();
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void deleteHosting(){
-        DomainManager.getHostingApiService().delete(DomainManager.getTokenHeader(), pk);
+        DomainManager.getHostingApiService().delete(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> finish()
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void addPhoto(){
+        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
+
+        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    private a.talenting.com.talenting.domain.hosting.photo.Hosting addPhoto(){
+    private void updatePhoto(){
         a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
 
         Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
-
-        return hosting;
-    }
-
-    private a.talenting.com.talenting.domain.hosting.photo.Hosting updatePhoto(){
-        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
-
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
-
-        return hosting;
     }
 
     @Override

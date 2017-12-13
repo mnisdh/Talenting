@@ -1,17 +1,16 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-07.
  */
 
 public class User {
-    private String first_name;
-
-    private String email;
-
-    private String last_name;
-
-    private String pk;
+    @Expose private String first_name;
+    @Expose private String email;
+    @Expose private String last_name;
+    @Expose(serialize = false) private String pk;
 
     public String getFirst_name ()
     {

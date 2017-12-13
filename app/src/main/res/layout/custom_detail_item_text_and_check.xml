@@ -24,16 +24,15 @@
             android:layout_gravity="left"
             android:text="@{item.title}"
             android:textColor="@{item.titleStyle.color}"
-            android:textSize="@{item.titleStyle.size}"
-            android:onClick="@{item::onClick}"/>
+            android:textSize="@{item.titleStyle.size}"/>
 
         <CheckBox
-            android:id="@+id/tvValue"
+            android:id="@+id/chkValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:checked="@{item.isCheck}"
-            android:onClick="@{item::onClick}"/>
+            android:enabled="@{item.isEditMode}"
+            android:checked="@{item.isCheck}" />
 
     </FrameLayout>
 </layout>

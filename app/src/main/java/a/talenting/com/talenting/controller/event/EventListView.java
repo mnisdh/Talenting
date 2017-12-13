@@ -15,6 +15,7 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.custom.AddressSearchTextView;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
 /**
@@ -55,7 +56,7 @@ public class EventListView extends FrameLayout {
     }
 
     public void setSampleData(){
-        List<ImageContentItem> items = new ArrayList<>();
+        List<IDetailItem> items = new ArrayList<>();
 
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
@@ -79,7 +80,7 @@ public class EventListView extends FrameLayout {
         adapter.addDataAndRefresh(item);
     }
 
-    public void addData(List<ImageContentItem> items){
+    public void addData(List<IDetailItem> items){
         adapter.addDataAndRefresh(items);
     }
 }

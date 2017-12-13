@@ -1,14 +1,15 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-08.
  */
 
 public class UserLogin
 {
-    private String email;
-
-    private String password;
+    @Expose private String email;
+    @Expose private String password;
 
     public String getEmail ()
     {

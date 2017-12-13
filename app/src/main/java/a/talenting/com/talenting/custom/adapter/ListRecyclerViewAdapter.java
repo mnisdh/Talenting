@@ -10,26 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 
 /**
  * Created by daeho on 2017. 11. 30..
  */
 
 public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerViewAdapter.Holder> {
-    private List<ImageContentItem> data = new ArrayList<>();
+    private List<IDetailItem> data = new ArrayList<>();
     private boolean useWidthMatchParent = false;
 
     public ListRecyclerViewAdapter(boolean useWidthMatchParent){
         this.useWidthMatchParent = useWidthMatchParent;
     }
 
-    public void addDataAndRefresh(ImageContentItem item){
+    public void addDataAndRefresh(IDetailItem item){
         data.add(item);
         notifyDataSetChanged();
     }
 
-    public void addDataAndRefresh(List<ImageContentItem> items){
+    public void addDataAndRefresh(List<IDetailItem> items){
         data.addAll(items);
         notifyDataSetChanged();
     }
@@ -75,7 +75,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             this.parent = parent;
         }
 
-        public void setDetailItem(ImageContentItem item){
+        public void setDetailItem(IDetailItem item){
             stage.removeAllViews();
             stage.addView(item.getLayoutView(layoutInflater, parent));
         }

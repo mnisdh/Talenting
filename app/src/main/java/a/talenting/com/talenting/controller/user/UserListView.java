@@ -16,6 +16,7 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.controller.event.EventActivity;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
 /**
@@ -55,7 +56,7 @@ public class UserListView extends FrameLayout {
     }
 
     public void setSampleData(){
-        List<ImageContentItem> items = new ArrayList<>();
+        List<IDetailItem> items = new ArrayList<>();
 
         List<String> itemList = new ArrayList<>();
         itemList.add("None");
@@ -84,7 +85,7 @@ public class UserListView extends FrameLayout {
         adapter.addDataAndRefresh(item);
     }
 
-    public void addData(List<ImageContentItem> items){
+    public void addData(List<IDetailItem> items){
         adapter.addDataAndRefresh(items);
     }
 }

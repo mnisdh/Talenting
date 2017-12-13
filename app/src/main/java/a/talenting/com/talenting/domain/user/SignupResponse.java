@@ -1,13 +1,15 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-07.
  */
 
 public class SignupResponse {
-    private String code;
-    private String msg;
-    private User user;
+    @Expose private String code;
+    @Expose private String msg;
+    @Expose private User user;
 
     public boolean isSuccess(){
         return "201".equals(code);

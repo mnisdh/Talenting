@@ -50,7 +50,10 @@ public class LoginMainActivity extends AppCompatActivity {
         initFacebook();
         init();
 
-        runProgress(2000);
+        if (SharedPreferenceManager.getInstance().getEmail() != ""
+                && SharedPreferenceManager.getInstance().getPw() != "") {
+            autologin();
+        }
     }
 
     private void initGoogle(){
@@ -67,7 +70,7 @@ public class LoginMainActivity extends AppCompatActivity {
         autoLoginLayout = findViewById(R.id.autoLoginLayout);
         progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.textView);
-        autoLoginLayout.setVisibility(View.VISIBLE);
+        autoLoginLayout.setVisibility(View.GONE);
     }
 
     private void runProgress(int delay){
@@ -79,9 +82,12 @@ public class LoginMainActivity extends AppCompatActivity {
     }
 
     private void autologin() {
+        autoLoginLayout.setVisibility(View.VISIBLE);
+
         UserLogin userLogin = new UserLogin();
         userLogin.setEmail(SharedPreferenceManager.getInstance().getEmail());
         userLogin.setPassword(SharedPreferenceManager.getInstance().getPw());
+
         Observable<LoginResponse> observable = DomainManager.getUserApiService().login(userLogin);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,10 +95,24 @@ public class LoginMainActivity extends AppCompatActivity {
                     if(result.isSuccess()) {
                         SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
                         SharedPreferenceManager.getInstance().setToken(result.getToken());
-
                         finish();
                     }
-                    else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                    else {
+                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        autoLoginLayout.setVisibility(View.GONE);
+                    }
+                },
+                e -> {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    autoLoginLayout.setVisibility(View.GONE);
+//                    if (e instanceof HttpException) {
+//                        LoginResponse result = new LoginResponse();
+//                        Gson gson = new Gson();
+//                        result = gson.fromJson(((HttpException) e).response().errorBody().toString(), result.getClass());
+//
+//                        Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                        autoLoginLayout.setVisibility(View.GONE);
+//                    }
                 });
     }
 

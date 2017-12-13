@@ -13,6 +13,7 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 
 public class SetHostingListActivity extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class SetHostingListActivity extends AppCompatActivity {
     }
 
     private void setData(){
-        List<ImageContentItem> items = new ArrayList<>();
+        List<IDetailItem> items = new ArrayList<>();
 
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
