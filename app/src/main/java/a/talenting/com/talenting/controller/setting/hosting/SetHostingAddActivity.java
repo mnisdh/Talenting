@@ -80,7 +80,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         init();
 
         if(isAddMode) {
-            initData();
+            loadData(new Hosting());
             setEditModeViews();
         }
         else loadData();
@@ -109,19 +109,12 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 addHosting();
                 return true;
             case R.id.btnEdit:
-                isEditMode = !isEditMode;
+                if(isEditMode) updateHosting(item);
+                else{
+                    setEditMode(true);
 
-                initActionBar();
-                setEditModeViews();
-
-                if(isEditMode) {
                     item.setIcon(R.drawable.save);
                     item.setTitle(getResStrng(R.string.save));
-                }
-                else{
-                    updateHosting();
-                    item.setIcon(R.drawable.edit);
-                    item.setTitle(getResStrng(R.string.edit));
                 }
                 return true;
             case R.id.btnDelete:
@@ -140,179 +133,21 @@ public class SetHostingAddActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    private void setEditMode(boolean use){
+        isEditMode = use;
+
+        initActionBar();
+        setEditModeViews();
+    }
+
     private void setEditModeViews(){
         boolean isEdit = isAddMode || isEditMode;
 
         thumbnailsItem.isEditMode = isEdit;
+        language.setUseAddMode(isEdit);
+        language.setUseRemoveMode(isEdit);
         smoking.isEditMode = isEdit;
         pet.isEditMode = isEdit;
-
-        adapter.refresh();
-    }
-
-    private void initData(){
-        //region thumbnails
-        thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
-        thumbnailsItem.setOnAddClickListener(item -> {
-            if(!isAddMode && !isEditMode) return;
-            DialogManager.showCameraDialog(this, activityResultManager, value -> {
-                thumbnailsItem.addThumbnail(new ThumbnailItem("", value));
-                adapter.refresh(thumbnailsItem);
-            });
-        });
-        thumbnailsItem.setOnDeleteClickListener(item -> {
-            if(!isAddMode && !isEditMode) return;
-        });
-        adapter.addData(thumbnailsItem);
-        //endregion
-        //region profile
-        profile = new ProfileItem("Host name", sampleImage);
-        profile.useBottomLine = true;
-        adapter.addData(profile);
-        //endregion
-        //region title
-        title = new TitleAndValueItem(getResStrng(R.string.hosting_title)
-                                    , getResStrng(R.string.hosting_input)
-                                    , titleAndValueItemClickEvent);
-        title.useBottomLine = true;
-        adapter.addData(title);
-        //endregion
-        //region summary
-        summary = new TextContentItem(getResStrng(R.string.hosting_summary)
-                                    , getResStrng(R.string.hosting_input)
-                                    , contentItemClickEvent);
-        summary.useBottomLine = true;
-        adapter.addData(summary);
-        //endregion
-        //region category type
-        category = new TitleAndValueItem(getResStrng(R.string.hosting_category)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        category.useBottomLine = true;
-        adapter.addData(category);
-        //endregion
-        //region house type
-        houseType = new TitleAndValueItem(getResStrng(R.string.hosting_house_type)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        houseType.useBottomLine = true;
-        adapter.addData(houseType);
-        //endregion
-        //region room type
-        roomType = new TitleAndValueItem(getResStrng(R.string.hosting_room_type)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        roomType.useBottomLine = true;
-        adapter.addData(roomType);
-        //endregion
-        //region meal type
-        mealType = new TitleAndValueItem(getResStrng(R.string.hosting_meal_type)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        mealType.useBottomLine = true;
-        adapter.addData(mealType);
-        //endregion
-        //region internet type
-        internet = new TitleAndValueItem(getResStrng(R.string.hosting_internet)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        internet.useBottomLine = true;
-        adapter.addData(internet);
-        //endregion
-        //region smoking
-        smoking = new TitleAndCheckItem(getResStrng(R.string.hosting_smoking), false);
-        smoking.useBottomLine = true;
-        adapter.addData(smoking);
-        //endregion
-        //region pet
-        pet = new TitleAndCheckItem(getResStrng(R.string.hosting_pet), false);
-        pet.useBottomLine = true;
-        adapter.addData(pet);
-        //endregion
-        //region rules
-        rules = new TextContentItem(getResStrng(R.string.hosting_rules)
-                                    , getResStrng(R.string.hosting_input)
-                                    , contentItemClickEvent);
-        rules.useBottomLine = true;
-        adapter.addData(rules);
-        //endregion
-        //region language type
-//        language = new TitleAndValueItem(getResStrng(R.string.hosting_language)
-//                                        , getResStrng(R.string.hosting_input)
-//                                        , typeItemClickEvent);
-//        language.useBottomLine = true;
-//        adapter.addData(language);
-        //endregion
-        //region capacity
-        capacity = new TitleAndValueItem(getResStrng(R.string.hosting_capacity)
-                                        , getResStrng(R.string.hosting_input)
-                                        , typeItemClickEvent);
-        capacity.useBottomLine = true;
-        adapter.addData(capacity);
-        //endregion
-        //region min stay
-        min_stay = new TitleAndValueItem(
-                getResStrng(R.string.hosting_min_stay)
-                , getResStrng(R.string.hosting_input)
-                , item -> {
-
-        });
-        min_stay.useBottomLine = true;
-        adapter.addData(min_stay);
-        //endregion
-        //region max stay
-        max_stay = new TitleAndValueItem(
-                getResStrng(R.string.hosting_max_stay)
-                , getResStrng(R.string.hosting_input)
-                , item -> {
-
-        });
-        max_stay.useBottomLine = true;
-        adapter.addData(max_stay);
-        //endregion
-        //region description
-        description = new TextContentItem(getResStrng(R.string.hosting_description)
-                                        , getResStrng(R.string.hosting_input)
-                                        , contentItemClickEvent);
-        description.useBottomLine = true;
-        adapter.addData(description);
-        //endregion
-        //region todo
-        todo = new TextContentItem(getResStrng(R.string.hosting_to_do)
-                                    , getResStrng(R.string.hosting_input)
-                                    , contentItemClickEvent);
-        todo.useBottomLine = true;
-        adapter.addData(todo);
-        //endregion
-        //region exchange
-        exchange = new TitleAndValueItem(getResStrng(R.string.hosting_exchange)
-                                        , getResStrng(R.string.hosting_input)
-                                        , titleAndValueItemClickEvent);
-        exchange.useBottomLine = true;
-        adapter.addData(exchange);
-        //endregion
-        //region neighborhood
-        neighborhood = new TitleAndValueItem(getResStrng(R.string.hosting_neighborhood)
-                                            , getResStrng(R.string.hosting_input)
-                                            , titleAndValueItemClickEvent);
-        neighborhood.useBottomLine = true;
-        adapter.addData(neighborhood);
-        //endregion
-        //region transportation
-        transportation = new TitleAndValueItem(getResStrng(R.string.hosting_transportation)
-                                            , getResStrng(R.string.hosting_input)
-                                            , titleAndValueItemClickEvent);
-        transportation.useBottomLine = true;
-        adapter.addData(transportation);
-        //endregion
-        //region location
-        locationTitle = new TitleAndValueItem(getResStrng(R.string.hosting_location), "");
-        adapter.addData(locationTitle);
-
-        GoogleStaticMap googleStaticMap = new GoogleStaticMap();
-        location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
-        adapter.addData(location);
-        //endregion
 
         adapter.refresh();
     }
@@ -424,12 +259,15 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //region language type
         List<IDetailItem> langItems = new ArrayList<>();
         for(String lang : hosting.getLanguage()){
-            TextContentItem langItem = new TextContentItem();
-            langItem.title = lang;
+            TitleAndValueItem langItem = new TitleAndValueItem();
+            langItem.padding.setRight(10);
+            langItem.value = BaseData.getLanguageText(lang);
+            langItem.valueCode = lang;
             langItems.add(langItem);
         }
         language = new RecyclerItem(getResStrng(R.string.hosting_language), langItems);
-        //language.useBottomLine = true;
+        language.setOnAddClickListener(recyclerAddClickEvent);
+        language.useBottomLine = true;
         adapter.addData(language);
         //endregion
         //region capacity
@@ -511,7 +349,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
 
-            if(item.value.equals(getResStrng(R.string.hosting_input))) item.value = "";
             DialogManager.showTextDialog(this, item, value -> {
                 item.value = value;
                 adapter.refresh(item);
@@ -524,7 +361,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
         if(i.getDetailItemType() == DetailItemType.TEXT_CONTENT) {
             TextContentItem item = (TextContentItem) i;
 
-            if(item.content.equals(getResStrng(R.string.hosting_input))) item.content = "";
             DialogManager.showMultiLineTextDialog(this, item.title, item, value -> {
                 item.content = value;
                 adapter.refresh(item);
@@ -542,9 +378,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
             else if(item == roomType) data = BaseData.getHostingRoomType();
             else if(item == mealType) data = BaseData.getHostingMealType();
             else if(item == internet) data = BaseData.getHostingInternetType();
-//            else if(item == language){
-//
-//            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
                 {
@@ -577,13 +410,31 @@ public class SetHostingAddActivity extends AppCompatActivity {
             }
         }
     };
+    private IItemClickListener recyclerAddClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.RECYCLER){
+            RecyclerItem item = (RecyclerItem) i;
+            Map<String, String> data = new LinkedHashMap<>();
+            if(item == language) data = BaseData.getLanguage();
+
+            DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
+            {
+                TitleAndValueItem langItem = new TitleAndValueItem();
+                langItem.value = text;
+                langItem.valueCode = code;
+                item.addItem(langItem);
+
+                adapter.refresh(item);
+            });
+        }
+    };
     private IItemClickListener numTitleAndValueItemClickEvent = i -> {
         if(!isAddMode && !isEditMode) return;
 
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
 
-            if(item.value.equals(getResStrng(R.string.hosting_input))) item.value = "";
             DialogManager.showNumTextDialog(this, item, value -> {
                 item.value = value;
                 adapter.refresh(item);
@@ -604,11 +455,14 @@ public class SetHostingAddActivity extends AppCompatActivity {
         baseHosting.setSmoking(smoking.isCheck + "");
         baseHosting.setPet(pet.isCheck + "");
         baseHosting.setRules(rules.content);
-        //baseHosting.setLanguage(language.valueCode);
         List<String> lang = new ArrayList<>();
-        lang.add("ko");
+        for(IDetailItem item : language.getItems()){
+            if(item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
+                lang.add(((TitleAndValueItem)item).valueCode);
+            }
+        }
         baseHosting.setLanguage(lang);
-        baseHosting.setCapacity(capacity.valueCode);
+        baseHosting.setCapacity(capacity.value);
         baseHosting.setMin_stay(min_stay.value);
         baseHosting.setMax_stay(max_stay.value);
         baseHosting.setDescription(description.content);
@@ -626,6 +480,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private void addHosting(){
         updateHostingData();
 
+        if(!checkValidation()) return;
+
         DomainManager.getHostingApiService().insert(DomainManager.getTokenHeader(), baseHosting)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -636,14 +492,16 @@ public class SetHostingAddActivity extends AppCompatActivity {
                     , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void updateHosting(){
+    private void updateHosting(MenuItem updateItem){
         updateHostingData();
+
+        if(!checkValidation()) return;
 
         DomainManager.getHostingApiService().update(DomainManager.getTokenHeader(), pk, baseHosting)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                            if (result.isSuccess()) updatePhoto();
+                            if (result.isSuccess()) updatePhoto(updateItem);
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -663,10 +521,40 @@ public class SetHostingAddActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updatePhoto(){
+    private void updatePhoto(MenuItem updateItem){
         a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
 
+
+
+
+
+        setEditMode(false);
+
+        updateItem.setIcon(R.drawable.edit);
+        updateItem.setTitle(getResStrng(R.string.edit));
+
         Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean checkValidation(){
+        String msg = "";
+        if(!checkValidation(baseHosting.getTitle())) msg = getResStrng(R.string.hosting_title);
+        else if(!checkValidation(baseHosting.getCategory())) msg = getResStrng(R.string.hosting_category);
+        else if(!checkValidation(baseHosting.getSummary())) msg = getResStrng(R.string.hosting_summary);
+        else if(!checkValidation(baseHosting.getHouse_type())) msg = getResStrng(R.string.hosting_house_type);
+        else if(!checkValidation(baseHosting.getRoom_type())) msg = getResStrng(R.string.hosting_room_type);
+        else if(!checkValidation(baseHosting.getMeal_type())) msg = getResStrng(R.string.hosting_meal_type);
+        else if(baseHosting.getLanguage().size() == 0) msg = getResStrng(R.string.hosting_language);
+        else if("".equals(baseHosting.getMax_lat()) && "".equals(baseHosting.getMax_lon())) msg = getResStrng(R.string.hosting_location);
+
+        if(msg.equals("")) return true;
+        else{
+            Toast.makeText(this, msg + " check please", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+    private boolean checkValidation(String str){
+        return str != null && !str.equals("");
     }
 
     @Override

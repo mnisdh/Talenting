@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerViewAdapter.Holder> {
     private List<IDetailItem> data = new ArrayList<>();
     private boolean useWidthMatchParent = false;
+    private boolean useRemove = false;
 
     public ListRecyclerViewAdapter(boolean useWidthMatchParent){
         this.useWidthMatchParent = useWidthMatchParent;
@@ -31,6 +33,21 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
     public void addDataAndRefresh(List<IDetailItem> items){
         data.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void setUseRemove(boolean use){
+        useRemove = use;
+
+        notifyDataSetChanged();
+    }
+
+    public List<IDetailItem> getData(){
+        return data;
+    }
+
+    public void removeData(IDetailItem item){
+        data.remove(item);
         notifyDataSetChanged();
     }
 
@@ -62,12 +79,19 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         private LayoutInflater layoutInflater;
         private ViewGroup parent;
 
+        private IDetailItem item;
+
         private LinearLayout stage;
+        private ImageButton btnDelete;
 
         public Holder(View itemView) {
             super(itemView);
 
             stage = itemView.findViewById(R.id.stage);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnDelete.setOnClickListener(v -> {
+                if(item != null) removeData(item);
+            });
         }
 
         public void init(LayoutInflater layoutInflater, ViewGroup parent){
@@ -76,6 +100,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         }
 
         public void setDetailItem(IDetailItem item){
+            this.item = item;
+
+            if(useRemove) btnDelete.setVisibility(View.VISIBLE);
+            else btnDelete.setVisibility(View.GONE);
+
             stage.removeAllViews();
             stage.addView(item.getLayoutView(layoutInflater, parent));
         }

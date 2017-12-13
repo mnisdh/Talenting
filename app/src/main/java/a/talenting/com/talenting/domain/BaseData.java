@@ -105,6 +105,10 @@ public class BaseData {
 
         return language;
     }
+    public static String getLanguageText(String key){
+        if(!getLanguage().containsKey(key)) return "";
+        return getLanguage().get(key);
+    }
     //endregion
 
     //region hosting

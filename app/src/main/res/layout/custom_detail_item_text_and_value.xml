@@ -15,6 +15,7 @@
         android:paddingLeft="@{item.padding.left}"
         android:paddingRight="@{item.padding.right}"
         android:paddingBottom="@{item.padding.bottom}"
+        android:onClick="@{item::onClick}"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
 
         <TextView

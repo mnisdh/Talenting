@@ -2,6 +2,7 @@ package a.talenting.com.talenting.domain.hosting;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,6 +107,7 @@ public class Hosting {
 
     public String getMin_lat ()
     {
+        if(min_lat == null || min_lat.equals("")) min_lat = "0";
         return min_lat;
     }
 
@@ -146,6 +148,7 @@ public class Hosting {
 
     public String getMax_lat ()
     {
+        if(max_lat == null || max_lat.equals("")) max_lat = "0";
         return max_lat;
     }
 
@@ -344,6 +347,7 @@ public class Hosting {
 
     public String getMax_lon ()
     {
+        if(max_lon == null || max_lon.equals("")) max_lon = "0";
         return max_lon;
     }
 
@@ -374,6 +378,7 @@ public class Hosting {
 
     public List<String> getLanguage ()
     {
+        if(language == null) language = new ArrayList<>();
         return language;
     }
 
@@ -394,6 +399,7 @@ public class Hosting {
 
     public String getMin_lon ()
     {
+        if(min_lon == null || min_lon.equals("")) min_lon = "0";
         return min_lon;
     }
 

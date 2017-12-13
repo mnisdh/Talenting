@@ -1,6 +1,7 @@
 package a.talenting.com.talenting.custom.domain.detailItem;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
+import a.talenting.com.talenting.custom.domain.style.TextStyle;
 import a.talenting.com.talenting.databinding.CustomDetailItemRecyclerBinding;
 
 /**
@@ -26,14 +28,45 @@ public class RecyclerItem implements IDetailItem{
     private List<IDetailItem> data = new ArrayList<>();
 
     public String title;
+    public TextStyle titleStyle = new TextStyle(Color.BLACK);
     public PaddingStyle titlePadding = new PaddingStyle(50, 50, 50, 0);
 
-    public boolean useAddMode = false;
-    public boolean useRemoveMode = false;
+    private boolean useAddMode = false;
+    private boolean useRemoveMode = false;
+
+    public boolean useBottomLine = false;
 
     public RecyclerItem(String title, List<IDetailItem> items){
         this.title = title;
         data.addAll(items);
+    }
+
+    public boolean isUseAddMode() {
+        return useAddMode;
+    }
+
+    public void setUseAddMode(boolean useAddMode) {
+        this.useAddMode = useAddMode;
+    }
+
+    public boolean isUseRemoveMode() {
+        return useRemoveMode;
+    }
+
+    public void setUseRemoveMode(boolean useRemoveMode) {
+        this.useRemoveMode = useRemoveMode;
+
+        if(adapter != null) adapter.setUseRemove(this.useRemoveMode);
+    }
+
+    public void addItem(IDetailItem item){
+        data.add(item);
+        adapter.addDataAndRefresh(item);
+    }
+
+    public List<IDetailItem> getItems(){
+        if(adapter != null && adapter.getData().size() > 0) data = adapter.getData();
+        return data;
     }
 
     public void onAddClick(View v){
@@ -68,6 +101,7 @@ public class RecyclerItem implements IDetailItem{
 
             recyclerView = view.findViewById(R.id.recyclerView);
             adapter = new ListRecyclerViewAdapter(false);
+            adapter.setUseRemove(useRemoveMode);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(layoutInflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
