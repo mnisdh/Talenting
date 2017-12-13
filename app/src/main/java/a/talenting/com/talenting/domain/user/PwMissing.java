@@ -1,14 +1,17 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-12.
  */
 
 public class PwMissing {
+    @Expose
     private String first_name;
-
+    @Expose
     private String email;
-
+    @Expose
     private String last_name;
 
     public String getFirst_name() {

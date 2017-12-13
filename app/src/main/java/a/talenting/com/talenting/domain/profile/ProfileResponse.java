@@ -13,7 +13,7 @@ public class ProfileResponse
     private Profile profile;
 
     public boolean isSuccess(){
-        return "200".equals(code);
+        return code.substring(0, 1).equals("2");
     }
 
     public String getCode ()

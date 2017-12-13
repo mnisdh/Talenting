@@ -1,18 +1,21 @@
 package a.talenting.com.talenting.domain.user;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-12.
  */
 
 public class PwMissingResponse {
+    @Expose
     private String code;
-
+    @Expose
     private String msg;
-
+    @Expose
     private User user;
 
     public boolean isSuccess(){
-        return "200".equals(code);
+        return code.substring(0, 1).equals("2");
     }
 
     public String getCode ()
