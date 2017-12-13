@@ -38,6 +38,7 @@ import java.util.List;
 import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.CitySpinnerAdapter;
+import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.util.PermissionUtil;
 
 import static a.talenting.com.talenting.common.Constants.CAMERA_PERMISSION_REQ;
@@ -64,6 +65,7 @@ public class SignupFirstActivity extends AppCompatActivity {
     private Spinner spinner_country;
     private ConstraintLayout popupchoice;
     private RadioGroup radioGroup;
+    private Profile profile;
 
 
 
@@ -72,6 +74,13 @@ public class SignupFirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_first);
+        Intent intent = getIntent();
+        if(intent!=null){
+            profile = (Profile)intent.getSerializableExtra("PROFILE");
+        }else{
+            profile = new Profile();
+
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
@@ -103,8 +112,9 @@ public class SignupFirstActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            String msg = String.format("%d - %d - %d", year, month+1, dayOfMonth);
+            String msg = String.format("%d-%d-%d", year, month+1, dayOfMonth);
             edit_birth.setText(msg);
+            profile.setBirth(msg);
         }
     };
 
@@ -114,7 +124,9 @@ public class SignupFirstActivity extends AppCompatActivity {
     }
 
     public void firstNext(View view){
+        profile.setCity(edit_city.getText().toString());
         Intent intent = new Intent(this, SignupSecondActivity.class);
+        intent.putExtra("PROFILE",profile);
         startActivity(intent);
     }
 
@@ -289,9 +301,9 @@ public class SignupFirstActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(group == radioGroup){
                     if(checkedId==R.id.radio_male){
-
+                        profile.setGender("male");
                     }else{
-
+                        profile.setGender("female");
                     }
                 }
             }
@@ -301,7 +313,7 @@ public class SignupFirstActivity extends AppCompatActivity {
         spinner_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                profile.setCountry(spinner_country.getSelectedItem().toString());
             }
 
             @Override
