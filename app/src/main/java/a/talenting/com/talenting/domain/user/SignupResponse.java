@@ -12,7 +12,7 @@ public class SignupResponse {
     @Expose private User user;
 
     public boolean isSuccess(){
-        return "201".equals(code);
+        return code.substring(0, 1).equals("2");
     }
 
     public String getCode ()

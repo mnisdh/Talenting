@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.user.PwMissing;
 import a.talenting.com.talenting.domain.user.PwMissingResponse;
@@ -61,14 +62,12 @@ public class FindPwActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if(result.isSuccess()){
-                        Toast.makeText(this, "Send Email to "+edit_findEmail.getText().toString()+"!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Send Password to "+edit_findEmail.getText().toString(), Toast.LENGTH_SHORT).show();
                         success();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        },
-                        e -> {
-                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
+                    },
+                        e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void success(){

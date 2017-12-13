@@ -78,9 +78,7 @@ public class SignupThirdActivity extends AppCompatActivity {
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         },
-                        e -> {
-                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
+                        e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         NavUtils.navigateUpFromSameTask(this);
         finish();
     }
