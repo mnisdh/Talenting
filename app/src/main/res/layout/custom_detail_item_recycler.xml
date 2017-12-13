@@ -4,37 +4,60 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="item"
             type="a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem" />
 
     </data>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@{item.titlePadding.top}"
-            android:paddingLeft="@{item.titlePadding.left}"
-            android:paddingRight="@{item.titlePadding.right}"
-            android:paddingBottom="@{item.titlePadding.bottom}"
-            android:text="@{item.title}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTitle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            android:layout_margin="5dp">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@{item.titlePadding.bottom}"
+                android:paddingLeft="@{item.titlePadding.left}"
+                android:paddingRight="@{item.titlePadding.right}"
+                android:paddingTop="@{item.titlePadding.top}"
+                android:text="@{item.title}"
+                android:textColor="@{item.titleStyle.color}"
+                android:textSize="@{item.titleStyle.size}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/recyclerView"
+                android:backgroundTint="@android:color/transparent"
+                android:onClick="@{item::onAddClick}"
+                android:visibility="@{item.useAddMode ? View.VISIBLE : View.GONE}"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 </layout>
