@@ -3,7 +3,6 @@ package a.talenting.com.talenting.controller.setting.signup;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +37,7 @@ import java.util.List;
 import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.CitySpinnerAdapter;
+import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.util.PermissionUtil;
 
@@ -75,7 +75,7 @@ public class SignupFirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_first);
         Intent intent = getIntent();
-        if(intent!=null){
+        if(intent.getSerializableExtra("PROFILE")!=null){
             profile = (Profile)intent.getSerializableExtra("PROFILE");
         }else{
             profile = new Profile();
@@ -83,7 +83,6 @@ public class SignupFirstActivity extends AppCompatActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
-        initList();
         initListener();
     }
 
@@ -151,15 +150,6 @@ public class SignupFirstActivity extends AppCompatActivity {
 
     public void addProfile(View view){
         popupchoice.setVisibility(View.VISIBLE);
-    }
-
-    private void initList() {
-        Resources res = getResources();
-        String[] countryArray = res.getStringArray(R.array.country);
-
-        for (String s : countryArray) {
-            country.add(s);
-        }
     }
 
     public void onCamera(View v){
@@ -308,7 +298,7 @@ public class SignupFirstActivity extends AppCompatActivity {
                 }
             }
         });
-        adapter = new CitySpinnerAdapter(this, country);
+        adapter = new CitySpinnerAdapter(this, BaseData.getLanguage());
         spinner_country.setAdapter(adapter);
         spinner_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -318,7 +308,7 @@ public class SignupFirstActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                profile.setCountry("");
             }
         });
     }

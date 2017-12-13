@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.domain.profile.ProfileResponse;
@@ -68,7 +69,7 @@ public class SignupThirdActivity extends AppCompatActivity {
         profile.setOccupation(edit_occupation.getText().toString());
         profile.setSelf_intro(edit_selfIntro.getText().toString());
         profile.setTalent_intro(edit_talentIntro.getText().toString());
-        Observable<ProfileResponse> observable = DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(),profile);
+        Observable<ProfileResponse> observable = DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(),profile);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -76,7 +77,10 @@ public class SignupThirdActivity extends AppCompatActivity {
                         Toast.makeText(this,"Success Profile Enroll!",Toast.LENGTH_SHORT).show();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                });
+                        },
+                        e -> {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
         NavUtils.navigateUpFromSameTask(this);
         finish();
     }
