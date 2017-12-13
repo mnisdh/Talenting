@@ -65,7 +65,10 @@ public class FindPwActivity extends AppCompatActivity {
                         success();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                });
+                        },
+                        e -> {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void success(){

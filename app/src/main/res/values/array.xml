@@ -2,7 +2,6 @@
 
 <resources>
     <string-array name="country">
-        <item>Country</item>
         <item>Afghanistan</item>
         <item>Albania</item>
         <item>Algeria</item>
@@ -139,13 +138,11 @@
         <item>NewYork</item>
     </string-array>
     <string-array name="Category">
-        <item>Category</item>
         <item>Language</item>
         <item>Physical</item>
         <item>Music</item>
     </string-array>
     <string-array name="Language">
-        <item>Language</item>
         <item>English</item>
         <item>Chinese</item>
         <item>Korean</item>

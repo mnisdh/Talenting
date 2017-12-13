@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +21,7 @@ import a.talenting.com.talenting.R;
 
 public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Holder> {
     Set<String> category = new HashSet<>();
-    Map<String,String> talent = new HashMap<>();
+    Map<String,String> talent = new LinkedHashMap<>();
     Context context;
     public TalentListAdapter(Context context){
         this.context = context;
@@ -54,7 +54,14 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
 
     @Override
     public void onBindViewHolder(TalentListAdapter.Holder holder, int position) {
-        String text = talent.get(position);
+        String text="";
+        int i = 0;
+        for(String key : talent.keySet()){
+            if(i == position){
+                text=key;
+            }
+            i++;
+        }
         holder.txt_talent.setText(text);
         holder.image_minus.setOnClickListener(new View.OnClickListener() {
             @Override

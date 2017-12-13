@@ -12,29 +12,27 @@ import java.util.List;
 public class Profile implements Serializable{
     @Expose(serialize = false)
     private String first_name;
-
     @Expose(serialize = false)
     private String last_name;
-
     @Expose(serialize = false)
     private String age;
-
+    @Expose
     private String occupation;
-
+    @Expose
     private String birth;
-
+    @Expose
     private String talent_intro;
-
+    @Expose
     private List<String> talent_category;
-
+    @Expose
     private String gender;
-
+    @Expose
     private String self_intro;
-
+    @Expose
     private List<String> available_languages;
-
+    @Expose
     private String city;
-
+    @Expose
     private String country;
 
     public String getFirst_name ()

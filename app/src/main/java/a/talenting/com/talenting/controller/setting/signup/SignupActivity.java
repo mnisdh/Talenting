@@ -16,9 +16,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.user.LoginResponse;
 import a.talenting.com.talenting.domain.user.SignupResponse;
+import a.talenting.com.talenting.domain.user.UserLogin;
 import a.talenting.com.talenting.domain.user.UserSignup;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -75,11 +78,39 @@ public class SignupActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if(result.isSuccess()){
-                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
-                        success();
+                        SharedPreferenceManager.getInstance().setEmail(edit_signEmail.getText().toString());
+                        SharedPreferenceManager.getInstance().setPw(edit_signPw.getText().toString());
+                        SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
+                        Toast.makeText(this, "SignUp SUCCESS!", Toast.LENGTH_SHORT).show();
+                        login();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                });
+                },
+                        e -> {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+    }
+
+    private void login(){
+        UserLogin user_login = new UserLogin();
+        user_login.setEmail(SharedPreferenceManager.getInstance().getEmail());
+        user_login.setPassword(SharedPreferenceManager.getInstance().getPw());
+        Observable<LoginResponse> observables = DomainManager.getUserApiService().login(user_login);
+        observables.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(results -> {
+                            if(results.isSuccess()) {
+                                SharedPreferenceManager.getInstance().setToken(results.getToken());
+                                Toast.makeText(this, "Login SUCCESS!", Toast.LENGTH_SHORT).show();
+                                success();
+                            }
+                            else {
+                                Toast.makeText(this, results.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        e -> {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void success(){

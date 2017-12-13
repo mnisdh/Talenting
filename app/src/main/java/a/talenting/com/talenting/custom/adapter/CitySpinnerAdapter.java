@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import a.talenting.com.talenting.R;
 
@@ -20,23 +20,31 @@ public class CitySpinnerAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflator;
-    List <String> data = new ArrayList<>();
+    Map<String, String> language = new LinkedHashMap<>();
 
-    public CitySpinnerAdapter(Context context, List <String> data){
+    public CitySpinnerAdapter(Context context, Map<String, String> language){
         this.context = context;
         inflator = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.data = data;
+        this.language = language;
 
     }
 
     @Override
     public int getCount() {
-        return data.size();
+        return language.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return data.get(position);
+        String text="";
+        int i = 0;
+        for(String key : language.keySet()){
+            if(i == position){
+                text=language.get(key);
+            }
+            i++;
+        }
+        return text;
     }
 
     @Override
@@ -49,7 +57,14 @@ public class CitySpinnerAdapter extends BaseAdapter {
         if(convertView == null){
             convertView = inflator.inflate(R.layout.item_list_spinner_normal, parent, false);
         }
-        String text = data.get(position);
+        String text="";
+        int i = 0;
+        for(String key : language.keySet()){
+            if(i == position){
+                text=language.get(key);
+            }
+            i++;
+        }
         ((TextView)convertView.findViewById(R.id.spinnerText)).setText(text);
 
         return convertView;
@@ -60,8 +75,15 @@ public class CitySpinnerAdapter extends BaseAdapter {
         if (convertView == null){
             convertView = inflator.inflate(R.layout.item_list_spinner_dropdown, parent, false);
         }
-        if (data != null){
-            String text = data.get(position);
+        if (language != null){
+            String text="";
+            int i = 0;
+            for(String key : language.keySet()){
+                if(i == position){
+                    text=language.get(key);
+                }
+                i++;
+            }
             ((TextView)convertView.findViewById(R.id.spinnerText)).setText(text);
         }
 
