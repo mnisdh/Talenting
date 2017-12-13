@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import a.talenting.com.talenting.R;
 
@@ -18,18 +20,32 @@ import a.talenting.com.talenting.R;
  */
 
 public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Holder> {
-
-    List<String> talent = new ArrayList<>();
+    Set<String> category = new HashSet<>();
+    Map<String,String> talent = new HashMap<>();
     Context context;
-
     public TalentListAdapter(Context context){
         this.context = context;
     }
 
-    public void refresh(String talentClicked){
-        talent.add(talentClicked);
-        notifyDataSetChanged();
+    public Map<String,String> getTalent(){
+        return talent;
     }
+
+    public Set<String> getCategory(){
+        return category;
+    }
+
+    public void refresh(String categoryClicked, String talentClicked){
+        if(!talent.containsKey(talentClicked)){
+            talent.put(talentClicked,categoryClicked);
+        }
+        if(!category.contains(categoryClicked)){
+            category.add(categoryClicked);
+        }
+        notifyDataSetChanged();
+
+    }
+
     @Override
     public TalentListAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_talent,parent,false);
@@ -44,6 +60,9 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
             @Override
             public void onClick(View v) {
                 talent.remove(holder.txt_talent.getText().toString());
+                if(!talent.containsValue(holder.txt_talent.getText().toString())){
+                    category.remove(holder.txt_talent.getText().toString());
+                }
                 notifyDataSetChanged();
             }
         });

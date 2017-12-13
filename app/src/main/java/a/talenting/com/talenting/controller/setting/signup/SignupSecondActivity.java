@@ -17,47 +17,57 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.CategorySpinnerAdapter;
 import a.talenting.com.talenting.custom.adapter.TalentListAdapter;
+import a.talenting.com.talenting.domain.profile.Profile;
 
 public class SignupSecondActivity extends AppCompatActivity {
 
     private List<String> category = new ArrayList<>();
     private List<String> Ncategory = new ArrayList<>();
+    private List<String> talentCategory = new ArrayList<>();
+    private List<String> availableLang = new ArrayList<>();
     private CategorySpinnerAdapter adapter;
     private CategorySpinnerAdapter nAdapter;
     private TalentListAdapter listAdapter;
     private Spinner spinner_category;
     private Spinner spinner_Ncategory;
     private RecyclerView talentList;
+    private Profile profile;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_second);
+        Intent intent = getIntent();
+        profile = (Profile)intent.getSerializableExtra("PROFILE");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
         initListener();
-
     }
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this,SignupFirstActivity.class);
+        intent.putExtra("PROFILE",profile);
         startActivity(intent);
         }
 
     public void addTalent(View view){
-        listAdapter.refresh(spinner_Ncategory.getSelectedItem().toString());
+        listAdapter.refresh(spinner_category.getSelectedItem().toString(),spinner_Ncategory.getSelectedItem().toString());
     }
 
     public void secondPrev(View view){
         Intent intent = new Intent(this,SignupFirstActivity.class);
+        intent.putExtra("PROFILE",profile);
         startActivity(intent);
     }
 
     public void secondNext(View view){
+        profile.setTalent_category(new ArrayList(listAdapter.getCategory()));
+        profile.setAvailable_languages(new ArrayList(listAdapter.getTalent().keySet()));
         Intent intent = new Intent(this,SignupThirdActivity.class);
+        intent.putExtra("PROFILE",profile);
         startActivity(intent);
     }
 
@@ -92,6 +102,7 @@ public class SignupSecondActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case android.R.id.home:
                 Intent intent = new Intent(this,SignupFirstActivity.class);
+                intent.putExtra("PROFILE",profile);
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

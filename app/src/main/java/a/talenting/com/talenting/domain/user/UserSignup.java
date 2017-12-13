@@ -5,6 +5,7 @@ package a.talenting.com.talenting.domain.user;
  */
 
 public class UserSignup {
+
     private String first_name;
 
     private String password1;

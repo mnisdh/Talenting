@@ -1,11 +1,8 @@
 package a.talenting.com.talenting.domain;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
+import a.talenting.com.talenting.domain.profile.IProfileApiService;
 import a.talenting.com.talenting.domain.user.IUserApiService;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -21,6 +18,7 @@ public class DomainManager {
     private static Retrofit retrofit;
     private static IUserApiService iUserApiService;
     private static IHostingApiService iHostingApiService;
+    private static IProfileApiService iProfileApiService;
 
     private static void initRetrofit(){
         if(retrofit == null){
@@ -49,6 +47,15 @@ public class DomainManager {
         if(iHostingApiService == null) iHostingApiService = retrofit.create(IHostingApiService.class);
         return iHostingApiService;
     }
+
+    public static IProfileApiService getProfileApiService(){
+        initRetrofit();
+
+        if(iProfileApiService == null) iProfileApiService = retrofit.create(IProfileApiService.class);
+        return iProfileApiService;
+    }
+
+
 
 
 }
