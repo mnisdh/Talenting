@@ -2,6 +2,7 @@ package a.talenting.com.talenting.controller.setting.hosting;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,9 +42,14 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.hosting.Hosting;
+import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
+import a.talenting.com.talenting.util.FileUtil;
 import a.talenting.com.talenting.util.ResourceUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class SetHostingAddActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -179,6 +186,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
             if(!isAddMode && !isEditMode) return;
         });
         adapter.addData(thumbnailsItem);
+
+        if(!isAddMode) loadPhotoData();
         //endregion
         //region profile
         profile = new ProfileItem("Host name", sampleImage);
@@ -339,6 +348,23 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.refresh();
     }
 
+    private void loadPhotoData(){
+        DomainManager.getHostingPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) loadPhotoData(result.getHostingPhoto());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void loadPhotoData(List<HostingPhoto> hostingPhotos){
+        for(HostingPhoto hostingPhoto : hostingPhotos){
+            thumbnailsItem.addThumbnail(new ThumbnailItem(hostingPhoto));
+        }
+    }
+
     private String getResStrng(int id){
         return ResourceUtil.getString(this, id);
     }
@@ -486,7 +512,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (result.isSuccess()) addPhoto();
+                    if (result.isSuccess()) addPhoto(result.getHosting().getPk());
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                     , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
@@ -514,19 +540,55 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void addPhoto(){
-        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
+    private void addPhoto(String pk){
+        int count = 1;
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
+            HostingPhoto hostingPhoto = new HostingPhoto();
+            hostingPhoto.setHosting_image(item.imageUrl);
+            hostingPhoto.setCaption("");
+            hostingPhoto.setType(count + "");
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+//            String realPath = RealPathUtil.getRealPath(this, Uri.parse(item.imageUrl));
+
+            File file = FileUtil.getFile(this,Uri.parse(item.imageUrl));
+//            File file = new File(Uri.parse(item.imageUrl).toString());
+            //String path = new File(Uri.parse(item.imageUrl).getPath()).getAbsolutePath();
+
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+
+//            MultipartBody body = new MultipartBody.Builder().addFormDataPart("file-type", "profile")
+//                    .addFormDataPart("hosting_image", file.getName(), requestFile)
+//                    .build();
+
+
+
+// MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+
+            RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), "");
+            RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
+
+
+            //RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), );
+
+            DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) ;
+                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+            count++;
+        }
+
         finish();
     }
 
     private void updatePhoto(MenuItem updateItem){
-        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
-
-
-
-
 
         setEditMode(false);
 

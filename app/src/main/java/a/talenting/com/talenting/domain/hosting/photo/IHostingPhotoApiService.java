@@ -1,11 +1,16 @@
 package a.talenting.com.talenting.domain.hosting.photo;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 /**
@@ -14,17 +19,34 @@ import retrofit2.http.Path;
 
 public interface IHostingPhotoApiService {
     @GET("/hosting/{hosting_pk}/photo/")
-    Observable<Hosting> select(@Path("hosting_pk") String hostingPk);
+    Observable<GetHostingPhoto> selects(@Path("hosting_pk") String hostingPk);
+
+    @GET("/hosting/{hosting_pk}/photo/")
+    Observable<GetHostingPhoto> selects(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk);
 
     @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
-    Observable<Hosting> select(@Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
+    Observable<GetHostingPhoto> select(@Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 
-    @POST("/hosting/")
-    Observable<HostingPhotoGet> insert(@Body Hosting hosting);
+    @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
+    Observable<GetHostingPhoto> select(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 
-    @PUT("/hosting/")
-    Observable<Hosting> update(@Body Hosting hosting);
+    @POST("/hosting/{hosting_pk}/photo/")
+    Observable<GetHostingPhoto> insert(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Body HostingPhoto hosting);
 
-    @DELETE("/hosting/{pk}/")
-    Observable<Boolean> delete(@Path("pk") String pk);
+    @Multipart
+    @POST("/hosting/{hosting_pk}/photo/")
+    Observable<GetHostingPhoto> insert(
+            @Header("Authorization") String token,
+            @Path("hosting_pk") String hostingPk,
+            @Part MultipartBody.Part image,
+            @Part("caption") RequestBody caption,
+            @Part("type") RequestBody type);
+
+
+
+    @PUT("/hosting/{hosting_pk}/photo/{photo_pk}/")
+    Observable<HostingPhoto> update(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk, @Body HostingPhoto hosting);
+
+    @DELETE("/hosting/{hosting_pk}/photo/{photo_pk}/")
+    Observable<Boolean> delete(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 }

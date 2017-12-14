@@ -10,6 +10,7 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
 import a.talenting.com.talenting.databinding.CustomDetailItemThumbnailBinding;
+import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
 
 /**
  * Created by daeho on 2017. 11. 29..
@@ -26,9 +27,17 @@ public class ThumbnailItem implements IDetailItem{
 
     public String imageUrl = "";
 
+    private HostingPhoto hostingPhoto;
+
     public ThumbnailItem(){
         contentStyle.getPadding().setLeft(10);
         contentStyle.getPadding().setBottom(10);
+    }
+    public ThumbnailItem(HostingPhoto hostingPhoto){
+        content = hostingPhoto.getCaption();
+        imageUrl = hostingPhoto.getHosting_thumbnail();
+
+        this.hostingPhoto = hostingPhoto;
     }
     public ThumbnailItem(String content, String imageUrl){
         contentStyle.getPadding().setLeft(10);
@@ -44,6 +53,10 @@ public class ThumbnailItem implements IDetailItem{
         this.content = content;
         this.imageUrl = imageUrl;
         this.onClickListener = onClickListener;
+    }
+
+    public HostingPhoto getHostingPhoto(){
+        return hostingPhoto;
     }
 
     public void onClick(View v){
