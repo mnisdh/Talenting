@@ -2,6 +2,7 @@ package a.talenting.com.talenting.domain.profile;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -13,4 +14,7 @@ import retrofit2.http.Path;
 public interface IProfileApiService {
     @PUT("/member/profile/{pk}/")
     Observable<ProfileResponse> update(@Header("Authorization") String token,@Path("pk")String pk, @Body Profile profile);
+
+    @GET("/member/profile/{pk}/")
+    Observable<ProfileResponse> retrieve(@Header("Authorization") String token,@Path("pk")String pk);
 }

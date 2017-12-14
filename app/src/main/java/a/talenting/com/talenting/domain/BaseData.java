@@ -208,5 +208,38 @@ public class BaseData {
     }
     //endregion
 
+    //region profile
+    private static Map<String, String> profile_gender = new LinkedHashMap<>();
+    private static Map<String, String> profile_talent = new LinkedHashMap<>();
+
+    public static Map<String, String> getProfileGender(){
+        if(profile_gender.size() == 0) {
+            profile_gender.put("1", "Male");
+            profile_gender.put("2", "Female");
+        }
+
+        return profile_gender;
+    }
+    public static String getProfileGenderText(String key){
+        if(!getProfileGender().containsKey(key)) return "";
+        return getProfileGender().get(key);
+    }
+
+    public static Map<String, String> getProfileTalent(){
+        if(profile_talent.size() == 0) {
+            profile_talent.put("1", "Culture");
+            profile_talent.put("2", "Work hand");
+            profile_talent.put("3", "Language exchange");
+            profile_talent.put("4", "Art");
+            profile_talent.put("5", "Other");
+        }
+
+        return profile_talent;
+    }
+    public static String getProfileTalentText(String key){
+        if(!getProfileTalent().containsKey(key)) return "";
+        return getProfileTalent().get(key);
+    }
+
 
 }
