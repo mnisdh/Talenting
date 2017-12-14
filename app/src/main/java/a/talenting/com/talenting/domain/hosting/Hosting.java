@@ -410,6 +410,7 @@ public class Hosting {
 
     public String getPk ()
     {
+        if(pk == null) pk = "";
         return pk;
     }
 

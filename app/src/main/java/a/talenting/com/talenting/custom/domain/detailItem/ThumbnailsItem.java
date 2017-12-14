@@ -34,6 +34,10 @@ public class ThumbnailsItem implements IDetailItem{
         if(adapter != null) adapter.addItem(item);
     }
 
+    public List<ThumbnailItem> getThumbnail(){
+        return data;
+    }
+
     public void onAddClick(View v){
         if(onAddClickListener != null) onAddClickListener.run(this);
     }

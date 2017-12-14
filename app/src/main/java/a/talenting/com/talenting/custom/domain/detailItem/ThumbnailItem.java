@@ -26,9 +26,16 @@ public class ThumbnailItem implements IDetailItem{
 
     public String imageUrl = "";
 
+    private IThumbnailPhoto thumbnailPhoto;
+
     public ThumbnailItem(){
         contentStyle.getPadding().setLeft(10);
         contentStyle.getPadding().setBottom(10);
+    }
+    public ThumbnailItem(IThumbnailPhoto thumbnailPhoto){
+        this.thumbnailPhoto = thumbnailPhoto;
+        this.content = thumbnailPhoto.getContent();
+        this.imageUrl = thumbnailPhoto.getImageUrl();
     }
     public ThumbnailItem(String content, String imageUrl){
         contentStyle.getPadding().setLeft(10);
@@ -44,6 +51,10 @@ public class ThumbnailItem implements IDetailItem{
         this.content = content;
         this.imageUrl = imageUrl;
         this.onClickListener = onClickListener;
+    }
+
+    public IThumbnailPhoto getThumbnailPhoto(){
+        return thumbnailPhoto;
     }
 
     public void onClick(View v){

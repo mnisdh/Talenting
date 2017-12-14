@@ -4,6 +4,7 @@ package a.talenting.com.talenting.domain;
 import com.google.gson.GsonBuilder;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
+import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
 import a.talenting.com.talenting.domain.user.IUserApiService;
 import retrofit2.Retrofit;
@@ -20,6 +21,7 @@ public class DomainManager {
     private static Retrofit retrofit;
     private static IUserApiService iUserApiService;
     private static IHostingApiService iHostingApiService;
+    private static IHostingPhotoApiService iHostingPhotoApiService;
     private static IProfileApiService iProfileApiService;
 
     private static void initRetrofit(){
@@ -48,6 +50,13 @@ public class DomainManager {
 
         if(iHostingApiService == null) iHostingApiService = retrofit.create(IHostingApiService.class);
         return iHostingApiService;
+    }
+
+    public static IHostingPhotoApiService getHostingPhotoApiService(){
+        initRetrofit();
+
+        if(iHostingPhotoApiService == null) iHostingPhotoApiService = retrofit.create(IHostingPhotoApiService.class);
+        return iHostingPhotoApiService;
     }
 
     public static IProfileApiService getProfileApiService(){
