@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_title">Profile</string>
+    <string name="profile_firstname">FirstName</string>
+    <string name="profile_lastname">LastName</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_selfintro">Self Intro</string>
+    <string name="profile_talentintro">Talent Intro</string>
+    <string name="profile_country">Country</string>
+    <string name="profile_city">City</string>
+    <string name="profile_occupation">Occupation</string>
+    <string name="profile_talent_category">Talent</string>
+    <string name="profile_available_language">Language</string>
+    <string name="profile_birth">Birth</string>
+</resources>

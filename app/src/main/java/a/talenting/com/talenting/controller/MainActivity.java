@@ -28,7 +28,7 @@ import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
-import a.talenting.com.talenting.controller.setting.profile.ProfileActivity;
+import a.talenting.com.talenting.controller.setting.profile.ProfileEditActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         settingMenu.setVisibility(View.GONE);
     }
     public void goProfile(View v){
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileEditActivity.class);
         startActivity(intent);
 
         settingMenu.setVisibility(View.GONE);

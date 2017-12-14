@@ -5,6 +5,8 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.List;
 
+import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
+
 /**
  * Created by user on 2017-12-13.
  */
@@ -34,7 +36,29 @@ public class Profile implements Serializable{
     private String city;
     @Expose
     private String country;
+    @Expose(serialize=false)
+    private List<ProfileImage> images;
+    @Expose(serialize=false)
+    private boolean wishList;
 
+
+    public boolean getWishList(){
+        return wishList;
+    }
+
+    public void setWishList(boolean wishList){
+        this.wishList = wishList;
+    }
+
+    public List<ProfileImage> getImages ()
+    {
+        return images;
+    }
+
+    public void setImages (List<ProfileImage> images)
+    {
+        this.images = images;
+    }
     public String getFirst_name ()
     {
         return first_name;

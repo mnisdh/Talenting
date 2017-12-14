@@ -1,23 +1,18 @@
-package a.talenting.com.talenting.domain.profile;
+package a.talenting.com.talenting.domain.profile.photo;
 
 import com.google.gson.annotations.Expose;
 
 /**
- * Created by user on 2017-12-13.
+ * Created by user on 2017-12-14.
  */
 
-public class ProfileResponse
-{
+public class ProfileImageResponse {
     @Expose
     private String code;
     @Expose
     private String msg;
     @Expose
-    private Profile profile;
-
-    public boolean isSuccess(){
-        return code.substring(0, 1).equals("2");
-    }
+    private ProfileImage profileimage;
 
     public String getCode ()
     {
@@ -39,19 +34,19 @@ public class ProfileResponse
         this.msg = msg;
     }
 
-    public Profile getProfile ()
+    public ProfileImage getProfileimage ()
     {
-        return profile;
+        return profileimage;
     }
 
-    public void setProfile (Profile profile)
+    public void setProfileimage (ProfileImage profileimage)
     {
-        this.profile = profile;
+        this.profileimage = profileimage;
     }
 
     @Override
     public String toString()
     {
-        return "ClassPojo [code = "+code+", msg = "+msg+", profile = "+profile+"]";
+        return "ClassPojo [code = "+code+", msg = "+msg+", profileimage = "+profileimage+"]";
     }
 }
