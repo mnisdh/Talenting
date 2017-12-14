@@ -2,11 +2,13 @@ package a.talenting.com.talenting.domain.hosting.photo;
 
 import com.google.gson.annotations.Expose;
 
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
+
 /**
  * Created by daeho on 2017. 12. 13..
  */
 
-public class HostingPhoto {
+public class HostingPhoto implements IThumbnailPhoto {
     @Expose(serialize = false) private String pk;
     @Expose(serialize = false) private String place;
     @Expose(serialize = false) private String hosting_thumbnail;
@@ -89,5 +91,15 @@ public class HostingPhoto {
     public String toString()
     {
         return "ClassPojo [created_at = "+created_at+", hosting_image = "+hosting_image+", caption = "+caption+", type = "+type+", place = "+place+", hosting_thumbnail = "+hosting_thumbnail+", pk = "+pk+"]";
+    }
+
+    @Override
+    public String getContent() {
+        return caption;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return hosting_thumbnail;
     }
 }

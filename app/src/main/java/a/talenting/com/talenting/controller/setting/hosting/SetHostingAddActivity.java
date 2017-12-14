@@ -1,9 +1,11 @@
 package a.talenting.com.talenting.controller.setting.hosting;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -540,6 +542,17 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    public String getRealPathFromURI(Uri contentUri) {
+        int column_index=0;
+        String[] proj = {MediaStore.Images.ImageColumns.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+
+        return cursor.getString(column_index);
+    }
+
     private void addPhoto(String pk){
         int count = 1;
         for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
@@ -548,30 +561,15 @@ public class SetHostingAddActivity extends AppCompatActivity {
             hostingPhoto.setCaption("");
             hostingPhoto.setType(count + "");
 
-//            String realPath = RealPathUtil.getRealPath(this, Uri.parse(item.imageUrl));
+            Uri uri = Uri.parse(item.imageUrl);
+//            String path = getRealPathFromURI(uri);
+            File file = FileUtil.getFile(this, uri);
+            //File file = new File(uri.getPath());
 
-            File file = FileUtil.getFile(this,Uri.parse(item.imageUrl));
-//            File file = new File(Uri.parse(item.imageUrl).toString());
-            //String path = new File(Uri.parse(item.imageUrl).getPath()).getAbsolutePath();
-
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-
-//            MultipartBody body = new MultipartBody.Builder().addFormDataPart("file-type", "profile")
-//                    .addFormDataPart("hosting_image", file.getName(), requestFile)
-//                    .build();
-
-
-
-// MultipartBody.Part is used to send also the actual file name
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
-
             RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), "");
             RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-
-
-            //RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), );
 
             DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
                     .subscribeOn(Schedulers.io())
@@ -581,7 +579,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                                 else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
                             , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-
             count++;
         }
 
