@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/btnSave"
+        android:id="@+id/profile_btnSave"
         android:icon="@android:drawable/ic_menu_save"
         android:title="save"
         app:showAsAction="always" />
