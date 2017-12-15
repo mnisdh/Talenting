@@ -162,8 +162,8 @@ public class Profile implements Serializable{
 
     public List<String> getAvailable_languages ()
     {
-        if(talent_category==null) talent_category=new ArrayList<>();
-        return talent_category;
+        if(available_languages==null) available_languages=new ArrayList<>();
+        return available_languages;
     }
 
     public void setAvailable_languages (List<String> available_languages)

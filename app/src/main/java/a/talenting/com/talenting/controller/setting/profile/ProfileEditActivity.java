@@ -84,8 +84,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isEditMode) getMenuInflater().inflate(R.menu.hosting_add, menu);
-        else getMenuInflater().inflate(R.menu.hosting_edit, menu);
+        if (isEditMode) getMenuInflater().inflate(R.menu.profile_add, menu);
+        else getMenuInflater().inflate(R.menu.profile_edit, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -131,6 +131,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         thumbnailsItem.isEditMode = isEdit;
         available_languages.setUseAddMode(isEdit);
         available_languages.setUseRemoveMode(isEdit);
+        talent_category.setUseAddMode(isEdit);
+        talent_category.setUseRemoveMode(isEdit);
 
         adapter.refresh();
     }
@@ -168,7 +170,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //endregion
         //region title
-        profileItem = new ProfileItem("My name", sampleImage);
+        profileItem = new ProfileItem(profile.getFirst_name()+" "+profile.getLast_name(), sampleImage);
         profileItem.useBottomLine = true;
         adapter.addData(profileItem);
         //endregion
@@ -212,7 +214,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         for (String talent : profile.getTalent_category()) {
             TitleAndValueItem talentItem = new TitleAndValueItem();
             talentItem.padding.setRight(10);
-            talentItem.value = BaseData.getLanguageText(talent);
+            talentItem.value = BaseData.getCategoryText(talent);
             talentItem.valueCode = talent;
             talentItems.add(talentItem);
         }
@@ -227,28 +229,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 , contentItemClickEvent);
         talent_intro.useBottomLine = true;
         adapter.addData(talent_intro);
-        //endregion
-        //region country
-        country = new TitleAndValueItem(getResStrng(R.string.profile_country)
-                , BaseData.getLanguageText(profile.getCountry())
-                , profile.getCountry()
-                , typeItemClickEvent);
-        country.useBottomLine = true;
-        adapter.addData(country);
-        //endregion
-        //region city
-        city = new TitleAndValueItem(getResStrng(R.string.profile_city)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
-        city.useBottomLine = true;
-        adapter.addData(city);
-        //endregion
-        //region occupation
-        occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
-        occupation.useBottomLine = true;
-        adapter.addData(occupation);
         //endregion
         //region available_languages
         List<IDetailItem> langItems = new ArrayList<>();
@@ -266,6 +246,28 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
 
         adapter.refresh();
+        //region country
+        country = new TitleAndValueItem(getResStrng(R.string.profile_country)
+                , BaseData.getLanguageText(profile.getCountry())
+                , profile.getCountry()
+                , typeItemClickEvent);
+        country.useBottomLine = true;
+        adapter.addData(country);
+        //endregion
+        //region city
+        city = new TitleAndValueItem(getResStrng(R.string.profile_city)
+                , profile.getCity()
+                , titleAndValueItemClickEvent);
+        city.useBottomLine = true;
+        adapter.addData(city);
+        //endregion
+        //region occupation
+        occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
+                , profile.getFirst_name()
+                , titleAndValueItemClickEvent);
+        occupation.useBottomLine = true;
+        adapter.addData(occupation);
+        //endregion
     }
 
     private String getResStrng(int id) {
@@ -335,8 +337,11 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (i.getDetailItemType() == DetailItemType.RECYCLER) {
             RecyclerItem item = (RecyclerItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if (item == available_languages){data = BaseData.getLanguage();}
-            else if (item == talent_category) {data = BaseData.getProfileTalent();}
+            if (item == available_languages){
+                data = BaseData.getLanguage();
+            }else if (item == talent_category) {
+                data = BaseData.getProfileTalent();
+            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -373,6 +378,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         baseProfile.setTalent_intro(talent_intro.content);
         baseProfile.setGender(gender.valueCode);
         baseProfile.setCountry(country.valueCode);
+        baseProfile.setBirth(birth.value);
 
         List<String> lang = new ArrayList<>();
         for (IDetailItem item : available_languages.getItems()) {
