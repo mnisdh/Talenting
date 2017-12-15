@@ -216,7 +216,7 @@ public class DialogManager {
             // 3.1 실제 파일이 저장되는 곳에 권한이 부여되어 있어야 한다
             //     롤리팝 부터는 File Provider를 선언해 줘야만한다 > Manifest에
             try {
-                photoFile = createFile();
+                photoFile = createFile(activity);
 
                 // 갤러리에서 나오지 않을때
                 refreshMedia(activity, photoFile);
@@ -242,12 +242,12 @@ public class DialogManager {
             }
         });
     }
-    private static File createFile() throws IOException {
+    private static File createFile(Context context) throws IOException {
         // 임시파일명 생성
         String tempFileName = "Temp_" + System.currentTimeMillis();
 
         // 임시파일 저장용 디렉토리 생성
-        File tempDir = new File(Environment.getExternalStorageDirectory() + File.separator + "tempPicture" + File.separator);
+        File tempDir = new File(Environment.getExternalStorageDirectory() + File.separator + "Talenting" + File.separator);
 
         // 생성체크
         if(!tempDir.exists()) tempDir.mkdirs();
