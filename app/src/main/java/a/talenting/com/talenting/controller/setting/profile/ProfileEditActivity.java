@@ -84,8 +84,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isEditMode) getMenuInflater().inflate(R.menu.hosting_add, menu);
-        else getMenuInflater().inflate(R.menu.hosting_edit, menu);
+        if (isEditMode) getMenuInflater().inflate(R.menu.profile_add, menu);
+        else getMenuInflater().inflate(R.menu.profile_edit, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -93,10 +93,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.btnSave:
-                addProfile();
-                return true;
-            case R.id.btnEdit:
+            case R.id.profile_btnEdit:
                 if (isEditMode) updateProfile(item);
                 else {
                     setEditMode(true);
@@ -131,6 +128,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         thumbnailsItem.isEditMode = isEdit;
         available_languages.setUseAddMode(isEdit);
         available_languages.setUseRemoveMode(isEdit);
+        talent_category.setUseAddMode(isEdit);
+        talent_category.setUseRemoveMode(isEdit);
 
         adapter.refresh();
     }
@@ -168,21 +167,19 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //endregion
         //region title
-        profileItem = new ProfileItem("My name", sampleImage);
+        profileItem = new ProfileItem(profile.getFirst_name()+" "+profile.getLast_name(), sampleImage);
         profileItem.useBottomLine = true;
         adapter.addData(profileItem);
         //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
+                , profile.getFirst_name());
         first_name.useBottomLine = true;
         adapter.addData(first_name);
         //endregion
         //region last_name
         last_name = new TitleAndValueItem(getResStrng(R.string.profile_lastname)
-                , profile.getLast_name()
-                , titleAndValueItemClickEvent);
+                , profile.getLast_name());
         last_name.useBottomLine = true;
         adapter.addData(last_name);
         //endregion
@@ -212,7 +209,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         for (String talent : profile.getTalent_category()) {
             TitleAndValueItem talentItem = new TitleAndValueItem();
             talentItem.padding.setRight(10);
-            talentItem.value = BaseData.getLanguageText(talent);
+            talentItem.value = BaseData.getCategoryText(talent);
             talentItem.valueCode = talent;
             talentItems.add(talentItem);
         }
@@ -227,28 +224,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 , contentItemClickEvent);
         talent_intro.useBottomLine = true;
         adapter.addData(talent_intro);
-        //endregion
-        //region country
-        country = new TitleAndValueItem(getResStrng(R.string.profile_country)
-                , BaseData.getLanguageText(profile.getCountry())
-                , profile.getCountry()
-                , typeItemClickEvent);
-        country.useBottomLine = true;
-        adapter.addData(country);
-        //endregion
-        //region city
-        city = new TitleAndValueItem(getResStrng(R.string.profile_city)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
-        city.useBottomLine = true;
-        adapter.addData(city);
-        //endregion
-        //region occupation
-        occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
-        occupation.useBottomLine = true;
-        adapter.addData(occupation);
         //endregion
         //region available_languages
         List<IDetailItem> langItems = new ArrayList<>();
@@ -266,6 +241,28 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
 
         adapter.refresh();
+        //region country
+        country = new TitleAndValueItem(getResStrng(R.string.profile_country)
+                , BaseData.getLanguageText(profile.getCountry())
+                , profile.getCountry()
+                , typeItemClickEvent);
+        country.useBottomLine = true;
+        adapter.addData(country);
+        //endregion
+        //region city
+        city = new TitleAndValueItem(getResStrng(R.string.profile_city)
+                , profile.getCity()
+                , titleAndValueItemClickEvent);
+        city.useBottomLine = true;
+        adapter.addData(city);
+        //endregion
+        //region occupation
+        occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
+                , profile.getFirst_name()
+                , titleAndValueItemClickEvent);
+        occupation.useBottomLine = true;
+        adapter.addData(occupation);
+        //endregion
     }
 
     private String getResStrng(int id) {
@@ -335,8 +332,11 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (i.getDetailItemType() == DetailItemType.RECYCLER) {
             RecyclerItem item = (RecyclerItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if (item == available_languages){data = BaseData.getLanguage();}
-            else if (item == talent_category) {data = BaseData.getProfileTalent();}
+            if (item == available_languages){
+                data = BaseData.getLanguage();
+            }else if (item == talent_category) {
+                data = BaseData.getProfileTalent();
+            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -367,13 +367,13 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         baseProfile.setFirst_name(first_name.value);
         baseProfile.setLast_name(last_name.value);
-        baseProfile.setCity(city.value);
-        baseProfile.setOccupation(occupation.value);
+        baseProfile.setBirth(birth.value);
+        baseProfile.setGender(gender.valueCode);
         baseProfile.setSelf_intro(self_intro.content);
         baseProfile.setTalent_intro(talent_intro.content);
-        baseProfile.setGender(gender.valueCode);
         baseProfile.setCountry(country.valueCode);
-
+        baseProfile.setCity(city.value);
+        baseProfile.setOccupation(occupation.value);
         List<String> lang = new ArrayList<>();
         for (IDetailItem item : available_languages.getItems()) {
             if (item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
@@ -388,21 +388,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         }
         baseProfile.setTalent_category(talent);
-    }
-
-    private void addProfile() {
-        updateProfileData();
-
-        if (!checkValidation()) return;
-
-        DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), baseProfile)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) addPhoto(result.getProfile().getProfilePk());
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void updateProfile(MenuItem updateItem) {

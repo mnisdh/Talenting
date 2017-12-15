@@ -30,7 +30,7 @@
         android:paddingLeft="13dp"
         android:textColor="#000"
         android:textColorHint="#1f000000"
-        android:textSize="15sp"
+        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/imageView3"

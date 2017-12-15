@@ -293,9 +293,9 @@ public class SignupFirstActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(group == radioGroup){
                     if(checkedId==R.id.radio_male){
-                        profile.setGender("male");
+                        profile.setGender("1");
                     }else{
-                        profile.setGender("female");
+                        profile.setGender("2");
                     }
                 }
             }
@@ -307,8 +307,8 @@ public class SignupFirstActivity extends AppCompatActivity {
                 country.value = text;
                 country.valueCode = code;
                 countryView.setDetailItem(country);
+                profile.setCountry(country.valueCode);
             });
-            profile.setCountry(country.valueCode);
         });
 
     }
