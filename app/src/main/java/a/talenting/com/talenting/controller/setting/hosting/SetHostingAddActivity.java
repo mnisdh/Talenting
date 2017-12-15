@@ -475,8 +475,18 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         if(i.getDetailItemType() == DetailItemType.RECYCLER){
             RecyclerItem item = (RecyclerItem) i;
+
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == language) data = BaseData.getLanguage();
+            if(item == language) {
+                List<String> exceptList = new ArrayList<>();
+                for(IDetailItem langItem : item.getItems()){
+                    if(langItem.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
+                        exceptList.add(((TitleAndValueItem)langItem).valueCode);
+                    }
+                }
+
+                data = BaseData.getLanguage(exceptList);
+            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {

@@ -181,7 +181,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
         //region last_name
         last_name = new TitleAndValueItem(getResStrng(R.string.profile_lastname)
-                , profile.getFirst_name()
+                , profile.getLast_name()
                 , titleAndValueItemClickEvent);
         last_name.useBottomLine = true;
         adapter.addData(last_name);

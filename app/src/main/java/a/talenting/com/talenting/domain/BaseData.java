@@ -1,6 +1,7 @@
 package a.talenting.com.talenting.domain;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -105,6 +106,17 @@ public class BaseData {
         }
 
         return language;
+    }
+    public static Map<String, String> getLanguage(List<String> exceptKeys){
+        if(exceptKeys.size() == 0) return getLanguage();
+
+        Map<String, String> result = new LinkedHashMap<>();
+
+        for(String key : getLanguage().keySet()){
+            if(!exceptKeys.contains(key)) result.put(key, getLanguage().get(key));
+        }
+
+        return result;
     }
     public static String getLanguageText(String key){
         if(!getLanguage().containsKey(key)) return "";
