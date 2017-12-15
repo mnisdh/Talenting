@@ -72,7 +72,7 @@ public class CategorySpinnerAdapter extends BaseAdapter {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if (convertView == null){
-            convertView = inflator.inflate(R.layout.item_list_spinner_normal, parent, false);
+            convertView = inflator.inflate(R.layout.item_list_spinner_dropdown, parent, false);
         }
         if (data != null){
             String text="";

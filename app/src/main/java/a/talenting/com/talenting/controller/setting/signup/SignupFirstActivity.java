@@ -34,6 +34,7 @@ import java.util.Map;
 import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.DialogManager;
+import a.talenting.com.talenting.custom.DetailItemView;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.profile.Profile;
@@ -62,9 +63,8 @@ public class SignupFirstActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private Profile profile;
     private TitleAndValueItem country;
-
-
-
+    private DetailItemView countryView;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +95,17 @@ public class SignupFirstActivity extends AppCompatActivity {
         edit_birth = findViewById(R.id.edit_birth);
         edit_city = findViewById(R.id.edit_city);
         popupchoice = findViewById(R.id.popupChoice);
-        country = new TitleAndValueItem("Country", "", item -> {
-            Map<String, String> data = BaseData.getLanguage();
-            DialogManager.showTypeListDialog(SignupFirstActivity.this,"Country",data,(String code, String text) ->
-            {
-                country.value = text;
-                country.valueCode = code;
-            });
-            profile.setCountry(country.valueCode);
-        });
+        constraintLayout = findViewById(R.id.constraintLayout);
+        //countryView = findViewById(R.id.countryView);
+        countryView = new DetailItemView(this);
+        countryView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+        country = new TitleAndValueItem("Country", "Select Country");
+        country.padding.setBottom(0);
+        country.padding.setTop(0);
+        country.padding.setLeft(0);
+        country.padding.setRight(0);
+        countryView.setDetailItem(country);
+        constraintLayout.addView(countryView);
     }
 
     public void birth(View view){
@@ -302,5 +304,16 @@ public class SignupFirstActivity extends AppCompatActivity {
                 }
             }
         });
+        country.setOnClickListener(item -> {
+            Map<String, String> data = BaseData.getLanguage();
+            DialogManager.showTypeListDialog(SignupFirstActivity.this,"Country",data,(String code, String text) ->
+            {
+                country.value = text;
+                country.valueCode = code;
+                countryView.setDetailItem(country);
+            });
+            profile.setCountry(country.valueCode);
+        });
+
     }
 }

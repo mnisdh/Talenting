@@ -18,10 +18,10 @@ import a.talenting.com.talenting.domain.BaseData;
  * Created by user on 2017-12-01.
  */
 
-public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Holder> {
+public class LangListAdapter extends RecyclerView.Adapter<LangListAdapter.Holder> {
     Map<String,String> data = new LinkedHashMap<>();
     Context context;
-    public TalentListAdapter(Context context){
+    public LangListAdapter(Context context){
         this.context = context;
     }
 
@@ -29,20 +29,20 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
         return data;
     }
 
-    public void talentAdd(int position){
-        String key = BaseData.getCategoryKey(position);
-        if(!data.containsKey(key)) data.put(key, BaseData.getCategoryText(key));
+    public void langAdd(int position){
+        String key = BaseData.getLanguageKey(position);
+        if(!data.containsKey(key)) data.put(key, BaseData.getLanguageText(key));
         notifyDataSetChanged();
     }
 
     @Override
-    public TalentListAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LangListAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_talent,parent,false);
         return new Holder(view);
     }
 
     @Override
-    public void onBindViewHolder(TalentListAdapter.Holder holder, int position) {
+    public void onBindViewHolder(LangListAdapter.Holder holder, int position) {
         String text="";
         int i = 0;
         for(String key : data.keySet()){

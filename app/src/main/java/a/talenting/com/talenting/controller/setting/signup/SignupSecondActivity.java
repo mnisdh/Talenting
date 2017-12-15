@@ -16,6 +16,7 @@ import java.util.Map;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.adapter.CategorySpinnerAdapter;
+import a.talenting.com.talenting.custom.adapter.LangListAdapter;
 import a.talenting.com.talenting.custom.adapter.TalentListAdapter;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.profile.Profile;
@@ -28,7 +29,7 @@ public class SignupSecondActivity extends AppCompatActivity {
     private CategorySpinnerAdapter talentAdapter;
     private CategorySpinnerAdapter langAdapter;
     private TalentListAdapter listAdapter;
-    private TalentListAdapter LangListAdapter;
+    private LangListAdapter langListAdapter;
     private Spinner spinner_talent;
     private Spinner spinner_lang;
     private RecyclerView talentList;
@@ -60,7 +61,7 @@ public class SignupSecondActivity extends AppCompatActivity {
     }
 
     public void addLanguage(View view){
-        LangListAdapter.langAdd(spinner_lang.getSelectedItemPosition());
+        langListAdapter.langAdd(spinner_lang.getSelectedItemPosition());
     }
 
     public void secondPrev(View view){
@@ -71,7 +72,7 @@ public class SignupSecondActivity extends AppCompatActivity {
 
     public void secondNext(View view){
         profile.setTalent_category(new ArrayList(listAdapter.getData().keySet()));
-        profile.setAvailable_languages(new ArrayList(LangListAdapter.getData().keySet()));
+        profile.setAvailable_languages(new ArrayList(langListAdapter.getData().keySet()));
         Intent intent = new Intent(this,SignupThirdActivity.class);
         intent.putExtra("PROFILE",profile);
         startActivity(intent);
@@ -82,11 +83,11 @@ public class SignupSecondActivity extends AppCompatActivity {
         talentList = findViewById(R.id.talentList);
         langList = findViewById(R.id.langList);
         listAdapter = new TalentListAdapter(this);
-        LangListAdapter = new TalentListAdapter(this);
+        langListAdapter = new LangListAdapter(this);
         talentList.setAdapter(listAdapter);
-        talentList.setLayoutManager(new GridLayoutManager(this,4));
-        langList.setAdapter(LangListAdapter);
-        langList.setLayoutManager(new GridLayoutManager(this,4));
+        talentList.setLayoutManager(new GridLayoutManager(this,2));
+        langList.setAdapter(langListAdapter);
+        langList.setLayoutManager(new GridLayoutManager(this,2));
         spinner_talent = findViewById(R.id.spinner_category);
         spinner_lang = findViewById(R.id.spinner_Ncateogry);
     }

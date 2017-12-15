@@ -62,6 +62,7 @@
                 android:id="@+id/textView20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
                 android:text="Occupation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
@@ -70,12 +71,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
 
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
                 android:text="Talent Intro"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
@@ -93,13 +97,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp" />
                 </LinearLayout>
 
             </ScrollView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
                 android:text="Self Intro"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
@@ -117,7 +125,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="8dp" />
                 </LinearLayout>
             </ScrollView>
 
