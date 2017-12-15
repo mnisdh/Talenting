@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DomainManager {
-    public static final String BASE_URL = "http://talenting-env.ap-northeast-2.elasticbeanstalk.com";
+    public static final String BASE_URL = "http://talenting-dev.ap-northeast-2.elasticbeanstalk.com";
 
     private static Retrofit retrofit;
     private static IUserApiService iUserApiService;

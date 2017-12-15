@@ -1,11 +1,9 @@
 package a.talenting.com.talenting.controller.setting.hosting;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,8 +43,8 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.hosting.Hosting;
 import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
-import a.talenting.com.talenting.util.FileUtil;
 import a.talenting.com.talenting.util.ResourceUtil;
+import a.talenting.com.talenting.util.TempUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -542,17 +540,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
-        int column_index=0;
-        String[] proj = {MediaStore.Images.ImageColumns.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if(cursor.moveToFirst()){
-            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        }
-
-        return cursor.getString(column_index);
-    }
-
     private void addPhoto(String pk){
         int count = 1;
         for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
@@ -563,7 +550,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
             Uri uri = Uri.parse(item.imageUrl);
 //            String path = getRealPathFromURI(uri);
-            File file = FileUtil.getFile(this, uri);
+            File file = TempUtil.createTempImage(this.getContentResolver(), uri);
             //File file = new File(uri.getPath());
 
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
