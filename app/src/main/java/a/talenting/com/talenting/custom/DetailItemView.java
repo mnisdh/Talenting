@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 
@@ -15,7 +15,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
  * Created by daeho on 2017. 11. 28..
  */
 
-public class DetailItemView extends LinearLayout {
+public class DetailItemView extends FrameLayout {
     private IDetailItem item;
 
     public DetailItemView(Context context) {
@@ -31,9 +31,9 @@ public class DetailItemView extends LinearLayout {
     }
 
     public void setDetailItem(IDetailItem item){
-        this.removeAllViews();
+        removeAllViews();
         View v = item.getLayoutView(LayoutInflater.from(this.getContext()), null);
-        this.addView(v);
+        addView(v);
 
         this.item = item;
     }

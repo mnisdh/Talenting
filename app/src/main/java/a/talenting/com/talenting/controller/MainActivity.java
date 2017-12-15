@@ -241,18 +241,14 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Logout");
         builder.setMessage("Really you want Logout?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                SharedPreferenceManager.getInstance().logout();
-                Toast.makeText(ApplicationInitializer.getAppContext(),"Logout!",Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton("Yes", (DialogInterface dialog, int which) -> {
+            SharedPreferenceManager.getInstance().logout();
+            Toast.makeText(ApplicationInitializer.getAppContext(),"Logout!",Toast.LENGTH_SHORT).show();
 
-            }
+            recreate();
+        });
+        builder.setNegativeButton("No", (DialogInterface dialog, int which) -> {
+
         });
         builder.show();
     }

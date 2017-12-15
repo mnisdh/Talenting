@@ -64,12 +64,12 @@ public class SignupFirstActivity extends AppCompatActivity {
     private Profile profile;
     private TitleAndValueItem country;
     private DetailItemView countryView;
-    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_first);
+
         Intent intent = getIntent();
         if(intent.getSerializableExtra("PROFILE")!=null){
             profile = (Profile)intent.getSerializableExtra("PROFILE");
@@ -95,17 +95,13 @@ public class SignupFirstActivity extends AppCompatActivity {
         edit_birth = findViewById(R.id.edit_birth);
         edit_city = findViewById(R.id.edit_city);
         popupchoice = findViewById(R.id.popupChoice);
-        constraintLayout = findViewById(R.id.constraintLayout);
-        //countryView = findViewById(R.id.countryView);
-        countryView = new DetailItemView(this);
-        countryView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+        countryView = findViewById(R.id.countryView);
         country = new TitleAndValueItem("Country", "Select Country");
         country.padding.setBottom(0);
         country.padding.setTop(0);
         country.padding.setLeft(0);
         country.padding.setRight(0);
         countryView.setDetailItem(country);
-        constraintLayout.addView(countryView);
     }
 
     public void birth(View view){

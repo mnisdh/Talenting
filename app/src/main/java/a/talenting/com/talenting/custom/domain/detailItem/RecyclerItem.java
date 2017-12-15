@@ -60,8 +60,11 @@ public class RecyclerItem implements IDetailItem{
     }
 
     public void addItem(IDetailItem item){
-        data.add(item);
-        adapter.addDataAndRefresh(item);
+        if(adapter == null) data.add(item);
+        else {
+            adapter.addDataAndRefresh(item);
+            data = adapter.getData();
+        }
     }
 
     public List<IDetailItem> getItems(){
