@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -40,6 +41,36 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class DialogManager {
+    public static void showDatePickerDialog(Context context, TitleAndValueItem item, IDialogStringEvent event) {
+        showDatePickerDialog(context, item.title, item.value, event);
+    }
+
+    public static void showDatePickerDialog(Context context, String title, String value, IDialogStringEvent event){
+        if(value!=null && !value.equals("")){
+            View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
+            DatePicker datePicker = v.findViewById(R.id.datePicker);
+            datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    String result = String.format("%d-%d-%d", year, monthOfYear+1, dayOfMonth);
+                    event.callback(result);
+                }
+            });
+        }
+        else {
+            String[] array = value.split("-");
+            View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
+            DatePicker datePicker = v.findViewById(R.id.datePicker);
+            datePicker.init(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    String result = String.format("%d-%d-%d", year, monthOfYear+1, dayOfMonth);
+                    event.callback(result);
+                }
+            });
+        }
+    }
+
     public static void showTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
         showTextDialog(context, item.title, item.value, event);
     }

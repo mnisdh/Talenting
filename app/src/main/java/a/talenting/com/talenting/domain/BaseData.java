@@ -10,6 +10,7 @@ import java.util.Map;
 public class BaseData {
     //region common
     private static Map<String, String> language = new LinkedHashMap<>();
+    private static Map<String, String> category = new LinkedHashMap<>();
 
     public static Map<String, String> getLanguage(){
         if(language.size() == 0){
@@ -109,31 +110,57 @@ public class BaseData {
         if(!getLanguage().containsKey(key)) return "";
         return getLanguage().get(key);
     }
+    public static String getLanguageKey(int index){
+        String result = "";
+
+        if(index < 0 || index >= getLanguage().size()) return result;
+
+        int idx = 0;
+        for(String key : getLanguage().keySet()){
+            if(idx == index) return key;
+            idx++;
+        }
+
+        return result;
+    }
+
+    public static Map<String, String> getCategory(){
+        if(category.size() == 0) {
+            category.put("1", "Culture");
+            category.put("2", "Work hand");
+            category.put("3", "Language exchange");
+            category.put("4", "Art");
+            category.put("5", "Other");
+        }
+
+        return category;
+    }
+    public static String getCategoryText(String key){
+        if(!getCategory().containsKey(key)) return "";
+        return getCategory().get(key);
+    }
+
+    public static String getCategoryKey(int index){
+        String result = "";
+
+        if(index < 0 || index >= getCategory().size()) return result;
+
+        int idx = 0;
+        for(String key : getCategory().keySet()){
+            if(idx == index) return key;
+            idx++;
+        }
+
+        return result;
+    }
     //endregion
 
     //region hosting
-    private static Map<String, String> hosting_category = new LinkedHashMap<>();
     private static Map<String, String> hosting_house = new LinkedHashMap<>();
     private static Map<String, String> hosting_room = new LinkedHashMap<>();
     private static Map<String, String> hosting_meal = new LinkedHashMap<>();
     private static Map<String, String> hosting_internet = new LinkedHashMap<>();
     private static Map<String, String> hosting_photo = new LinkedHashMap<>();
-
-    public static Map<String, String> getHostingCategory(){
-        if(hosting_category.size() == 0) {
-            hosting_category.put("1", "Culture");
-            hosting_category.put("2", "Work hand");
-            hosting_category.put("3", "Language exchange");
-            hosting_category.put("4", "Art");
-            hosting_category.put("5", "Other");
-        }
-
-        return hosting_category;
-    }
-    public static String getHostigCategoryText(String key){
-        if(!getHostingCategory().containsKey(key)) return "";
-        return getHostingCategory().get(key);
-    }
 
     public static Map<String, String> getHostingHouseType(){
         if(hosting_house.size() == 0) {

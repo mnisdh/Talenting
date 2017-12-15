@@ -5,6 +5,7 @@ package a.talenting.com.talenting.controller.setting.profile;
  */
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,9 +39,13 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
+import a.talenting.com.talenting.util.FileUtil;
 import a.talenting.com.talenting.util.ResourceUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class ProfileEditActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -54,8 +60,8 @@ public class ProfileEditActivity extends AppCompatActivity {
     private ThumbnailsItem thumbnailsItem;
     private ProfileItem profileItem;
     private TextContentItem self_intro, talent_intro;
-    private TitleAndValueItem first_name, last_name, city, occupation, gender,country;
-    private RecyclerItem available_languages,talent_category;
+    private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
+    private RecyclerItem available_languages, talent_category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +75,16 @@ public class ProfileEditActivity extends AppCompatActivity {
         loadData();
     }
 
-    private void initActionBar(){
+    private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setTitle(R.string.profile);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(isEditMode) getMenuInflater().inflate(R.menu.hosting_add, menu);
+        if (isEditMode) getMenuInflater().inflate(R.menu.hosting_add, menu);
         else getMenuInflater().inflate(R.menu.hosting_edit, menu);
 
         return super.onCreateOptionsMenu(menu);
@@ -86,13 +92,13 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.btnSave:
                 addProfile();
                 return true;
             case R.id.btnEdit:
-                if(isEditMode) updateProfile(item);
-                else{
+                if (isEditMode) updateProfile(item);
+                else {
                     setEditMode(true);
 
                     item.setIcon(R.drawable.save);
@@ -104,7 +110,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     }
 
-    private void init(){
+    private void init() {
         recyclerView = findViewById(R.id.recyclerView);
         adapter = new DetailRecyclerViewAdapter();
 
@@ -112,14 +118,14 @@ public class ProfileEditActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void setEditMode(boolean use){
+    private void setEditMode(boolean use) {
         isEditMode = use;
 
         initActionBar();
         setEditModeViews();
     }
 
-    private void setEditModeViews(){
+    private void setEditModeViews() {
         boolean isEdit = isEditMode;
 
         thumbnailsItem.isEditMode = isEdit;
@@ -129,7 +135,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         adapter.refresh();
     }
 
-    private void loadData(){
+    private void loadData() {
         DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -140,29 +146,33 @@ public class ProfileEditActivity extends AppCompatActivity {
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void loadData(Profile profile){
+    private void loadData(Profile profile) {
         baseProfile = profile;
-
         //region thumbnails
         thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
+        for (ProfileImage image : profile.getImages()) {
+            thumbnailsItem.addThumbnail(new ThumbnailItem(image));
+        }
+        adapter.refresh(thumbnailsItem);
         thumbnailsItem.setOnAddClickListener(item -> {
-            if(!isEditMode) return;
+            if (!isEditMode) return;
             DialogManager.showCameraDialog(this, activityResultManager, value -> {
                 thumbnailsItem.addThumbnail(new ThumbnailItem("", value));
                 adapter.refresh(thumbnailsItem);
             });
         });
         thumbnailsItem.setOnDeleteClickListener(item -> {
-            if(!isEditMode) return;
+            if (!isEditMode) return;
         });
         adapter.addData(thumbnailsItem);
+
         //endregion
-        //region first_name
+        //region title
         profileItem = new ProfileItem("My name", sampleImage);
         profileItem.useBottomLine = true;
         adapter.addData(profileItem);
         //endregion
-        //region title
+        //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
                 , profile.getFirst_name()
                 , titleAndValueItemClickEvent);
@@ -176,6 +186,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         last_name.useBottomLine = true;
         adapter.addData(last_name);
         //endregion
+        //region birth
+        birth = new TitleAndValueItem(getResStrng(R.string.profile_birth)
+                , profile.getBirth()
+                , calenderClickEvent);
+        birth.useBottomLine = true;
+        adapter.addData(birth);
         //region gender
         gender = new TitleAndValueItem(getResStrng(R.string.profile_gender)
                 , BaseData.getProfileGenderText(profile.getGender())
@@ -193,7 +209,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
         //region talent type
         List<IDetailItem> talentItems = new ArrayList<>();
-        for(String talent : profile.getTalent_category()){
+        for (String talent : profile.getTalent_category()) {
             TitleAndValueItem talentItem = new TitleAndValueItem();
             talentItem.padding.setRight(10);
             talentItem.value = BaseData.getLanguageText(talent);
@@ -236,14 +252,14 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
         //region available_languages
         List<IDetailItem> langItems = new ArrayList<>();
-        for(String lang : profile.getAvailable_languages()){
+        for (String lang : profile.getAvailable_languages()) {
             TitleAndValueItem langItem = new TitleAndValueItem();
             langItem.padding.setRight(10);
             langItem.value = BaseData.getLanguageText(lang);
             langItem.valueCode = lang;
             langItems.add(langItem);
         }
-        available_languages = new RecyclerItem(getResStrng(R.string.profile_available_language), talentItems);
+        available_languages = new RecyclerItem(getResStrng(R.string.profile_available_language), langItems);
         available_languages.setOnAddClickListener(recyclerAddClickEvent);
         available_languages.useBottomLine = true;
         adapter.addData(available_languages);
@@ -252,14 +268,27 @@ public class ProfileEditActivity extends AppCompatActivity {
         adapter.refresh();
     }
 
-    private String getResStrng(int id){
+    private String getResStrng(int id) {
         return ResourceUtil.getString(this, id);
     }
 
-    private IItemClickListener titleAndValueItemClickEvent = i -> {
-        if(!isEditMode) return;
+    private IItemClickListener calenderClickEvent = i -> {
+        if (!isEditMode) return;
 
-        if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+        if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+            TitleAndValueItem item = (TitleAndValueItem) i;
+
+            DialogManager.showDatePickerDialog(this, item, value -> {
+                item.value = value;
+                adapter.refresh(item);
+            });
+        }
+    };
+
+    private IItemClickListener titleAndValueItemClickEvent = i -> {
+        if (!isEditMode) return;
+
+        if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
 
             DialogManager.showTextDialog(this, item, value -> {
@@ -269,9 +298,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     };
     private IItemClickListener contentItemClickEvent = i -> {
-        if(!isEditMode) return;
+        if (!isEditMode) return;
 
-        if(i.getDetailItemType() == DetailItemType.TEXT_CONTENT) {
+        if (i.getDetailItemType() == DetailItemType.TEXT_CONTENT) {
             TextContentItem item = (TextContentItem) i;
 
             DialogManager.showMultiLineTextDialog(this, item.title, item, value -> {
@@ -281,12 +310,15 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     };
     private IItemClickListener typeItemClickEvent = i -> {
-        if(!isEditMode) return;
+        if (!isEditMode) return;
 
-        if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
+        if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == gender) data = BaseData.getProfileGender();
+            if (item == gender) data = BaseData.getProfileGender();
+            else {
+                data = BaseData.getLanguage();
+            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -298,13 +330,13 @@ public class ProfileEditActivity extends AppCompatActivity {
     };
 
     private IItemClickListener recyclerAddClickEvent = i -> {
-        if(!isEditMode) return;
+        if (!isEditMode) return;
 
-        if(i.getDetailItemType() == DetailItemType.RECYCLER){
+        if (i.getDetailItemType() == DetailItemType.RECYCLER) {
             RecyclerItem item = (RecyclerItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == available_languages) data = BaseData.getLanguage();
-            else if(item == talent_category) data = BaseData.getProfileTalent();
+            if (item == available_languages){data = BaseData.getLanguage();}
+            else if (item == talent_category) {data = BaseData.getProfileTalent();}
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -318,9 +350,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     };
     private IItemClickListener numTitleAndValueItemClickEvent = i -> {
-        if(!isEditMode) return;
+        if (!isEditMode) return;
 
-        if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+        if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
 
             DialogManager.showNumTextDialog(this, item, value -> {
@@ -330,8 +362,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     };
 
-    private void updateProfileData(){
-        if(baseProfile == null) baseProfile = new Profile();
+    private void updateProfileData() {
+        if (baseProfile == null) baseProfile = new Profile();
 
         baseProfile.setFirst_name(first_name.value);
         baseProfile.setLast_name(last_name.value);
@@ -343,40 +375,40 @@ public class ProfileEditActivity extends AppCompatActivity {
         baseProfile.setCountry(country.valueCode);
 
         List<String> lang = new ArrayList<>();
-        for(IDetailItem item : available_languages.getItems()){
-            if(item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
-                lang.add(((TitleAndValueItem)item).valueCode);
+        for (IDetailItem item : available_languages.getItems()) {
+            if (item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+                lang.add(((TitleAndValueItem) item).valueCode);
             }
         }
         baseProfile.setAvailable_languages(lang);
         List<String> talent = new ArrayList<>();
-        for(IDetailItem item : talent_category.getItems()){
-            if(item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
-                talent.add(((TitleAndValueItem)item).valueCode);
+        for (IDetailItem item : talent_category.getItems()) {
+            if (item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
+                talent.add(((TitleAndValueItem) item).valueCode);
             }
         }
         baseProfile.setTalent_category(talent);
     }
 
-    private void addProfile(){
+    private void addProfile() {
         updateProfileData();
 
-        if(!checkValidation()) return;
+        if (!checkValidation()) return;
 
         DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), baseProfile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                            if (result.isSuccess()) addPhoto();
+                            if (result.isSuccess()) addPhoto(result.getProfile().getProfilePk());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void updateProfile(MenuItem updateItem){
+    private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 
-        if(!checkValidation()) return;
+        if (!checkValidation()) return;
 
         DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), baseProfile)
                 .subscribeOn(Schedulers.io())
@@ -388,19 +420,32 @@ public class ProfileEditActivity extends AppCompatActivity {
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void addPhoto(){
-        ProfileImage profileImage = new ProfileImage();
+    private void addPhoto(String pk) {
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+            Uri uri = Uri.parse(item.imageUrl);
+//            String path = getRealPathFromURI(uri);
+            File file = FileUtil.getFile(this, uri);
+            //File file = new File(uri.getPath());
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+
+            DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), pk, body)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) ;
+                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+
         finish();
     }
 
+
     private void updatePhoto(MenuItem updateItem){
-        ProfileImage profileImage = new ProfileImage();
-
-
-
-
 
         setEditMode(false);
 

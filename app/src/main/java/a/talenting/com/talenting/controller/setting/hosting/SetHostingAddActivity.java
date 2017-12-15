@@ -210,7 +210,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region category type
         category = new TitleAndValueItem(getResStrng(R.string.hosting_category)
-                , BaseData.getHostigCategoryText(hosting.getCategory())
+                , BaseData.getCategoryText(hosting.getCategory())
                 , hosting.getCategory()
                 , typeItemClickEvent);
         category.useBottomLine = true;
@@ -399,7 +399,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
             TitleAndValueItem item = (TitleAndValueItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == category) data = BaseData.getHostingCategory();
+            if(item == category) data = BaseData.getCategory();
             else if(item == houseType) data = BaseData.getHostingHouseType();
             else if(item == roomType) data = BaseData.getHostingRoomType();
             else if(item == mealType) data = BaseData.getHostingMealType();

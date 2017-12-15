@@ -8,42 +8,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.domain.BaseData;
 
 /**
  * Created by user on 2017-12-01.
  */
 
 public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Holder> {
-    Set<String> category = new HashSet<>();
-    Map<String,String> talent = new LinkedHashMap<>();
+    Map<String,String> data = new HashMap<>();
     Context context;
     public TalentListAdapter(Context context){
         this.context = context;
     }
 
-    public Map<String,String> getTalent(){
-        return talent;
+    public Map<String,String> getData(){
+        return data;
     }
 
-    public Set<String> getCategory(){
-        return category;
-    }
-
-    public void refresh(String categoryClicked, String talentClicked){
-        if(!talent.containsKey(talentClicked)){
-            talent.put(talentClicked,categoryClicked);
-        }
-        if(!category.contains(categoryClicked)){
-            category.add(categoryClicked);
-        }
+    public void langAdd(int position){
+        String key = BaseData.getLanguageKey(position);
+        if(!data.containsKey(key)) data.put(key, BaseData.getLanguageText(key));
         notifyDataSetChanged();
+    }
 
+    public void talentAdd(int position){
+        String key = BaseData.getCategoryKey(position);
+        if(!data.containsKey(key)) data.put(key, BaseData.getLanguageText(key));
+        notifyDataSetChanged();
     }
 
     @Override
@@ -56,9 +51,9 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
     public void onBindViewHolder(TalentListAdapter.Holder holder, int position) {
         String text="";
         int i = 0;
-        for(String key : talent.keySet()){
+        for(String key : data.keySet()){
             if(i == position){
-                text=key;
+                text=data.get(key);
             }
             i++;
         }
@@ -66,9 +61,19 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
         holder.image_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                talent.remove(holder.txt_talent.getText().toString());
-                if(!talent.containsValue(holder.txt_talent.getText().toString())){
-                    category.remove(holder.txt_talent.getText().toString());
+                int i=0;
+                for(String value : data.values()){
+                    if(holder.txt_talent.getText().toString().equals(value)){
+                       break;
+                    }
+                    i++;
+                }
+                int j = 0;
+                for(String key : data.keySet()){
+                    if(i == j){
+                        data.remove(key);
+                    }
+                    i++;
                 }
                 notifyDataSetChanged();
             }
@@ -77,7 +82,7 @@ public class TalentListAdapter extends RecyclerView.Adapter<TalentListAdapter.Ho
 
     @Override
     public int getItemCount() {
-        return talent.size();
+        return data.size();
     }
 
     public class Holder extends RecyclerView.ViewHolder {
