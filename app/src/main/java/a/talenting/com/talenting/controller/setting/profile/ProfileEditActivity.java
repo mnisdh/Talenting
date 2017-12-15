@@ -93,10 +93,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.btnSave:
-                addProfile();
-                return true;
-            case R.id.btnEdit:
+            case R.id.profile_btnEdit:
                 if (isEditMode) updateProfile(item);
                 else {
                     setEditMode(true);
@@ -176,15 +173,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
+                , profile.getFirst_name());
         first_name.useBottomLine = true;
         adapter.addData(first_name);
         //endregion
         //region last_name
         last_name = new TitleAndValueItem(getResStrng(R.string.profile_lastname)
-                , profile.getFirst_name()
-                , titleAndValueItemClickEvent);
+                , profile.getLast_name());
         last_name.useBottomLine = true;
         adapter.addData(last_name);
         //endregion
@@ -372,14 +367,13 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         baseProfile.setFirst_name(first_name.value);
         baseProfile.setLast_name(last_name.value);
-        baseProfile.setCity(city.value);
-        baseProfile.setOccupation(occupation.value);
+        baseProfile.setBirth(birth.value);
+        baseProfile.setGender(gender.valueCode);
         baseProfile.setSelf_intro(self_intro.content);
         baseProfile.setTalent_intro(talent_intro.content);
-        baseProfile.setGender(gender.valueCode);
         baseProfile.setCountry(country.valueCode);
-        baseProfile.setBirth(birth.value);
-
+        baseProfile.setCity(city.value);
+        baseProfile.setOccupation(occupation.value);
         List<String> lang = new ArrayList<>();
         for (IDetailItem item : available_languages.getItems()) {
             if (item.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
@@ -394,21 +388,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         }
         baseProfile.setTalent_category(talent);
-    }
-
-    private void addProfile() {
-        updateProfileData();
-
-        if (!checkValidation()) return;
-
-        DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), baseProfile)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) addPhoto(result.getProfile().getProfilePk());
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void updateProfile(MenuItem updateItem) {
