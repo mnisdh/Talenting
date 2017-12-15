@@ -34,6 +34,11 @@ public class ThumbnailsItem implements IDetailItem{
         if(adapter != null) adapter.addItem(item);
     }
 
+    public void deleteThubnail(ThumbnailItem item){
+        data.remove(item);
+        if(adapter != null) adapter.deleteItem(item);
+    }
+
     public List<ThumbnailItem> getThumbnail(){
         return data;
     }
@@ -52,11 +57,19 @@ public class ThumbnailsItem implements IDetailItem{
         this.onDeleteClickListener = onDeleteClickListener;
     }
 
+    public ThumbnailItem selectedThubnail(){
+        if(currentPosition < 0) return null;
+        if(data.size() == 0) return null;
+
+        return data.get(currentPosition);
+    }
+
     @Override
     public DetailItemType getDetailItemType() {
         return detailItemType;
     }
 
+    private int currentPosition = -1;
     private View view;
     private ViewPager viewPager;
     private ThumbnailViewPagerAdapter adapter;
@@ -68,6 +81,22 @@ public class ThumbnailsItem implements IDetailItem{
 
             view = binding.getRoot();
             viewPager = view.findViewById(R.id.viewPager);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    currentPosition = position;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             adapter = new ThumbnailViewPagerAdapter();
             viewPager.setAdapter(adapter);
             adapter.addItem(data);

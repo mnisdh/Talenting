@@ -31,6 +31,7 @@ import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
@@ -72,6 +73,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
                                 transportation, locationTitle;
     private MapPreviewItem location;
     private RecyclerItem language;
+
+    private List<HostingPhoto> deletePhotos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,12 +181,32 @@ public class SetHostingAddActivity extends AppCompatActivity {
         thumbnailsItem.setOnAddClickListener(item -> {
             if(!isAddMode && !isEditMode) return;
             DialogManager.showCameraDialog(this, activityResultManager, value -> {
-                thumbnailsItem.addThumbnail(new ThumbnailItem("", value));
+                ThumbnailItem thumbnailItem = new ThumbnailItem("", value);
+                thumbnailItem.setOnContentClickListener(thumbnailContentClickEvent);
+                thumbnailItem.setOnSubContentClickListener(thumbnailSubContentClickEvent);
+
+                thumbnailItem.useContent = true;
+                thumbnailItem.contentHint = getResStrng(R.string.hosting_thumbnail_caption_hint);
+                thumbnailItem.useSubContent = true;
+                thumbnailItem.subContent = BaseData.getHostigPhotoText("1");
+                thumbnailItem.subContentCode = "1";
+                thumbnailsItem.addThumbnail(thumbnailItem);
+
                 adapter.refresh(thumbnailsItem);
             });
         });
         thumbnailsItem.setOnDeleteClickListener(item -> {
             if(!isAddMode && !isEditMode) return;
+
+            ThumbnailItem thumbnailItem = thumbnailsItem.selectedThubnail();
+            if(thumbnailItem == null) return;
+
+            IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
+            if(thumbnailPhoto != null && thumbnailPhoto instanceof HostingPhoto) deletePhotos.add((HostingPhoto) thumbnailPhoto);
+
+            thumbnailsItem.deleteThubnail(thumbnailItem);
+
+            adapter.refresh(thumbnailsItem);
         });
         adapter.addData(thumbnailsItem);
 
@@ -361,7 +384,18 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
     private void loadPhotoData(List<HostingPhoto> hostingPhotos){
         for(HostingPhoto hostingPhoto : hostingPhotos){
-            thumbnailsItem.addThumbnail(new ThumbnailItem(hostingPhoto));
+            ThumbnailItem thumbnailItem = new ThumbnailItem(hostingPhoto);
+            thumbnailItem.setOnContentClickListener(thumbnailContentClickEvent);
+            thumbnailItem.setOnSubContentClickListener(thumbnailSubContentClickEvent);
+
+            thumbnailItem.useContent = true;
+            thumbnailItem.content = hostingPhoto.getCaption();
+            thumbnailItem.contentHint = "Input content";
+            thumbnailItem.useSubContent = true;
+            thumbnailItem.subContent = BaseData.getHostigPhotoText(hostingPhoto.getType());
+            thumbnailItem.subContentCode = hostingPhoto.getType();
+
+            thumbnailsItem.addThumbnail(thumbnailItem);
         }
     }
 
@@ -467,6 +501,31 @@ public class SetHostingAddActivity extends AppCompatActivity {
             });
         }
     };
+    private IItemClickListener thumbnailContentClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.THUMBNAIL) {
+            ThumbnailItem item = (ThumbnailItem) i;
+
+            DialogManager.showTextDialog(this, getResStrng(R.string.hosting_thumbnail_caption), item.content, value -> {
+                item.content = value;
+                adapter.refresh(thumbnailsItem);
+            });
+        }
+    };
+    private IItemClickListener thumbnailSubContentClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.THUMBNAIL){
+            ThumbnailItem item = (ThumbnailItem) i;
+            DialogManager.showTypeListDialog(this, getResStrng(R.string.hosting_thumbnail_type), BaseData.getHostingPhotoType(), (String code, String text) ->
+            {
+                item.subContentCode = code;
+                item.subContent = text;
+                adapter.refresh(thumbnailsItem);
+            });
+        }
+    };
 
     private void updateHostingData(){
         if(baseHosting == null) baseHosting = new Hosting();
@@ -517,7 +576,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                     }
                     , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void updateHosting(MenuItem updateItem){
         updateHostingData();
 
@@ -532,7 +590,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void deleteHosting(){
         DomainManager.getHostingApiService().delete(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
@@ -541,45 +598,114 @@ public class SetHostingAddActivity extends AppCompatActivity {
     }
 
     private void addPhoto(String pk){
-        int count = 1;
-        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
-            HostingPhoto hostingPhoto = new HostingPhoto();
-            hostingPhoto.setHosting_image(item.imageUrl);
-            hostingPhoto.setCaption("");
-            hostingPhoto.setType(count + "");
-
-            Uri uri = Uri.parse(item.imageUrl);
-//            String path = getRealPathFromURI(uri);
-            File file = TempUtil.createTempImage(this.getContentResolver(), uri);
-            //File file = new File(uri.getPath());
-
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
-            RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), "");
-            RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-
-            DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-                                if (result.isSuccess()) ;
-                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-            count++;
-        }
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()) addPhoto(pk, item);
 
         finish();
     }
+    private void addPhoto(String pk, ThumbnailItem thumbnailItem){
+        Uri uri = Uri.parse(thumbnailItem.imageUrl);
+        File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+        RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.content);
+        RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.subContentCode);
+
+        DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) ;
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                        , () -> editPhotoFinishCheck()
+                );
+    }
     private void updatePhoto(MenuItem updateItem){
+        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deletePhotos.size());
 
-        setEditMode(false);
+        //region delete
+        deletePhoto();
+        //endregion
+        //region update/create
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
+            if(item.getThumbnailPhoto() instanceof HostingPhoto){
+                HostingPhoto hostingPhoto = (HostingPhoto) item.getThumbnailPhoto();
 
-        updateItem.setIcon(R.drawable.edit);
-        updateItem.setTitle(getResStrng(R.string.edit));
+                if(!hostingPhoto.getImageUrl().equals(item.imageUrl)){
+                    Uri uri = Uri.parse(item.imageUrl);
+                    File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
+                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
+
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace(), body, caption, type)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> {
+                                        if (result.isSuccess()) ;
+                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , () -> editPhotoFinishCheck()
+                            );
+                }
+                else{
+                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
+                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
+
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace(), caption, type)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> {
+                                        if (result.isSuccess()) ;
+                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , () -> editPhotoFinishCheck()
+                            );
+                }
+
+
+            }
+            else addPhoto(pk, item);
+        }
+        //endregion
+    }
+    private void deletePhoto(){
+        for(HostingPhoto hostingPhoto : deletePhotos) {
+            DomainManager.getHostingPhotoApiService().delete(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck()
+                    );
+        }
+    }
+
+    private MenuItem updateItem;
+    private int uploadCount = -1;
+    private void editPhotoStart(MenuItem updateItem, int uploadCount){
+        this.updateItem = updateItem;
+        this.uploadCount = uploadCount;
+    }
+    private void editPhotoFinishCheck(){
+        uploadCount--;
+
+        if(uploadCount == 0){
+            setEditMode(false);
+
+            updateItem.setIcon(R.drawable.edit);
+            updateItem.setTitle(getResStrng(R.string.edit));
+
+            Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean checkValidation(){
