@@ -46,30 +46,33 @@ public class DialogManager {
     }
 
     public static void showDatePickerDialog(Context context, String title, String value, IDialogStringEvent event){
-        if(value!=null && !value.equals("")){
-            View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
-            DatePicker datePicker = v.findViewById(R.id.datePicker);
+        View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
+        DatePicker datePicker = v.findViewById(R.id.datePicker);
+        if(value==null || value.equals("")) {
             datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
                 @Override
                 public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    String result = String.format("%d-%d-%d", year, monthOfYear+1, dayOfMonth);
-                    event.callback(result);
+//
                 }
             });
-        }
-        else {
+        }else {
             String[] array = value.split("-");
-            View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
-            DatePicker datePicker = v.findViewById(R.id.datePicker);
             datePicker.init(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), new DatePicker.OnDateChangedListener() {
                 @Override
                 public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    String result = String.format("%d-%d-%d", year, monthOfYear+1, dayOfMonth);
-                    event.callback(result);
+
                 }
             });
         }
-    }
+            new MaterialDialog.Builder(context)
+                    .title(title)
+                    .customView(v, true)
+                    .positiveText("Save")
+                    .onAny((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                        event.callback(datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth());
+                    })
+                    .show();
+        }
 
     public static void showTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
         showTextDialog(context, item.title, item.value, event);
