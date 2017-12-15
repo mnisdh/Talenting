@@ -2,11 +2,13 @@ package a.talenting.com.talenting.domain.profile.photo;
 
 import com.google.gson.annotations.Expose;
 
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
+
 /**
  * Created by user on 2017-12-14.
  */
 
-public class ProfileImage {
+public class ProfileImage implements IThumbnailPhoto{
     @Expose
     private String profile_thumbnail;
     @Expose
@@ -60,5 +62,15 @@ public class ProfileImage {
     public String toString()
     {
         return "ClassPojo [profile_thumbnail = "+profile_thumbnail+", created_at = "+created_at+", image = "+image+", pk = "+pk+"]";
+    }
+
+    @Override
+    public String getContent() {
+        return "";
+    }
+
+    @Override
+    public String getImageUrl() {
+        return profile_thumbnail;
     }
 }

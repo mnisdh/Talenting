@@ -6,6 +6,7 @@ import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
+import a.talenting.com.talenting.domain.profile.photo.IProfilePhotoApiService;
 import a.talenting.com.talenting.domain.user.IUserApiService;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -16,13 +17,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DomainManager {
-    public static final String BASE_URL = "http://talenting-env.ap-northeast-2.elasticbeanstalk.com";
+    public static final String BASE_URL = "http://talenting-dev.ap-northeast-2.elasticbeanstalk.com";
 
     private static Retrofit retrofit;
     private static IUserApiService iUserApiService;
     private static IHostingApiService iHostingApiService;
     private static IHostingPhotoApiService iHostingPhotoApiService;
     private static IProfileApiService iProfileApiService;
+    private static IProfilePhotoApiService iProfilePhotoApiService;
 
     private static void initRetrofit(){
         if(retrofit == null){
@@ -64,6 +66,13 @@ public class DomainManager {
 
         if(iProfileApiService == null) iProfileApiService = retrofit.create(IProfileApiService.class);
         return iProfileApiService;
+    }
+
+    public static IProfilePhotoApiService getProfilePhotoApiService(){
+        initRetrofit();
+
+        if(iProfilePhotoApiService == null) iProfilePhotoApiService = retrofit.create(IProfilePhotoApiService.class);
+        return iProfilePhotoApiService;
     }
 
 

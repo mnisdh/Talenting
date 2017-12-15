@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,19 +23,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.custom.adapter.CitySpinnerAdapter;
+import a.talenting.com.talenting.common.DialogManager;
+import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.util.PermissionUtil;
@@ -48,8 +46,6 @@ import static a.talenting.com.talenting.common.Constants.GALLERY_REQ;
 
 public class SignupFirstActivity extends AppCompatActivity {
 
-    CitySpinnerAdapter adapter;
-    List<String> country = new ArrayList<>();
     private Uri fileUri = null;
     private Uri profileUri = null;
     private ImageView ivProfile;
@@ -62,10 +58,10 @@ public class SignupFirstActivity extends AppCompatActivity {
     private RadioButton radio_female;
     private EditText edit_birth;
     private EditText edit_city;
-    private Spinner spinner_country;
     private ConstraintLayout popupchoice;
     private RadioGroup radioGroup;
     private Profile profile;
+    private TitleAndValueItem country;
 
 
 
@@ -98,8 +94,16 @@ public class SignupFirstActivity extends AppCompatActivity {
         radio_female = findViewById(R.id.radio_female);
         edit_birth = findViewById(R.id.edit_birth);
         edit_city = findViewById(R.id.edit_city);
-        spinner_country = findViewById(R.id.spinner_country);
         popupchoice = findViewById(R.id.popupChoice);
+        country = new TitleAndValueItem("Country", "", item -> {
+            Map<String, String> data = BaseData.getLanguage();
+            DialogManager.showTypeListDialog(SignupFirstActivity.this,"Country",data,(String code, String text) ->
+            {
+                country.value = text;
+                country.valueCode = code;
+            });
+            profile.setCountry(country.valueCode);
+        });
     }
 
     public void birth(View view){
@@ -296,19 +300,6 @@ public class SignupFirstActivity extends AppCompatActivity {
                         profile.setGender("female");
                     }
                 }
-            }
-        });
-        adapter = new CitySpinnerAdapter(this, BaseData.getLanguage());
-        spinner_country.setAdapter(adapter);
-        spinner_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                profile.setCountry(spinner_country.getSelectedItem().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                profile.setCountry("");
             }
         });
     }

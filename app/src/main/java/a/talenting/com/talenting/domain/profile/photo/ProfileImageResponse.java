@@ -14,6 +14,10 @@ public class ProfileImageResponse {
     @Expose
     private ProfileImage profileimage;
 
+    public boolean isSuccess(){
+        return code.substring(0, 1).equals("2");
+    }
+
     public String getCode ()
     {
         return code;

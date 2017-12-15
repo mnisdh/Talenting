@@ -3,6 +3,7 @@ package a.talenting.com.talenting.domain.profile;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
@@ -18,6 +19,8 @@ public class Profile implements Serializable{
     private String last_name;
     @Expose(serialize = false)
     private String age;
+    @Expose(serialize = false)
+    private String pk;
     @Expose
     private String occupation;
     @Expose
@@ -41,6 +44,13 @@ public class Profile implements Serializable{
     @Expose(serialize=false)
     private boolean wishList;
 
+    public String getProfilePk(){
+        return pk;
+    }
+
+    public void setProfilePk(String pk) {
+        this.pk = pk;
+    }
 
     public boolean getWishList(){
         return wishList;
@@ -101,6 +111,7 @@ public class Profile implements Serializable{
 
     public List<String> getTalent_category ()
     {
+        if(talent_category==null) talent_category=new ArrayList<>();
         return talent_category;
     }
 
@@ -151,7 +162,8 @@ public class Profile implements Serializable{
 
     public List<String> getAvailable_languages ()
     {
-        return available_languages;
+        if(talent_category==null) talent_category=new ArrayList<>();
+        return talent_category;
     }
 
     public void setAvailable_languages (List<String> available_languages)
