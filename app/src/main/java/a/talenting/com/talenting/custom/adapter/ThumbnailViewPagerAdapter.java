@@ -27,6 +27,11 @@ public class ThumbnailViewPagerAdapter extends PagerAdapter {
         notifyDataSetChanged();
     }
 
+    public void deleteItem(ThumbnailItem item){
+        data.remove(item);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());

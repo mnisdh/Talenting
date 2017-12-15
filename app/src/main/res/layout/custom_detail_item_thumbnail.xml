@@ -4,13 +4,13 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="item"
             type="a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem" />
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:paddingTop="@{item.padding.top}"
@@ -27,17 +27,50 @@
             android:scaleType="centerCrop"
             app:image_url="@{item.imageUrl}" />
 
-        <TextView
-            android:id="@+id/textView2"
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
+            android:layout_above="@+id/editText2"
+            android:layout_margin="5dp"
+            android:background="@drawable/round"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusableInTouchMode="false"
+            android:hint="@{item.contentHint}"
+            android:inputType="textPersonName"
+            android:onClick="@{item::onContentClick}"
+            android:padding="5dp"
             android:paddingBottom="@{item.contentStyle.padding.bottom}"
             android:paddingLeft="@{item.contentStyle.padding.left}"
             android:text="@{item.content}"
             android:textColor="@{item.contentStyle.color}"
+            android:textColorHint="@{item.contentStyle.color}"
             android:textSize="@{item.contentStyle.size}"
-            android:textAlignment="textStart" />
+            android:visibility="@{item.useContent ? View.VISIBLE : View.GONE}" />
 
-    </FrameLayout>
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_margin="5dp"
+            android:background="@drawable/round"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusableInTouchMode="false"
+            android:hint="@{item.subContentHint}"
+            android:inputType="textPersonName"
+            android:onClick="@{item::onSubContentClick}"
+            android:padding="5dp"
+            android:paddingBottom="@{item.subContentStyle.padding.bottom}"
+            android:paddingLeft="@{item.subContentStyle.padding.left}"
+            android:text="@{item.subContent}"
+            android:textColor="@{item.subContentStyle.color}"
+            android:textColorHint="@{item.subContentStyle.color}"
+            android:textSize="@{item.subContentStyle.size}"
+            android:visibility="@{item.useSubContent ? View.VISIBLE : View.GONE}" />
+
+    </RelativeLayout>
 </layout>
