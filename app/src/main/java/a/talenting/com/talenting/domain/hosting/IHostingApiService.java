@@ -16,13 +16,7 @@ import retrofit2.http.Path;
 
 public interface IHostingApiService {
     @GET("/hosting/")
-    Observable<GetHostingList> selects();
-
-    @GET("/hosting/")
     Observable<GetHostingList> selects(@Header("Authorization") String token);
-
-    @GET("/hosting/{pk}/")
-    Observable<GetHosting> select(@Path("pk") String pk);
 
     @GET("/hosting/{pk}/")
     Observable<GetHosting> select(@Header("Authorization") String token, @Path("pk") String pk);

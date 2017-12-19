@@ -19,13 +19,7 @@ import retrofit2.http.Path;
 
 public interface IHostingPhotoApiService {
     @GET("/hosting/{hosting_pk}/photo/")
-    Observable<GetHostingPhotoList> selects(@Path("hosting_pk") String hostingPk);
-
-    @GET("/hosting/{hosting_pk}/photo/")
     Observable<GetHostingPhotoList> selects(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk);
-
-    @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
-    Observable<GetHostingPhoto> select(@Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 
     @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
     Observable<GetHostingPhoto> select(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
