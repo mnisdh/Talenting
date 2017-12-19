@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
  */
 
 public class GetHostingPhoto {
-    @Expose private HostingPhoto hostingPhoto;
+    @Expose private HostingPhoto hosting_photo;
     @Expose private String code;
     @Expose private String msg;
 
@@ -17,12 +17,12 @@ public class GetHostingPhoto {
 
     public HostingPhoto getHostingPhoto ()
     {
-        return hostingPhoto;
+        return hosting_photo;
     }
 
     public void setHostingPhoto (HostingPhoto hosting)
     {
-        this.hostingPhoto = hosting;
+        this.hosting_photo = hosting;
     }
 
     public String getCode ()
@@ -48,6 +48,6 @@ public class GetHostingPhoto {
     @Override
     public String toString()
     {
-        return "ClassPojo [hostingPhoto = "+hostingPhoto+", code = "+code+", msg = "+msg+"]";
+        return "ClassPojo [hostingPhoto = "+hosting_photo+", code = "+code+", msg = "+msg+"]";
     }
 }

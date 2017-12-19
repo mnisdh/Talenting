@@ -178,6 +178,8 @@ public class DialogManager {
     public static void showCameraDialog(Activity activity, ActivityResultManager resultManager, IDialogStringEvent event){
         View v = LayoutInflater.from(activity).inflate(R.layout.dialog_camera, null, false);
 
+        MaterialDialog materialDialog = new MaterialDialog.Builder(activity).customView(v, true).build();
+
         //region camera event
         v.findViewById(R.id.btnCamera).setOnClickListener(view -> {
             String[] Permission = new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
@@ -194,6 +196,8 @@ public class DialogManager {
                         }
 
                         if(uri != null) event.callback(uri.toString());
+
+                        materialDialog.cancel();
                     });
                     resultManager.addItem(resultItem);
 
@@ -220,6 +224,8 @@ public class DialogManager {
                         if(resultCode == RESULT_OK) uri = data.getData();
 
                         if(uri != null) event.callback(uri.toString());
+
+                        materialDialog.cancel();
                     });
                     resultManager.addItem(resultItem);
 
@@ -234,7 +240,7 @@ public class DialogManager {
         });
         //endregion
 
-        new MaterialDialog.Builder(activity).customView(v, true).show();
+        materialDialog.show();
     }
     //region camera / gallery functions
     private static Uri fileUri = null;

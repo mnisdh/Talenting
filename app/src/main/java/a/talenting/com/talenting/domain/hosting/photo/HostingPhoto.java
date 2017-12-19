@@ -13,7 +13,7 @@ public class HostingPhoto implements IThumbnailPhoto {
     @Expose(serialize = false) private String place;
     @Expose(serialize = false) private String hosting_thumbnail;
     @Expose(serialize = false) private String created_at;
-    @Expose private String hosting_image;
+    @Expose(serialize = false) private String hosting_image;
     @Expose private String caption;
     @Expose private String type;
 

@@ -9,8 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -25,16 +28,15 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
+import a.talenting.com.talenting.controller.message.MessageListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
-import a.talenting.com.talenting.controller.setting.profile.ProfileEditActivity;
+import a.talenting.com.talenting.controller.setting.profile.SetProfileEditActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
-import a.talenting.com.talenting.domain.DomainManager;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import a.talenting.com.talenting.domain.BaseData;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -44,11 +46,12 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout stage;
     private FrameLayout settingMenu;
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
+    private CardView card_profile, card_hosting, card_event, card_review, card_logout,card_myEvent,card_joinEvent;
 
     private HostingListView hostingListView;
     private UserListView usersListView;
     private EventListView eventListView;
-    private EventListView messageListView;
+    private MessageListView messageListView;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         activityResultManager = new ActivityResultManager();
+        BaseData.init(isSuccess -> {});
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -76,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init(){
-
-
         initView();
 
         initHosting();
@@ -118,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
         eventListView.setSampleData();
     }
     private void initMessage(){
-        messageListView = new EventListView(this, activityResultManager);
+        messageListView = new MessageListView(this, activityResultManager);
+        messageListView.setSampleData();
     }
     private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
@@ -128,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
         btnEvent = findViewById(R.id.btnEvent);
         btnMessage = findViewById(R.id.btnMessage);
         btnSetting = findViewById(R.id.btnSetting);
+        card_profile = findViewById(R.id.card_profile);
+        card_hosting = findViewById(R.id.card_hosting);
+        card_event = findViewById(R.id.card_event);
+        card_review = findViewById(R.id.card_review);
+        card_logout = findViewById(R.id.card_logout);
+        card_myEvent = findViewById(R.id.card_myEvent);
+        card_joinEvent = findViewById(R.id.card_joinEvent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -192,41 +202,64 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSetting(){
         settingMenu.setVisibility(View.VISIBLE);
+        anim();
+    }
+
+    private void anim(){
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.profile_anim);
+        card_profile.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.hosting_anim);
+        card_hosting.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.event_anim);
+        card_event.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.review_anim);
+        card_review.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.logout_anim);
+        card_logout.startAnimation(anim);
+    }
+
+    private void subAnim(){
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.profile_anim);
+        card_joinEvent.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.hosting_anim);
+        card_myEvent.startAnimation(anim);
     }
     public void closeSettingMenu(View v){
         settingMenu.setVisibility(View.GONE);
+        card_myEvent.setVisibility(View.GONE);
+        card_joinEvent.setVisibility(View.GONE);
+    }
+
+    public void closeSettingMenu(){
+        settingMenu.setVisibility(View.GONE);
+        card_myEvent.setVisibility(View.GONE);
+        card_joinEvent.setVisibility(View.GONE);
     }
     public void goProfile(View v){
-        Intent intent = new Intent(this, ProfileEditActivity.class);
+        Intent intent = new Intent(this, SetProfileEditActivity.class);
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goRecommend(View v){
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goHostingSetting(View v){
-        DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) {
-                                Intent intent = new Intent(this, SetHostingAddActivity.class);
+        Intent intent = new Intent(this, SetHostingAddActivity.class);
+        startActivity(intent);
 
-                                if(result.getHosting().size() == 1) intent.putExtra(Constants.EXT_HOSTING_PK, result.getHosting().get(0).getPk());
-
-                                startActivity(intent);
-
-                                settingMenu.setVisibility(View.GONE);
-                            }
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+        settingMenu.setVisibility(View.GONE);
     }
     public void goEventSetting(View v){
+        card_myEvent.setVisibility(View.VISIBLE);
+        card_joinEvent.setVisibility(View.VISIBLE);
+        subAnim();
+    }
+
+    public void goMyEventSetting(View v){
         boolean exist = true;
 
         Intent intent = null;
@@ -235,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goLogout(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -251,11 +284,5 @@ public class MainActivity extends AppCompatActivity {
 
         });
         builder.show();
-    }
-
-    public void goLoginTest(View v){
-
-
-        settingMenu.setVisibility(View.GONE);
     }
 }

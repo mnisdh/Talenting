@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.controller.event.EventActivity;
+import a.talenting.com.talenting.custom.AddressSearchTextView;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
@@ -29,7 +29,7 @@ public class UserListView extends FrameLayout {
 
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
-    private EditText edit_findUser;
+    private AddressSearchTextView tvAddressSearch;
     private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     public UserListView(Activity activity, ActivityResultManager manager) {
@@ -52,7 +52,8 @@ public class UserListView extends FrameLayout {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
-        edit_findUser = v.findViewById(R.id.edit_findUser);
+        tvAddressSearch = v.findViewById(R.id.tvAddressSearch);
+        tvAddressSearch.setParentActivity(activity, manager);
     }
 
     public void setSampleData(){

@@ -7,12 +7,9 @@ import com.google.gson.annotations.Expose;
  */
 
 public class ProfileImageResponse {
-    @Expose
-    private String code;
-    @Expose
-    private String msg;
-    @Expose
-    private ProfileImage profileimage;
+    @Expose private String code;
+    @Expose private String msg;
+    @Expose private ProfileImage profileimage;
 
     public boolean isSuccess(){
         return code.substring(0, 1).equals("2");

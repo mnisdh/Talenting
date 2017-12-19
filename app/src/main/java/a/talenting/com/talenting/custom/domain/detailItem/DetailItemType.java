@@ -14,5 +14,8 @@ public enum  DetailItemType {
     TITLE_AND_EDITTEXT,
     TITLE_AND_CHECK,
     MAP_PREVIEW,
-    RECYCLER
+    RECYCLER,
+    MSG_PREIVEW,
+    MSG_OTHER,
+    MSG_MY
 }

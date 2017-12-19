@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class GetHostingPhotoList {
-    @Expose private List<HostingPhoto> hostingPhoto;
+    @Expose private List<HostingPhoto> hosting_photo;
     @Expose private String code;
     @Expose private String msg;
 
@@ -20,13 +20,13 @@ public class GetHostingPhotoList {
 
     public List<HostingPhoto> getHostingPhoto ()
     {
-        if(hostingPhoto == null) hostingPhoto = new ArrayList<>();
-        return hostingPhoto;
+        if(hosting_photo == null) hosting_photo = new ArrayList<>();
+        return hosting_photo;
     }
 
     public void setHostingPhoto (List<HostingPhoto> hosting)
     {
-        this.hostingPhoto = hosting;
+        this.hosting_photo = hosting;
     }
 
     public String getCode ()
@@ -52,6 +52,6 @@ public class GetHostingPhotoList {
     @Override
     public String toString()
     {
-        return "ClassPojo [hostingPhoto = "+hostingPhoto+", code = "+code+", msg = "+msg+"]";
+        return "ClassPojo [hostingPhoto = "+hosting_photo+", code = "+code+", msg = "+msg+"]";
     }
 }

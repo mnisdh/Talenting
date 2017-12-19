@@ -2,6 +2,7 @@ package a.talenting.com.talenting.domain.profile.photo;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -26,16 +27,21 @@ public interface IProfilePhotoApiService {
     @GET("/member/profile/{profile_pk}/image/{image_pk}/")
     Observable<ProfileImageResponse> retrieve(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk);
 
+    @Multipart
     @PUT("/member/profile/{profile_pk}/image/{image_pk}/")
-    Observable<ProfileImageResponse> update(
+    Observable<Response<Void>> update(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk,
+            @Part MultipartBody.Part image);
 
     @DELETE("/member/profile/{profile_pk}/image/{image_pk}/")
-    Observable<ProfileImageResponse> delete(
+    Observable<Response<Void>> delete(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk);
 
 }

@@ -13,36 +13,23 @@ import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
  */
 
 public class Profile implements Serializable{
-    @Expose(serialize = false)
-    private String first_name;
-    @Expose(serialize = false)
-    private String last_name;
-    @Expose(serialize = false)
-    private String age;
-    @Expose(serialize = false)
-    private String pk;
-    @Expose
-    private String occupation;
-    @Expose
-    private String birth;
-    @Expose
-    private String talent_intro;
-    @Expose
-    private List<String> talent_category;
-    @Expose
-    private String gender;
-    @Expose
-    private String self_intro;
-    @Expose
-    private List<String> available_languages;
-    @Expose
-    private String city;
-    @Expose
-    private String country;
-    @Expose(serialize=false)
-    private List<ProfileImage> images;
-    @Expose(serialize=false)
-    private boolean wishList;
+    @Expose(serialize = false) private String first_name;
+    @Expose(serialize = false) private String last_name;
+    @Expose(serialize = false) private String age;
+    @Expose(serialize = false) private String pk;
+
+    @Expose(serialize = false) private List<ProfileImage> images;
+    @Expose(serialize = false) private boolean wishList;
+
+    @Expose private String occupation;
+    @Expose private String birth;
+    @Expose private String talent_intro;
+    @Expose private List<String> talent_category;
+    @Expose private String gender;
+    @Expose private String self_intro;
+    @Expose private List<String> available_languages;
+    @Expose private String city;
+    @Expose private String country;
 
     public String getProfilePk(){
         return pk;
@@ -62,7 +49,14 @@ public class Profile implements Serializable{
 
     public List<ProfileImage> getImages ()
     {
+        if(images == null) images = new ArrayList<>();
         return images;
+    }
+
+    public String getFirstImageUrl(){
+        if(getImages().size() > 0) return getImages().get(0).getImageUrl();
+
+        return "";
     }
 
     public void setImages (List<ProfileImage> images)

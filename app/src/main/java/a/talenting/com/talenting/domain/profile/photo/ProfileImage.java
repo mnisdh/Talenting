@@ -2,21 +2,19 @@ package a.talenting.com.talenting.domain.profile.photo;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
+
 import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
 
 /**
  * Created by user on 2017-12-14.
  */
 
-public class ProfileImage implements IThumbnailPhoto{
-    @Expose
-    private String profile_thumbnail;
-    @Expose
-    private String created_at;
-    @Expose
-    private String image;
-    @Expose
-    private String pk;
+public class ProfileImage implements Serializable, IThumbnailPhoto{
+    @Expose private String profile_thumbnail;
+    @Expose private String created_at;
+    @Expose private String image;
+    @Expose private String pk;
 
     public String getProfile_thumbnail ()
     {
