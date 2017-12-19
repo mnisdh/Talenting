@@ -46,15 +46,18 @@
                 android:value=".controller.LoginMainActivity" />
         </provider>
 
+        <!-- Common start -->
+        <activity android:name=".controller.common.LocationActivity" />
+        <!-- Common end -->
+        <!-- Setting start -->
         <activity android:name=".controller.setting.login.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.MainActivity" />
         </activity>
         <activity android:name=".controller.setting.login.FindPwActivity" />
-        <activity
-            android:name=".controller.setting.signup.SignupActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".controller.setting.signup.SignupActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".controller.setting.signup.SignupFirstActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -66,19 +69,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </activity>
-        <activity android:name=".controller.setting.hosting.SetHostingListActivity" />
-        <activity android:name=".controller.setting.hosting.SetHostingActivity" />
+
         <activity android:name=".controller.setting.hosting.SetHostingAddActivity" />
-        <activity android:name=".controller.event.EventActivity" />
+
+        <activity android:name=".controller.setting.profile.SetProfileEditActivity"/>
+
         <activity android:name=".controller.setting.event.SetEventListActivity" />
         <activity android:name=".controller.setting.event.SetEventAddActivity" />
         <activity android:name=".controller.setting.event.SetEventActivity" />
-        <activity android:name=".controller.common.LocationActivity" />
+        <!-- Setting end -->
+        <!-- Main Menu start -->
+        <activity android:name=".controller.event.EventActivity" />
         <activity android:name=".controller.hosting.HostingActivity"/>
-        <activity android:name=".controller.setting.profile.ProfileEditActivity"/>
+        <activity android:name=".controller.user.UserActivity"/>
         <activity android:name=".controller.message.MessageActivity"
             android:windowSoftInputMode="adjustPan" />
-
     </application>
 
 </manifest>

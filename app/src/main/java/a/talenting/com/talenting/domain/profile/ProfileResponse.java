@@ -8,12 +8,9 @@ import com.google.gson.annotations.Expose;
 
 public class ProfileResponse
 {
-    @Expose
-    private String code;
-    @Expose
-    private String msg;
-    @Expose
-    private Profile profile;
+    @Expose private String code;
+    @Expose private String msg;
+    @Expose private Profile profile;
 
     public boolean isSuccess(){
         return code.substring(0, 1).equals("2");

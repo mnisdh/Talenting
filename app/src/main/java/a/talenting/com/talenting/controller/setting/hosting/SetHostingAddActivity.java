@@ -28,7 +28,9 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.DialogManager;
 import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.common.LocationActivity;
+import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
@@ -46,6 +48,7 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.hosting.Hosting;
 import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
+import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.util.ResourceUtil;
 import a.talenting.com.talenting.util.TempUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -65,8 +68,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
-    private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
-
     private ThumbnailsItem thumbnailsItem;
     private ProfileItem profile;
     private TextContentItem summary, rules, description, todo;
@@ -84,19 +85,14 @@ public class SetHostingAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_hosting_add);
 
-        activityResultManager = new ActivityResultManager();
+        pk = SharedPreferenceManager.getInstance().getPk();
 
-        pk = getIntent().getStringExtra(Constants.EXT_HOSTING_PK);
-        isAddMode = ("".equals(pk) || pk == null);
+        activityResultManager = new ActivityResultManager();
 
         initActionBar();
         init();
 
-        if(isAddMode) {
-            loadData(new Hosting());
-            setEditModeViews();
-        }
-        else loadData();
+        loadData();
     }
 
     private void initActionBar(){
@@ -169,15 +165,24 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
     private void loadData(){
         DomainManager.getHostingApiService().select(DomainManager.getTokenHeader(), pk)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) loadData(result.getHosting());
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(result -> {
+                        if (result.isSuccess()) loadData(result.getHosting());
+                        else setNewData();
+                    }
+                    , error -> setNewData()
+            );
     }
+    private void setNewData(){
+        isAddMode = true;
 
+        Hosting newHosting = new Hosting();
+        newHosting.setOwner(pk);
+
+        loadData(newHosting);
+        setEditModeViews();
+    }
     private void loadData(Hosting hosting){
         baseHosting = hosting;
 
@@ -218,9 +223,11 @@ public class SetHostingAddActivity extends AppCompatActivity {
         if(!isAddMode) loadPhotoData();
         //endregion
         //region profile
-        profile = new ProfileItem("Host name", sampleImage);
+        profile = new ProfileItem("", "");
         profile.useBottomLine = true;
         adapter.addData(profile);
+
+        loadProfileData(hosting.getOwner());
         //endregion
         //region title
         title = new TitleAndValueItem(getResStrng(R.string.hosting_title)
@@ -335,7 +342,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         description.useBottomLine = true;
         adapter.addData(description);
         //endregion
-        //region todo
+        //region to_do
         todo = new TextContentItem(getResStrng(R.string.hosting_to_do)
                 , hosting.getTo_do()
                 , contentItemClickEvent);
@@ -375,6 +382,30 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         adapter.refresh();
     }
+    private void loadProfileData(String owner){
+        if("".equals(owner)) return;
+
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), owner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                Profile ownerProfile = result.getProfile();
+
+                                profile.content = ownerProfile.getFirst_name() + " " + ownerProfile.getLast_name();
+                                profile.imageUrl = ownerProfile.getFirstImageUrl();
+                                profile.setOnClickListener(item -> {
+                                    Intent intent = new Intent(this, UserActivity.class);
+                                    intent.putExtra(Constants.EXT_USER_PK, owner);
+                                    startActivity(intent);
+                                });
+
+                                adapter.refresh(profile);
+                            }
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
     private void loadPhotoData(){
         DomainManager.getHostingPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
@@ -386,7 +417,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void loadPhotoData(List<HostingPhoto> hostingPhotos){
         for(HostingPhoto hostingPhoto : hostingPhotos){
             ThumbnailItem thumbnailItem = new ThumbnailItem(hostingPhoto);

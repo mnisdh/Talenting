@@ -30,7 +30,6 @@ import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
 import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
-import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -48,8 +47,9 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class ProfileEditActivity extends AppCompatActivity {
+public class SetProfileEditActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
+    private String pk;
     private Profile baseProfile = null;
     private boolean isEditMode = false;
 
@@ -59,7 +59,6 @@ public class ProfileEditActivity extends AppCompatActivity {
     private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     private ThumbnailsItem thumbnailsItem;
-    private ProfileItem profileItem;
     private TextContentItem self_intro, talent_intro;
     private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
     private RecyclerItem available_languages, talent_category;
@@ -71,6 +70,8 @@ public class ProfileEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile_edit);
+
+        pk = SharedPreferenceManager.getInstance().getPk();
 
         activityResultManager = new ActivityResultManager();
 
@@ -139,7 +140,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk())
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -148,9 +149,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void loadData(Profile profile) {
         baseProfile = profile;
+
         //region thumbnails
         thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
         for (ProfileImage image : profile.getImages()) {
@@ -180,11 +181,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         adapter.addData(thumbnailsItem);
 
         //endregion
-        //region title
-        profileItem = new ProfileItem(profile.getFirst_name()+" "+profile.getLast_name(), sampleImage);
-        profileItem.useBottomLine = true;
-        adapter.addData(profileItem);
-        //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
                 , profile.getFirst_name());
@@ -203,6 +199,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 , calenderClickEvent);
         birth.useBottomLine = true;
         adapter.addData(birth);
+        //endregion
         //region gender
         gender = new TitleAndValueItem(getResStrng(R.string.profile_gender)
                 , BaseData.getProfileGenderText(profile.getGender())
@@ -253,8 +250,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         available_languages.useBottomLine = true;
         adapter.addData(available_languages);
         //endregion
-
-        adapter.refresh();
         //region country
         country = new TitleAndValueItem(getResStrng(R.string.profile_country)
                 , BaseData.getLanguageText(profile.getCountry())
@@ -277,6 +272,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         occupation.useBottomLine = true;
         adapter.addData(occupation);
         //endregion
+
+        adapter.refresh();
     }
 
     private String getResStrng(int id) {
@@ -295,7 +292,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             });
         }
     };
-
     private IItemClickListener titleAndValueItemClickEvent = i -> {
         if (!isEditMode) return;
 
@@ -339,7 +335,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             });
         }
     };
-
     private IItemClickListener recyclerAddClickEvent = i -> {
         if (!isEditMode) return;
 
@@ -391,13 +386,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
         baseProfile.setTalent_category(talent);
     }
-    //PHOTO
     private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 
         if (!checkValidation()) return;
 
-        DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), baseProfile)
+        DomainManager.getProfileApiService().update(DomainManager.getTokenHeader(), pk, baseProfile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -406,29 +400,25 @@ public class ProfileEditActivity extends AppCompatActivity {
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-    //PHOTO
+
     private void addPhoto(ThumbnailItem thumbnailItem){
-        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
-            Uri uri = Uri.parse(thumbnailItem.imageUrl);
-            File file = TempUtil.createTempImage(this.getContentResolver(), uri);
+        Uri uri = Uri.parse(thumbnailItem.imageUrl);
+        File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
-            DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-                                if (result.isSuccess()) ;
-                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                            , () -> editPhotoFinishCheck()
-                    );}
-
-        finish();
+        DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), pk, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) ;
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                        , () -> editPhotoFinishCheck()
+                );
     }
-    //PHOTO
     private void updatePhoto(MenuItem updateItem) {
         editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size());
 
@@ -445,39 +435,34 @@ public class ProfileEditActivity extends AppCompatActivity {
                     File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                    MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
-                    DomainManager.getProfilePhotoApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), profileImage.getPk(), body)
+                    DomainManager.getProfilePhotoApiService().update(DomainManager.getTokenHeader(), pk, profileImage.getPk(), body)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(result -> {
-                                        if (result.isSuccess()) ;
-                                        else
-                                            Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                                    }
+                            .subscribe(result -> {}
                                     , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                                     , () -> editPhotoFinishCheck()
                             );
-                } else {
-                    addPhoto(item);
                 }
+                else editPhotoFinishCheck();
             }
-            //endregion
+            else addPhoto(item);
         }
+        //endregion
     }
-    //PHOTO
     private void deletePhoto(){
         for(ProfileImage profileImage : deleteImages) {
-            DomainManager.getProfilePhotoApiService().delete(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), profileImage.getPk())
+            DomainManager.getProfilePhotoApiService().delete(DomainManager.getTokenHeader(), pk, profileImage.getPk())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-
-                            }
+                    .subscribe(result -> {}
                             , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                             , () -> editPhotoFinishCheck()
                     );
         }
+
+        deleteImages.clear();
     }
 
     private MenuItem updateItem;
