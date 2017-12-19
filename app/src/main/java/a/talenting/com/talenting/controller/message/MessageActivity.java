@@ -17,7 +17,7 @@ import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.controller.hosting.HostingActivity;
-import a.talenting.com.talenting.controller.setting.profile.ProfileEditActivity;
+import a.talenting.com.talenting.controller.setting.profile.SetProfileEditActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
@@ -118,7 +118,7 @@ public class MessageActivity extends AppCompatActivity {
     };
 
     private IItemClickListener guestMsgClickEvent = i -> {
-        Intent intent = new Intent(this, ProfileEditActivity.class);
+        Intent intent = new Intent(this, SetProfileEditActivity.class);
         startActivity(intent);
     };
 

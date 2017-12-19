@@ -49,7 +49,14 @@ public class Profile implements Serializable{
 
     public List<ProfileImage> getImages ()
     {
+        if(images == null) images = new ArrayList<>();
         return images;
+    }
+
+    public String getFirstImageUrl(){
+        if(getImages().size() > 0) return getImages().get(0).getImageUrl();
+
+        return "";
     }
 
     public void setImages (List<ProfileImage> images)
