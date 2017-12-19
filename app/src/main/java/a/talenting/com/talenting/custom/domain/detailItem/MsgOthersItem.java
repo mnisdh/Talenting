@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
@@ -21,7 +18,6 @@ import a.talenting.com.talenting.databinding.CustomOtherMessageBinding;
 public class MsgOthersItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.MSG_OTHER;
     private IItemClickListener onClickListener;
-    private List<MsgOthersItem> data = new ArrayList<>();
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
@@ -35,10 +31,6 @@ public class MsgOthersItem implements IDetailItem{
     public String imageUrl = "";
 
     public boolean useBottomLine = false;
-
-    public MsgOthersItem(List<MsgOthersItem> items){
-        data.addAll(items);
-    }
 
     public MsgOthersItem(){
 
@@ -59,12 +51,10 @@ public class MsgOthersItem implements IDetailItem{
     private View view;
     @Override
     public View getLayoutView(LayoutInflater layoutInflater, ViewGroup parent) {
-        //if(view == null) {
         CustomOtherMessageBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_other_message, parent, false);
         binding.setItem(this);
 
         view = binding.getRoot();
-        //}
 
         return view;
     }

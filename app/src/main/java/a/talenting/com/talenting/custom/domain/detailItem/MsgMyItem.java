@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.style.PaddingStyle;
 import a.talenting.com.talenting.custom.domain.style.TextStyle;
@@ -21,7 +18,6 @@ import a.talenting.com.talenting.databinding.CustomMyMessageBinding;
 public class MsgMyItem implements IDetailItem {
     private final DetailItemType detailItemType = DetailItemType.MSG_MY;
     private IItemClickListener onClickListener;
-    private List<MsgMyItem> data = new ArrayList<>();
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
@@ -35,10 +31,6 @@ public class MsgMyItem implements IDetailItem {
     public String imageUrl = "";
 
     public boolean useBottomLine = false;
-
-    public MsgMyItem(List<MsgMyItem> items){
-        data.addAll(items);
-    }
 
     public MsgMyItem(){
 

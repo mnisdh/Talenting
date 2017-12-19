@@ -13,6 +13,7 @@ import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MsgMyItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MsgOthersItem;
+import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 
 /**
  * Created by user on 2017-12-18.
@@ -43,25 +44,21 @@ public class MessageActivity extends AppCompatActivity {
     private void setData(){
         List<IDetailItem> items = new ArrayList<>();
 
-        List<MsgOthersItem> msgOthersItems = new ArrayList<>();
+        items.add(new ProfileItem("aaaaa",sampleImage));
+
         MsgOthersItem msgOthersItem = new MsgOthersItem();
         msgOthersItem.content = ("other item");
         msgOthersItem.imageUrl = (sampleImage);
         msgOthersItem.lastTime = ("1 minutes ago");
         msgOthersItem.name = ("other");
-        msgOthersItems.add(msgOthersItem);
+        items.add(msgOthersItem);
 
-        items.add(new MsgOthersItem(msgOthersItems));
-
-        List<MsgMyItem> msgMyItems = new ArrayList<>();
         MsgMyItem msgMyItem = new MsgMyItem();
         msgMyItem.content = ("other item");
         msgMyItem.imageUrl = (sampleImage);
         msgMyItem.lastTime = ("2 minutes ago");
         msgMyItem.name = ("me");
-        msgMyItems.add(msgMyItem);
-
-        items.add(new MsgMyItem(msgMyItems));
+        items.add(msgMyItem);
 
         adapter.addDataAndRefresh(items);
     }
