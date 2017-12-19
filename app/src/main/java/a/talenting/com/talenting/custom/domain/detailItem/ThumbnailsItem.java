@@ -69,7 +69,7 @@ public class ThumbnailsItem implements IDetailItem{
         return detailItemType;
     }
 
-    private int currentPosition = -1;
+    private int currentPosition = 0;
     private View view;
     private ViewPager viewPager;
     private ThumbnailViewPagerAdapter adapter;

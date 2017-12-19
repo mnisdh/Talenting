@@ -27,9 +27,7 @@ public class Hosting {
     @Expose private String max_stay;
     @Expose private String transportation;
     @Expose private String room_type;
-    @Expose private String min_lat;
     @Expose private String title;
-    @Expose private String max_lat;
     @Expose private String house_type;
     @Expose private String smoking;
     @Expose private String description;
@@ -41,11 +39,11 @@ public class Hosting {
     @Expose private String rules;
     @Expose private String category;
     @Expose private String pet;
-    @Expose private String max_lon;
     @Expose private String min_stay;
     @Expose private List<String> language;
     @Expose private String internet;
-    @Expose private String min_lon;
+    @Expose private String lat;
+    @Expose private String lon;
 
     @Expose private String country = "KR";
     @Expose private String street = "empty";
@@ -54,6 +52,23 @@ public class Hosting {
     @Expose private String city = "empty";
     @Expose private String distinct = "empty";
 
+    public String getLat() {
+        if(lat == null || "".equals(lat)) lat = "0";
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        if(lon == null || "".equals(lon)) lon = "0";
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
 
     public String getSummary ()
     {
@@ -105,17 +120,6 @@ public class Hosting {
         this.room_type = room_type;
     }
 
-    public String getMin_lat ()
-    {
-        if(min_lat == null || min_lat.equals("")) min_lat = "0";
-        return min_lat;
-    }
-
-    public void setMin_lat (String min_lat)
-    {
-        this.min_lat = min_lat;
-    }
-
     public String getDistinct ()
     {
         return distinct;
@@ -144,17 +148,6 @@ public class Hosting {
     public void setTitle (String title)
     {
         this.title = title;
-    }
-
-    public String getMax_lat ()
-    {
-        if(max_lat == null || max_lat.equals("")) max_lat = "0";
-        return max_lat;
-    }
-
-    public void setMax_lat (String max_lat)
-    {
-        this.max_lat = max_lat;
     }
 
     public String getHouse_type ()
@@ -345,17 +338,6 @@ public class Hosting {
         this.pet = pet;
     }
 
-    public String getMax_lon ()
-    {
-        if(max_lon == null || max_lon.equals("")) max_lon = "0";
-        return max_lon;
-    }
-
-    public void setMax_lon (String max_lon)
-    {
-        this.max_lon = max_lon;
-    }
-
     public String getOwner ()
     {
         return owner;
@@ -397,17 +379,6 @@ public class Hosting {
         this.internet = internet;
     }
 
-    public String getMin_lon ()
-    {
-        if(min_lon == null || min_lon.equals("")) min_lon = "0";
-        return min_lon;
-    }
-
-    public void setMin_lon (String min_lon)
-    {
-        this.min_lon = min_lon;
-    }
-
     public String getPk ()
     {
         if(pk == null) pk = "";
@@ -422,6 +393,6 @@ public class Hosting {
     @Override
     public String toString()
     {
-        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", min_lat = "+min_lat+", distinct = "+distinct+", city = "+city+", title = "+title+", max_lat = "+max_lat+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", created_at = "+created_at+", capacity = "+capacity+", to_do = "+to_do+", published = "+published+", exchange = "+exchange+", meal_type = "+meal_type+", recommend_counter = "+recommend_counter+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", updated_at = "+updated_at+", address = "+address+", pet = "+pet+", max_lon = "+max_lon+", owner = "+owner+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+", min_lon = "+min_lon+", pk = "+pk+"]";
+        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", lat = "+lat+", distinct = "+distinct+", city = "+city+", title = "+title+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", created_at = "+created_at+", capacity = "+capacity+", to_do = "+to_do+", published = "+published+", exchange = "+exchange+", meal_type = "+meal_type+", recommend_counter = "+recommend_counter+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", updated_at = "+updated_at+", address = "+address+", pet = "+pet+", lon = "+lon+", owner = "+owner+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+", pk = "+pk+"]";
     }
 }

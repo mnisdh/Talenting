@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -59,6 +61,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private boolean isAddMode = true;
     private boolean isEditMode = false;
 
+    private ConstraintLayout progress;
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
@@ -141,6 +144,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        progress = findViewById(R.id.progress);
     }
 
     private void setEditMode(boolean use){
@@ -363,7 +368,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.addData(locationTitle);
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
-        googleStaticMap.setLatlng(Double.parseDouble(hosting.getMax_lat()), Double.parseDouble(hosting.getMin_lon()), Color.RED);
+        googleStaticMap.setLatlng(Double.parseDouble(hosting.getLat()), Double.parseDouble(hosting.getLon()), Color.RED);
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
         //endregion
@@ -566,10 +571,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
         baseHosting.setNeighborhood(neighborhood.value);
         baseHosting.setTransportation(transportation.value);
         LatLng latLng = location.googleStaticMap.getLatLng();
-        baseHosting.setMin_lat(latLng.latitude + "");
-        baseHosting.setMax_lat(latLng.latitude + "");
-        baseHosting.setMin_lon(latLng.longitude + "");
-        baseHosting.setMax_lon(latLng.longitude + "");
+        baseHosting.setLat(latLng.latitude + "");
+        baseHosting.setLon(latLng.longitude + "");
     }
 
     private void addHosting(){
@@ -624,10 +627,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) ;
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                        }
+                .subscribe(result -> {}
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                         , () -> editPhotoFinishCheck()
                 );
@@ -652,7 +652,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                     RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
                     RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
 
-                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace(), body, caption, type)
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), body, caption, type)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(result -> {
@@ -667,7 +667,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                     RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
                     RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
 
-                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace(), caption, type)
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), caption, type)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(result -> {
@@ -678,8 +678,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                                     , () -> editPhotoFinishCheck()
                             );
                 }
-
-
             }
             else addPhoto(pk, item);
         }
@@ -687,16 +685,15 @@ public class SetHostingAddActivity extends AppCompatActivity {
     }
     private void deletePhoto(){
         for(HostingPhoto hostingPhoto : deletePhotos) {
-            DomainManager.getHostingPhotoApiService().delete(DomainManager.getTokenHeader(), pk, hostingPhoto.getPlace())
+            DomainManager.getHostingPhotoApiService().delete(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-
-                            }
+                    .subscribe(result -> {}
                             , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                            , () -> editPhotoFinishCheck()
-                    );
+                            , () -> editPhotoFinishCheck());
         }
+
+        deletePhotos.clear();
     }
 
     private MenuItem updateItem;
@@ -704,6 +701,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private void editPhotoStart(MenuItem updateItem, int uploadCount){
         this.updateItem = updateItem;
         this.uploadCount = uploadCount;
+
+        progress.setVisibility(View.VISIBLE);
     }
     private void editPhotoFinishCheck(){
         uploadCount--;
@@ -713,6 +712,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
             updateItem.setIcon(R.drawable.edit);
             updateItem.setTitle(getResStrng(R.string.edit));
+
+            progress.setVisibility(View.GONE);
 
             Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
         }
@@ -727,7 +728,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         else if(!checkValidation(baseHosting.getRoom_type())) msg = getResStrng(R.string.hosting_room_type);
         else if(!checkValidation(baseHosting.getMeal_type())) msg = getResStrng(R.string.hosting_meal_type);
         else if(baseHosting.getLanguage().size() == 0) msg = getResStrng(R.string.hosting_language);
-        else if("".equals(baseHosting.getMax_lat()) && "".equals(baseHosting.getMax_lon())) msg = getResStrng(R.string.hosting_location);
+        else if("0".equals(baseHosting.getLat()) && "0".equals(baseHosting.getLon())) msg = getResStrng(R.string.hosting_location);
 
         if(msg.equals("")) return true;
         else{

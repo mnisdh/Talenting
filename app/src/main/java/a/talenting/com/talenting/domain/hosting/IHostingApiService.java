@@ -1,6 +1,7 @@
 package a.talenting.com.talenting.domain.hosting;
 
 import io.reactivex.Observable;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -33,5 +34,5 @@ public interface IHostingApiService {
     Observable<GetHosting> update(@Header("Authorization") String token, @Path("pk") String pk, @Body Hosting hosting);
 
     @DELETE("/hosting/{pk}/")
-    Observable<Boolean> delete(@Header("Authorization") String token, @Path("pk") String pk);
+    Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("pk") String pk);
 }
