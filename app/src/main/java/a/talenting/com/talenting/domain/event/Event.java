@@ -45,6 +45,7 @@ public class Event {
 
     public String getLon ()
     {
+        if(lon == null || "".equals(lon)) lon = "0";
         return lon;
     }
 
@@ -245,6 +246,7 @@ public class Event {
 
     public String getLat ()
     {
+        if(lat == null || "".equals(lat)) lat = "0";
         return lat;
     }
 

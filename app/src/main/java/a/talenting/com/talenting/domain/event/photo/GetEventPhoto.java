@@ -11,6 +11,10 @@ public class GetEventPhoto {
     @Expose private String msg;
     @Expose private EventPhoto event_photo;
 
+    public boolean isSuccess(){
+        return code.substring(0, 1).equals("2");
+    }
+
     public String getCode ()
     {
         return code;

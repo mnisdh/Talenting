@@ -29,7 +29,6 @@ import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.message.MessageListView;
-import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.SetProfileEditActivity;
@@ -258,14 +257,14 @@ public class MainActivity extends AppCompatActivity {
         card_joinEvent.setVisibility(View.VISIBLE);
         subAnim();
     }
-
     public void goMyEventSetting(View v){
-        boolean exist = true;
+        Intent intent = new Intent(this, SetEventListActivity.class);
+        startActivity(intent);
 
-        Intent intent = null;
-        if(exist) intent = new Intent(this, SetEventListActivity.class);
-        else intent = new Intent(this, SetEventAddActivity.class);
-
+        closeSettingMenu();
+    }
+    public void goJoinEventSetting(View v){
+        Intent intent = new Intent(this, SetEventListActivity.class);
         startActivity(intent);
 
         closeSettingMenu();

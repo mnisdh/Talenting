@@ -239,7 +239,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:onClick="goMyEventSetting"
+                            android:onClick="goJoinEventSetting"
                             android:padding="10dp"
                             app:image="@drawable/ic_join_event"
                             app:imageTint="@color/cardview_light_background"

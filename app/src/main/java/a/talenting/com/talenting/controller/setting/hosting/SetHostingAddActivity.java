@@ -89,10 +89,11 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         activityResultManager = new ActivityResultManager();
 
-        initActionBar();
         init();
 
         loadData();
+
+        initActionBar();
     }
 
     private void initActionBar(){

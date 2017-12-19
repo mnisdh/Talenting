@@ -11,6 +11,10 @@ public class GetEvent {
     @Expose private String code;
     @Expose private String msg;
 
+    public boolean isSuccess(){
+        return code.substring(0, 1).equals("2");
+    }
+
     public Event getEvent ()
     {
         return event;
