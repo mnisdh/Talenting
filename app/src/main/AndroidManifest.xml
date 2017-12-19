@@ -56,7 +56,6 @@
                 android:value=".controller.MainActivity" />
         </activity>
         <activity android:name=".controller.setting.login.FindPwActivity" />
-
         <activity android:name=".controller.setting.signup.SignupActivity"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".controller.setting.signup.SignupFirstActivity">
@@ -84,8 +83,7 @@
         <activity android:name=".controller.hosting.HostingActivity"/>
         <activity android:name=".controller.user.UserActivity"/>
         <activity android:name=".controller.message.MessageActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
-        <!-- Main Menu end -->
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>
