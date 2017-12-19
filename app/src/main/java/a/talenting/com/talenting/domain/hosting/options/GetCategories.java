@@ -1,16 +1,15 @@
-package a.talenting.com.talenting.domain.hosting.photo;
+package a.talenting.com.talenting.domain.hosting.options;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by daeho on 2017. 12. 11..
+ * Created by daeho on 2017. 12. 17..
  */
 
-public class GetHostingPhoto {
-    @Expose private List<HostingPhoto> hosting_photo;
+public class GetCategories {
+    @Expose private List<Categories> categories;
     @Expose private String code;
     @Expose private String msg;
 
@@ -18,15 +17,14 @@ public class GetHostingPhoto {
         return code.substring(0, 1).equals("2");
     }
 
-    public List<HostingPhoto> getHostingPhoto ()
+    public List<Categories> getCategories ()
     {
-        if(hosting_photo == null) hosting_photo = new ArrayList<>();
-        return hosting_photo;
+        return categories;
     }
 
-    public void setHostingPhoto (List<HostingPhoto> hosting)
+    public void setCategories (List<Categories> categories)
     {
-        this.hosting_photo = hosting;
+        this.categories = categories;
     }
 
     public String getCode ()
@@ -52,6 +50,6 @@ public class GetHostingPhoto {
     @Override
     public String toString()
     {
-        return "ClassPojo [hostingPhoto = "+hosting_photo+", code = "+code+", msg = "+msg+"]";
+        return "ClassPojo [categories = "+categories+", code = "+code+", msg = "+msg+"]";
     }
 }
