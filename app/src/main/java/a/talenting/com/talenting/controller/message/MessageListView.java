@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.controller.user;
+package a.talenting.com.talenting.controller.message;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,37 +13,34 @@ import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
-import a.talenting.com.talenting.controller.event.EventActivity;
-import a.talenting.com.talenting.custom.AddressSearchTextView;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
-import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MsgPreviewItem;
 
 /**
- * Created by user on 2017-12-06.
+ * Created by user on 2017-12-18.
  */
 
-public class UserListView extends FrameLayout {
+public class MessageListView extends FrameLayout {
+
     private Activity activity;
     private ActivityResultManager manager;
-
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
-    private AddressSearchTextView tvAddressSearch;
     private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
-    public UserListView(Activity activity, ActivityResultManager manager) {
+    public MessageListView(Activity activity, ActivityResultManager manager) {
         super(activity);
         this.activity = activity;
         this.manager = manager;
 
-        this.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         init();
     }
 
     private void init(){
-        View v = LayoutInflater.from(this.getContext()).inflate(R.layout.view_user_list, null, false);
+        View v = LayoutInflater.from(this.getContext()).inflate(R.layout.view_message_list, null, false);
         this.addView(v);
 
         recyclerView = v.findViewById(R.id.recyclerView);
@@ -52,27 +49,22 @@ public class UserListView extends FrameLayout {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
-        tvAddressSearch = v.findViewById(R.id.tvAddressSearch);
-        tvAddressSearch.setParentActivity(activity, manager);
     }
 
     public void setSampleData(){
         List<IDetailItem> items = new ArrayList<>();
 
-        List<String> itemList = new ArrayList<>();
-        itemList.add("None");
-        itemList.add("none");
-
-        ImageContentItem item;
+        MsgPreviewItem item;
         for(int i = 0; i < 10; i++){
-            item = new ImageContentItem(false);
+            item = new MsgPreviewItem();
+            item.name=i+"";
+            item.content=i+"번째 메시지";
             item.imageUrl = sampleImage;
-            item.title = "title" + i;
-            item.content = "content" + i;
-            item.itemList = itemList;
+            item.lastTime = i+"분전";
+            item.useBottomLine=true;
 
             item.setOnClickListener(j -> {
-                Intent intent = new Intent(this.getContext(), EventActivity.class);
+                Intent intent = new Intent(this.getContext(), MessageActivity.class);
                 this.getContext().startActivity(intent);
             });
 
@@ -82,11 +74,4 @@ public class UserListView extends FrameLayout {
         adapter.addDataAndRefresh(items);
     }
 
-    public void addData(ImageContentItem item){
-        adapter.addDataAndRefresh(item);
-    }
-
-    public void addData(List<IDetailItem> items){
-        adapter.addDataAndRefresh(items);
-    }
 }

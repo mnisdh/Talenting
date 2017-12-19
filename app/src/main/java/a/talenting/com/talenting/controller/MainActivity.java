@@ -25,6 +25,7 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
+import a.talenting.com.talenting.controller.message.MessageListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventAddActivity;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private HostingListView hostingListView;
     private UserListView usersListView;
     private EventListView eventListView;
-    private EventListView messageListView;
+    private MessageListView messageListView;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -118,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         eventListView.setSampleData();
     }
     private void initMessage(){
-        messageListView = new EventListView(this, activityResultManager);
+        messageListView = new MessageListView(this, activityResultManager);
+        messageListView.setSampleData();
     }
     private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
