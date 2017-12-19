@@ -9,8 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout stage;
     private FrameLayout settingMenu;
     private ImageTextButton btnHosting, btnUsers, btnEvent, btnMessage, btnSetting;
+    private CardView card_profile, card_hosting, card_event, card_review, card_logout,card_myEvent,card_joinEvent;
 
     private HostingListView hostingListView;
     private UserListView usersListView;
@@ -133,6 +137,13 @@ public class MainActivity extends AppCompatActivity {
         btnEvent = findViewById(R.id.btnEvent);
         btnMessage = findViewById(R.id.btnMessage);
         btnSetting = findViewById(R.id.btnSetting);
+        card_profile = findViewById(R.id.card_profile);
+        card_hosting = findViewById(R.id.card_hosting);
+        card_event = findViewById(R.id.card_event);
+        card_review = findViewById(R.id.card_review);
+        card_logout = findViewById(R.id.card_logout);
+        card_myEvent = findViewById(R.id.card_myEvent);
+        card_joinEvent = findViewById(R.id.card_joinEvent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -197,21 +208,50 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSetting(){
         settingMenu.setVisibility(View.VISIBLE);
+        anim();
+    }
+
+    private void anim(){
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.profile_anim);
+        card_profile.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.hosting_anim);
+        card_hosting.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.event_anim);
+        card_event.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.review_anim);
+        card_review.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.logout_anim);
+        card_logout.startAnimation(anim);
+    }
+
+    private void subAnim(){
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.profile_anim);
+        card_joinEvent.startAnimation(anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.hosting_anim);
+        card_myEvent.startAnimation(anim);
     }
     public void closeSettingMenu(View v){
         settingMenu.setVisibility(View.GONE);
+        card_myEvent.setVisibility(View.GONE);
+        card_joinEvent.setVisibility(View.GONE);
+    }
+
+    public void closeSettingMenu(){
+        settingMenu.setVisibility(View.GONE);
+        card_myEvent.setVisibility(View.GONE);
+        card_joinEvent.setVisibility(View.GONE);
     }
     public void goProfile(View v){
         Intent intent = new Intent(this, ProfileEditActivity.class);
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goRecommend(View v){
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goHostingSetting(View v){
         DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader())
@@ -225,13 +265,19 @@ public class MainActivity extends AppCompatActivity {
 
                                 startActivity(intent);
 
-                                settingMenu.setVisibility(View.GONE);
+                                closeSettingMenu();
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
     public void goEventSetting(View v){
+        card_myEvent.setVisibility(View.VISIBLE);
+        card_joinEvent.setVisibility(View.VISIBLE);
+        subAnim();
+    }
+
+    public void goMyEventSetting(View v){
         boolean exist = true;
 
         Intent intent = null;
@@ -240,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
     public void goLogout(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -261,6 +307,6 @@ public class MainActivity extends AppCompatActivity {
     public void goLoginTest(View v){
 
 
-        settingMenu.setVisibility(View.GONE);
+        closeSettingMenu();
     }
 }

@@ -54,7 +54,7 @@
         <activity android:name=".controller.setting.login.FindPwActivity" />
         <activity
             android:name=".controller.setting.signup.SignupActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".controller.setting.signup.SignupFirstActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -77,7 +77,7 @@
         <activity android:name=".controller.hosting.HostingActivity"/>
         <activity android:name=".controller.setting.profile.ProfileEditActivity"/>
         <activity android:name=".controller.message.MessageActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 
