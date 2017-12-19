@@ -3,6 +3,7 @@ package a.talenting.com.talenting.domain.hosting.photo;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -18,10 +19,10 @@ import retrofit2.http.Path;
 
 public interface IHostingPhotoApiService {
     @GET("/hosting/{hosting_pk}/photo/")
-    Observable<GetHostingPhoto> selects(@Path("hosting_pk") String hostingPk);
+    Observable<GetHostingPhotoList> selects(@Path("hosting_pk") String hostingPk);
 
     @GET("/hosting/{hosting_pk}/photo/")
-    Observable<GetHostingPhoto> selects(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk);
+    Observable<GetHostingPhotoList> selects(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk);
 
     @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
     Observable<GetHostingPhoto> select(@Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
@@ -29,9 +30,15 @@ public interface IHostingPhotoApiService {
     @GET("/hosting/{hosting_pk}/photo/{photo_pk}/")
     Observable<GetHostingPhoto> select(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 
+    @DELETE("/hosting/{hosting_pk}/photo/{photo_pk}/")
+    Observable<Response<Void>> delete(
+            @Header("Authorization") String token
+            , @Path("hosting_pk") String hostingPk
+            , @Path("photo_pk") String photoPk);
+
     @Multipart
     @POST("/hosting/{hosting_pk}/photo/")
-    Observable<GetHostingPhoto> insert(
+    Observable<Response<Void>> insert(
             @Header("Authorization") String token,
             @Path("hosting_pk") String hostingPk,
             @Part MultipartBody.Part image,
@@ -57,7 +64,4 @@ public interface IHostingPhotoApiService {
             @Path("photo_pk") String photoPk,
             @Part("caption") RequestBody caption,
             @Part("type") RequestBody type);
-
-    @DELETE("/hosting/{hosting_pk}/photo/{photo_pk}/")
-    Observable<Boolean> delete(@Header("Authorization") String token, @Path("hosting_pk") String hostingPk, @Path("photo_pk") String photoPk);
 }
