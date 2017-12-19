@@ -26,16 +26,21 @@ public interface IProfilePhotoApiService {
     @GET("/member/profile/{profile_pk}/image/{image_pk}/")
     Observable<ProfileImageResponse> retrieve(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk);
 
+    @Multipart
     @PUT("/member/profile/{profile_pk}/image/{image_pk}/")
     Observable<ProfileImageResponse> update(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk,
+            @Part MultipartBody.Part image);
 
     @DELETE("/member/profile/{profile_pk}/image/{image_pk}/")
     Observable<ProfileImageResponse> delete(
             @Header("Authorization") String token,
-            @Path("profile_pk")String profilePk, @Path("image_pk")String pk);
+            @Path("profile_pk")String profilePk,
+            @Path("image_pk")String pk);
 
 }

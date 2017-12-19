@@ -153,7 +153,7 @@ public class SignupFirstActivity extends AppCompatActivity {
     public void addProfile(View view){
         popupchoice.setVisibility(View.VISIBLE);
     }
-
+    //PHOTO
     public void onCamera(View v){
         String[] Permission = new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
 

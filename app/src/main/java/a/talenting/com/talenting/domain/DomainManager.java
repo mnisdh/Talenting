@@ -2,8 +2,10 @@ package a.talenting.com.talenting.domain;
 
 
 import com.google.gson.GsonBuilder;
+
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
+import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
 import a.talenting.com.talenting.domain.profile.photo.IProfilePhotoApiService;
@@ -23,6 +25,7 @@ public class DomainManager {
     private static IUserApiService iUserApiService;
     private static IHostingApiService iHostingApiService;
     private static IHostingPhotoApiService iHostingPhotoApiService;
+    private static IHostingOptionsApiService iHostingOptionsApiService;
     private static IProfileApiService iProfileApiService;
     private static IProfilePhotoApiService iProfilePhotoApiService;
 
@@ -61,6 +64,13 @@ public class DomainManager {
         return iHostingPhotoApiService;
     }
 
+    public static IHostingOptionsApiService getHostingOptionsApiService(){
+        initRetrofit();
+
+        if(iHostingOptionsApiService == null) iHostingOptionsApiService = retrofit.create(IHostingOptionsApiService.class);
+        return iHostingOptionsApiService;
+    }
+
     public static IProfileApiService getProfileApiService(){
         initRetrofit();
 
@@ -74,6 +84,8 @@ public class DomainManager {
         if(iProfilePhotoApiService == null) iProfilePhotoApiService = retrofit.create(IProfilePhotoApiService.class);
         return iProfilePhotoApiService;
     }
+
+
 
 
 

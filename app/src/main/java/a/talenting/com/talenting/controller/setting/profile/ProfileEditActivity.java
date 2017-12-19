@@ -29,6 +29,7 @@ import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
@@ -39,8 +40,8 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
-import a.talenting.com.talenting.util.FileUtil;
 import a.talenting.com.talenting.util.ResourceUtil;
+import a.talenting.com.talenting.util.TempUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -62,6 +63,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     private TextContentItem self_intro, talent_intro;
     private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
     private RecyclerItem available_languages, talent_category;
+
+    private List<ProfileImage> deleteImages = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +165,17 @@ public class ProfileEditActivity extends AppCompatActivity {
             });
         });
         thumbnailsItem.setOnDeleteClickListener(item -> {
-            if (!isEditMode) return;
+            if(!isEditMode) return;
+
+            ThumbnailItem thumbnailItem = thumbnailsItem.selectedThubnail();
+            if(thumbnailItem == null) return;
+
+            IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
+            if(thumbnailPhoto != null && thumbnailPhoto instanceof ProfileImage) deleteImages.add((ProfileImage) thumbnailPhoto);
+
+            thumbnailsItem.deleteThubnail(thumbnailItem);
+
+            adapter.refresh(thumbnailsItem);
         });
         adapter.addData(thumbnailsItem);
 
@@ -349,18 +363,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             });
         }
     };
-    private IItemClickListener numTitleAndValueItemClickEvent = i -> {
-        if (!isEditMode) return;
-
-        if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
-            TitleAndValueItem item = (TitleAndValueItem) i;
-
-            DialogManager.showNumTextDialog(this, item, value -> {
-                item.value = value;
-                adapter.refresh(item);
-            });
-        }
-    };
 
     private void updateProfileData() {
         if (baseProfile == null) baseProfile = new Profile();
@@ -389,7 +391,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
         baseProfile.setTalent_category(talent);
     }
-
+    //PHOTO
     private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 
@@ -404,40 +406,97 @@ public class ProfileEditActivity extends AppCompatActivity {
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
-    private void addPhoto(String pk) {
+    //PHOTO
+    private void addPhoto(ThumbnailItem thumbnailItem){
         for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
-
-            Uri uri = Uri.parse(item.imageUrl);
-//            String path = getRealPathFromURI(uri);
-            File file = FileUtil.getFile(this, uri);
-            //File file = new File(uri.getPath());
+            Uri uri = Uri.parse(thumbnailItem.imageUrl);
+            File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
 
-            DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), pk, body)
+            DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), body)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {
                                 if (result.isSuccess()) ;
                                 else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck()
+                    );}
 
         finish();
     }
+    //PHOTO
+    private void updatePhoto(MenuItem updateItem) {
+        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size());
 
+        //region delete
+        deletePhoto();
+        //endregion
+        //region update/create
+        for (ThumbnailItem item : thumbnailsItem.getThumbnail()) {
+            if (item.getThumbnailPhoto() instanceof ProfileImage) {
+                ProfileImage profileImage = (ProfileImage) item.getThumbnailPhoto();
 
-    private void updatePhoto(MenuItem updateItem){
+                if (!profileImage.getImageUrl().equals(item.imageUrl)) {
+                    Uri uri = Uri.parse(item.imageUrl);
+                    File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
-        setEditMode(false);
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
 
-        updateItem.setIcon(R.drawable.edit);
-        updateItem.setTitle(getResStrng(R.string.edit));
+                    DomainManager.getProfilePhotoApiService().update(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), profileImage.getPk(), body)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> {
+                                        if (result.isSuccess()) ;
+                                        else
+                                            Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , () -> editPhotoFinishCheck()
+                            );
+                } else {
+                    addPhoto(item);
+                }
+            }
+            //endregion
+        }
+    }
+    //PHOTO
+    private void deletePhoto(){
+        for(ProfileImage profileImage : deleteImages) {
+            DomainManager.getProfilePhotoApiService().delete(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), profileImage.getPk())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck()
+                    );
+        }
+    }
+
+    private MenuItem updateItem;
+    private int uploadCount = -1;
+    private void editPhotoStart(MenuItem updateItem, int uploadCount){
+        this.updateItem = updateItem;
+        this.uploadCount = uploadCount;
+    }
+    private void editPhotoFinishCheck(){
+        uploadCount--;
+
+        if(uploadCount == 0){
+            setEditMode(false);
+
+            updateItem.setIcon(R.drawable.edit);
+            updateItem.setTitle(getResStrng(R.string.edit));
+
+            Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean checkValidation(){
