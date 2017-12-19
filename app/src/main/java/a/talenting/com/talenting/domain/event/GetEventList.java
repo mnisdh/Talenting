@@ -13,6 +13,10 @@ public class GetEventList {
     @Expose private String code;
     @Expose private String msg;
 
+    public boolean isSuccess(){
+        return code.substring(0, 1).equals("2");
+    }
+
     public List<Event> getEvent ()
     {
         return event;

@@ -2,11 +2,13 @@ package a.talenting.com.talenting.domain.event.photo;
 
 import com.google.gson.annotations.Expose;
 
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
+
 /**
  * Created by daeho on 2017. 12. 20..
  */
 
-public class EventPhoto {
+public class EventPhoto implements IThumbnailPhoto {
     @Expose private String id;
     @Expose private String events;
     @Expose private String created_at;
@@ -56,5 +58,15 @@ public class EventPhoto {
     public String toString()
     {
         return "ClassPojo [id = "+id+", events = "+events+", created_at = "+created_at+", image = "+image+"]";
+    }
+
+    @Override
+    public String getContent() {
+        return "";
+    }
+
+    @Override
+    public String getImageUrl() {
+        return image;
     }
 }

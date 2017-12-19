@@ -4,6 +4,8 @@ package a.talenting.com.talenting.domain;
 import com.google.gson.GsonBuilder;
 
 import a.talenting.com.talenting.common.SharedPreferenceManager;
+import a.talenting.com.talenting.domain.event.IEventApiService;
+import a.talenting.com.talenting.domain.event.photo.IEventPhotoApiService;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
 import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
@@ -28,6 +30,8 @@ public class DomainManager {
     private static IHostingOptionsApiService iHostingOptionsApiService;
     private static IProfileApiService iProfileApiService;
     private static IProfilePhotoApiService iProfilePhotoApiService;
+    private static IEventApiService iEventApiService;
+    private static IEventPhotoApiService iEventPhotoApiService;
 
     private static void initRetrofit(){
         if(retrofit == null){
@@ -56,14 +60,12 @@ public class DomainManager {
         if(iHostingApiService == null) iHostingApiService = retrofit.create(IHostingApiService.class);
         return iHostingApiService;
     }
-
     public static IHostingPhotoApiService getHostingPhotoApiService(){
         initRetrofit();
 
         if(iHostingPhotoApiService == null) iHostingPhotoApiService = retrofit.create(IHostingPhotoApiService.class);
         return iHostingPhotoApiService;
     }
-
     public static IHostingOptionsApiService getHostingOptionsApiService(){
         initRetrofit();
 
@@ -77,7 +79,6 @@ public class DomainManager {
         if(iProfileApiService == null) iProfileApiService = retrofit.create(IProfileApiService.class);
         return iProfileApiService;
     }
-
     public static IProfilePhotoApiService getProfilePhotoApiService(){
         initRetrofit();
 
@@ -85,8 +86,18 @@ public class DomainManager {
         return iProfilePhotoApiService;
     }
 
+    public static IEventApiService getEventApiService(){
+        initRetrofit();
 
+        if(iEventApiService == null) iEventApiService = retrofit.create(IEventApiService.class);
+        return iEventApiService;
+    }
+    public static IEventPhotoApiService getEventPhotoApiService(){
+        initRetrofit();
 
+        if(iEventPhotoApiService == null) iEventPhotoApiService = retrofit.create(IEventPhotoApiService.class);
+        return iEventPhotoApiService;
+    }
 
 
 
