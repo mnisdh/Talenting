@@ -76,6 +76,7 @@
         <activity android:name=".controller.common.LocationActivity" />
         <activity android:name=".controller.hosting.HostingActivity"/>
         <activity android:name=".controller.setting.profile.ProfileEditActivity"/>
+        <activity android:name=".controller.message.MessageActivity"/>
 
     </application>
 
