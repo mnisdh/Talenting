@@ -2,12 +2,15 @@ package a.talenting.com.talenting.domain.hosting.photo;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by daeho on 2017. 12. 11..
  */
 
-public class GetHostingPhoto {
-    @Expose private HostingPhoto hostingPhoto;
+public class GetHostingPhotoList {
+    @Expose private List<HostingPhoto> hostingPhoto;
     @Expose private String code;
     @Expose private String msg;
 
@@ -15,12 +18,13 @@ public class GetHostingPhoto {
         return code.substring(0, 1).equals("2");
     }
 
-    public HostingPhoto getHostingPhoto ()
+    public List<HostingPhoto> getHostingPhoto ()
     {
+        if(hostingPhoto == null) hostingPhoto = new ArrayList<>();
         return hostingPhoto;
     }
 
-    public void setHostingPhoto (HostingPhoto hosting)
+    public void setHostingPhoto (List<HostingPhoto> hosting)
     {
         this.hostingPhoto = hosting;
     }

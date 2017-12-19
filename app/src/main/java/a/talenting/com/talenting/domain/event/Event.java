@@ -1,57 +1,37 @@
 package a.talenting.com.talenting.domain.event;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 /**
- * Created by daeho on 2017. 12. 17..
+ * Created by daeho on 2017. 12. 20..
  */
 
-public class Results {
-    private String wish_status;
-
-    private String lon;
-
-    private String noted_item;
-
-    private String state;
-
-    private String primary_photo;
-
-    private String closing_date;
-
-    private String event_categories;
-
-    private List<String> participants;
-
-    private String city;
-
-    private String country;
-
-    private String id;
-
-    private Author author;
-
-    private String title;
-
-    private String updated_at;
-
-    private String price;
-
-    private String maximum_participant;
-
-    private String additional_photo;
-
-    private String program;
-
-    private String event_date;
-
-    private String created_at;
-
-    private String opening_date;
-
-    private String lat;
-
-    private String participants_count;
+public class Event {
+    @Expose private String wish_status;
+    @Expose private String lon;
+    @Expose private String noted_item;
+    @Expose private String state;
+    @Expose private String primary_photo;
+    @Expose private String closing_date;
+    @Expose private String event_categories;
+    @Expose private List<String> participants;
+    @Expose private String city;
+    @Expose private String country;
+    @Expose private String id;
+    @Expose private Author author;
+    @Expose private String title;
+    @Expose private String updated_at;
+    @Expose private String price;
+    @Expose private String maximum_participant;
+    @Expose private String program;
+    @Expose private String event_date;
+    @Expose private String participants_counter;
+    @Expose private String created_at;
+    @Expose private String opening_date;
+    @Expose private String lat;
+    @Expose private String participants_count;
 
     public String getWish_status ()
     {
@@ -213,16 +193,6 @@ public class Results {
         this.maximum_participant = maximum_participant;
     }
 
-    public String getAdditional_photo ()
-    {
-        return additional_photo;
-    }
-
-    public void setAdditional_photo (String additional_photo)
-    {
-        this.additional_photo = additional_photo;
-    }
-
     public String getProgram ()
     {
         return program;
@@ -241,6 +211,16 @@ public class Results {
     public void setEvent_date (String event_date)
     {
         this.event_date = event_date;
+    }
+
+    public String getParticipants_counter ()
+    {
+        return participants_counter;
+    }
+
+    public void setParticipants_counter (String participants_counter)
+    {
+        this.participants_counter = participants_counter;
     }
 
     public String getCreated_at ()
@@ -286,6 +266,6 @@ public class Results {
     @Override
     public String toString()
     {
-        return "ClassPojo [wish_status = "+wish_status+", lon = "+lon+", noted_item = "+noted_item+", state = "+state+", primary_photo = "+primary_photo+", closing_date = "+closing_date+", event_categories = "+event_categories+", participants = "+participants+", city = "+city+", country = "+country+", id = "+id+", author = "+author+", title = "+title+", updated_at = "+updated_at+", price = "+price+", maximum_participant = "+maximum_participant+", additional_photo = "+additional_photo+", program = "+program+", event_date = "+event_date+", created_at = "+created_at+", opening_date = "+opening_date+", lat = "+lat+", participants_count = "+participants_count+"]";
+        return "ClassPojo [wish_status = "+wish_status+", lon = "+lon+", noted_item = "+noted_item+", state = "+state+", primary_photo = "+primary_photo+", closing_date = "+closing_date+", event_categories = "+event_categories+", participants = "+participants+", city = "+city+", country = "+country+", id = "+id+", author = "+author+", title = "+title+", updated_at = "+updated_at+", price = "+price+", maximum_participant = "+maximum_participant+", program = "+program+", event_date = "+event_date+", participants_counter = "+participants_counter+", created_at = "+created_at+", opening_date = "+opening_date+", lat = "+lat+", participants_count = "+participants_count+"]";
     }
 }

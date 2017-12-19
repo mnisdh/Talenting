@@ -1,27 +1,15 @@
-package a.talenting.com.talenting.domain.event;
+package a.talenting.com.talenting.domain.event.photo;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.List;
-
 /**
- * Created by daeho on 2017. 12. 17..
+ * Created by daeho on 2017. 12. 20..
  */
 
-public class GetEventList {
-    @Expose private List<Event> event;
+public class GetEventPhoto {
     @Expose private String code;
     @Expose private String msg;
-
-    public List<Event> getEvent ()
-    {
-        return event;
-    }
-
-    public void setEvent (List<Event> event)
-    {
-        this.event = event;
-    }
+    @Expose private EventPhoto event_photo;
 
     public String getCode ()
     {
@@ -43,9 +31,19 @@ public class GetEventList {
         this.msg = msg;
     }
 
+    public EventPhoto getEvent_photo ()
+    {
+        return event_photo;
+    }
+
+    public void setEvent_photo (EventPhoto event_photo)
+    {
+        this.event_photo = event_photo;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [event = "+event+", code = "+code+", msg = "+msg+"]";
+        return "ClassPojo [code = "+code+", msg = "+msg+", event_photo = "+event_photo+"]";
     }
 }

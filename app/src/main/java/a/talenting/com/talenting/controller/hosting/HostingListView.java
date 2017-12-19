@@ -70,7 +70,7 @@ public class HostingListView extends FrameLayout {
     }
 
     public void getData(){
-        DomainManager.getHostingApiService().selects()
+        DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

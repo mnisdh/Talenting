@@ -1,9 +1,9 @@
 package a.talenting.com.talenting.domain.event;
 
-import a.talenting.com.talenting.domain.hosting.GetHosting;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -18,20 +18,17 @@ import retrofit2.http.Path;
 
 public interface IEventApiService {
     @GET("/event/")
-    Observable<GetEventList> selects();
-
-    @GET("/event/")
     Observable<GetEventList> selects(@Header("Authorization") String token);
 
-    @GET("/event/{pk}/")
-    Observable<GetHosting> select(@Path("pk") String pk);
+    @GET("/event/created/")
+    Observable<GetEventList> selectsCreated(@Header("Authorization") String token);
 
     @GET("/event/{pk}/")
-    Observable<GetHosting> select(@Header("Authorization") String token, @Path("pk") String pk);
+    Observable<GetEvent> select(@Header("Authorization") String token, @Path("pk") String pk);
 
     @Multipart
     @POST("/event/")
-    Observable<GetHosting> insert(
+    Observable<GetEvent> insert(
             @Header("Authorization") String token,
             @Part MultipartBody.Part primaryPhoto,
             @Part("title") RequestBody title,
@@ -47,7 +44,7 @@ public interface IEventApiService {
 
     @Multipart
     @POST("/event/{pk}/")
-    Observable<GetHosting> update(
+    Observable<GetEvent> update(
             @Header("Authorization") String token,
             @Path("pk") String pk,
             @Part MultipartBody.Part primaryPhoto,
@@ -63,5 +60,9 @@ public interface IEventApiService {
             @Part("event_date") RequestBody event_date);
 
     @DELETE("/event/{pk}/")
-    Observable<Boolean> delete(@Header("Authorization") String token, @Path("pk") String pk);
+    Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("pk") String pk);
+
+    @POST("/event/{pk}/participate/")
+    Observable<GetEvent> participate(@Header("Authorization") String token, @Path("pk") String pk);
+
 }

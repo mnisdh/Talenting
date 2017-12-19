@@ -2,23 +2,21 @@ package a.talenting.com.talenting.domain.event;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.List;
-
 /**
  * Created by daeho on 2017. 12. 17..
  */
 
-public class GetEventList {
-    @Expose private List<Event> event;
+public class GetEvent {
+    @Expose private Event event;
     @Expose private String code;
     @Expose private String msg;
 
-    public List<Event> getEvent ()
+    public Event getEvent ()
     {
         return event;
     }
 
-    public void setEvent (List<Event> event)
+    public void setEvent (Event event)
     {
         this.event = event;
     }
