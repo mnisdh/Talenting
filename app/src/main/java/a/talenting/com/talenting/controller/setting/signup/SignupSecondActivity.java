@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.custom.adapter.CategorySpinnerAdapter;
 import a.talenting.com.talenting.custom.adapter.LangListAdapter;
 import a.talenting.com.talenting.custom.adapter.TalentListAdapter;
@@ -42,7 +43,7 @@ public class SignupSecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_second);
         Intent intent = getIntent();
-        profile = (Profile)intent.getSerializableExtra("PROFILE");
+        profile = (Profile)intent.getSerializableExtra(Constants.EXT_PROFILE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
@@ -51,8 +52,8 @@ public class SignupSecondActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this,SignupFirstActivity.class);
-        intent.putExtra("PROFILE",profile);
+        Intent intent = new Intent(this, SignupFirstActivity.class);
+        intent.putExtra(Constants.EXT_PROFILE, profile);
         startActivity(intent);
         }
 
@@ -65,8 +66,8 @@ public class SignupSecondActivity extends AppCompatActivity {
     }
 
     public void secondPrev(View view){
-        Intent intent = new Intent(this,SignupFirstActivity.class);
-        intent.putExtra("PROFILE",profile);
+        Intent intent = new Intent(this, SignupFirstActivity.class);
+        intent.putExtra(Constants.EXT_PROFILE, profile);
         startActivity(intent);
     }
 
@@ -74,7 +75,7 @@ public class SignupSecondActivity extends AppCompatActivity {
         profile.setTalent_category(new ArrayList(listAdapter.getData().keySet()));
         profile.setAvailable_languages(new ArrayList(langListAdapter.getData().keySet()));
         Intent intent = new Intent(this,SignupThirdActivity.class);
-        intent.putExtra("PROFILE",profile);
+        intent.putExtra(Constants.EXT_PROFILE, profile);
         startActivity(intent);
     }
 
@@ -102,8 +103,8 @@ public class SignupSecondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
-                Intent intent = new Intent(this,SignupFirstActivity.class);
-                intent.putExtra("PROFILE",profile);
+                Intent intent = new Intent(this, SignupFirstActivity.class);
+                intent.putExtra(Constants.EXT_PROFILE, profile);
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

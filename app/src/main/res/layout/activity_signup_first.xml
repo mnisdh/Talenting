@@ -71,46 +71,7 @@
                 android:text="Female" />
         </RadioGroup>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/popupChoice"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:drawable/screen_background_dark_transparent"
-        android:elevation="2dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/btnCamera"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="100dp"
-            android:onClick="onCamera"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
-
-        <ImageButton
-            android:id="@+id/btnGallery"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="100dp"
-            android:onClick="onGallery"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
-    </android.support.constraint.ConstraintLayout>
-
-        <Button
+    <Button
             android:id="@+id/btn_later"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -335,7 +335,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         description.useBottomLine = true;
         adapter.addData(description);
         //endregion
-        //region todo
+        //region to_do
         todo = new TextContentItem(getResStrng(R.string.hosting_to_do)
                 , hosting.getTo_do()
                 , contentItemClickEvent);

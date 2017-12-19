@@ -29,6 +29,11 @@ public class BaseData {
     public static void init(IBaseDataEvent event){
         iBaseDataEvent = event;
 
+        if(initCount == 0) {
+            iBaseDataEvent.finished(true);
+            return;
+        }
+
         //region languages
         DomainManager.getHostingOptionsApiService().selectLanguages()
         .subscribeOn(Schedulers.io())

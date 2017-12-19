@@ -203,6 +203,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 , calenderClickEvent);
         birth.useBottomLine = true;
         adapter.addData(birth);
+        //endregion
         //region gender
         gender = new TitleAndValueItem(getResStrng(R.string.profile_gender)
                 , BaseData.getProfileGenderText(profile.getGender())
@@ -253,8 +254,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         available_languages.useBottomLine = true;
         adapter.addData(available_languages);
         //endregion
-
-        adapter.refresh();
         //region country
         country = new TitleAndValueItem(getResStrng(R.string.profile_country)
                 , BaseData.getLanguageText(profile.getCountry())
@@ -277,6 +276,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         occupation.useBottomLine = true;
         adapter.addData(occupation);
         //endregion
+
+        adapter.refresh();
     }
 
     private String getResStrng(int id) {
@@ -339,7 +340,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             });
         }
     };
-
     private IItemClickListener recyclerAddClickEvent = i -> {
         if (!isEditMode) return;
 
@@ -391,7 +391,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
         baseProfile.setTalent_category(talent);
     }
-    //PHOTO
+
+    //todo 포토 연결하기
     private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 
@@ -406,7 +407,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-    //PHOTO
+
     private void addPhoto(ThumbnailItem thumbnailItem){
         for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
             Uri uri = Uri.parse(thumbnailItem.imageUrl);
@@ -428,7 +429,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         finish();
     }
-    //PHOTO
+
     private void updatePhoto(MenuItem updateItem) {
         editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size());
 
@@ -465,7 +466,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             //endregion
         }
     }
-    //PHOTO
+
     private void deletePhoto(){
         for(ProfileImage profileImage : deleteImages) {
             DomainManager.getProfilePhotoApiService().delete(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), profileImage.getPk())

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         activityResultManager = new ActivityResultManager();
+        BaseData.init(isSuccess -> {});
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -78,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init(){
-
-
         initView();
 
         initHosting();
@@ -89,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
         initSetting();
 
         onBtnClick(btnHosting);
-
-        BaseData.init(isSuccess -> {});
     }
 
     @Override
