@@ -32,6 +32,7 @@ import a.talenting.com.talenting.controller.setting.profile.ProfileEditActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
+import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         initSetting();
 
         onBtnClick(btnHosting);
+
+        BaseData.init(isSuccess -> {});
     }
 
     @Override
