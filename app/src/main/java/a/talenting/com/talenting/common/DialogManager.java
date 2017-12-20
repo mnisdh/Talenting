@@ -11,10 +11,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -22,6 +24,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,7 @@ import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
+import a.talenting.com.talenting.util.FormatUtil;
 import a.talenting.com.talenting.util.PermissionUtil;
 
 import static a.talenting.com.talenting.common.Constants.CAMERA_PERMISSION_REQ;
@@ -44,7 +49,6 @@ public class DialogManager {
     public static void showDatePickerDialog(Context context, TitleAndValueItem item, IDialogStringEvent event) {
         showDatePickerDialog(context, item.title, item.value, event);
     }
-
     public static void showDatePickerDialog(Context context, String title, String value, IDialogStringEvent event){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
         DatePicker datePicker = v.findViewById(R.id.datePicker);
@@ -73,6 +77,60 @@ public class DialogManager {
                     })
                     .show();
         }
+
+    public static void showDateTimePickerDialog(Context context, TitleAndValueItem item, IDialogStringEvent event) {
+        showDateTimePickerDialog(context, item.title, item.value, event);
+    }
+    public static void showDateTimePickerDialog(Context context, String title, String value, IDialogStringEvent event){
+        View v = LayoutInflater.from(context).inflate(R.layout.dialog_datetimepicker, null, false);
+        DatePicker datePicker = v.findViewById(R.id.datePicker);
+        TimePicker timePicker = v.findViewById(R.id.timePicker);
+
+        int year, month, day, hour, min, sec;
+
+        if(value == null || "".equals(value)) {
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            hour = calendar.get(Calendar.HOUR);
+            min = calendar.get(Calendar.MINUTE);
+            sec = calendar.get(Calendar.SECOND);
+        }
+        else{
+            Date d = FormatUtil.utcStringToDate(value);
+            year = Integer.parseInt(DateFormat.format("yyyy", d).toString());
+            month = Integer.parseInt(DateFormat.format("MM", d).toString());
+            day = Integer.parseInt(DateFormat.format("dd", d).toString());
+            hour = Integer.parseInt(DateFormat.format("hh", d).toString());
+            min = Integer.parseInt(DateFormat.format("mm", d).toString());
+            sec = Integer.parseInt(DateFormat.format("ss", d).toString());
+        }
+
+        datePicker.init(year, month, day, (DatePicker view, int y, int m, int d) -> {});
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            timePicker.setHour(hour);
+            timePicker.setMinute(min);
+        }
+
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .customView(v, true)
+                .positiveText("Save")
+                .onAny((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    String s = "";
+                    s = datePicker.getYear()
+                            + "-" + (datePicker.getMonth() + 1)
+                            + "-" + datePicker.getDayOfMonth();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        s += " " + timePicker.getHour() + ":" + timePicker.getMinute() + ":00";
+                    }
+
+                    event.callback(s);
+                })
+                .show();
+    }
 
     public static void showTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
         showTextDialog(context, item.title, item.value, event);

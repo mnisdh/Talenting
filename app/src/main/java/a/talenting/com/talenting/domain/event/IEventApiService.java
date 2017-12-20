@@ -40,7 +40,9 @@ public interface IEventApiService {
             @Part("maximum_participant") RequestBody maximumParticipant,
             @Part("opening_date") RequestBody openingDate,
             @Part("closing_date") RequestBody closingDate,
-            @Part("event_date") RequestBody event_date);
+            @Part("event_date") RequestBody event_date,
+            @Part("lat") RequestBody lat,
+            @Part("lon") RequestBody lon);
 
     @Multipart
     @POST("/event/{pk}/")
@@ -57,7 +59,27 @@ public interface IEventApiService {
             @Part("maximum_participant") RequestBody maximumParticipant,
             @Part("opening_date") RequestBody openingDate,
             @Part("closing_date") RequestBody closingDate,
-            @Part("event_date") RequestBody event_date);
+            @Part("event_date") RequestBody event_date,
+            @Part("lat") RequestBody lat,
+            @Part("lon") RequestBody lon);
+
+    @Multipart
+    @POST("/event/{pk}/")
+    Observable<GetEvent> update(
+            @Header("Authorization") String token,
+            @Path("pk") String pk,
+            @Part("title") RequestBody title,
+            @Part("program") RequestBody program,
+            @Part("event_categories") RequestBody eventCategries,
+            @Part("country") RequestBody cuntry,
+            @Part("city") RequestBody city,
+            @Part("price") RequestBody price,
+            @Part("maximum_participant") RequestBody maximumParticipant,
+            @Part("opening_date") RequestBody openingDate,
+            @Part("closing_date") RequestBody closingDate,
+            @Part("event_date") RequestBody event_date,
+            @Part("lat") RequestBody lat,
+            @Part("lon") RequestBody lon);
 
     @DELETE("/event/{pk}/")
     Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("pk") String pk);

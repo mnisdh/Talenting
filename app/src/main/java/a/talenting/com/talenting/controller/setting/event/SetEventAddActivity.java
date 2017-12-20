@@ -75,7 +75,7 @@ public class SetEventAddActivity extends AppCompatActivity {
                                 openingDate, closingDate, eventDate, locationTitle;
     private MapPreviewItem location;
 
-    private List<HostingPhoto> deletePhotos = new ArrayList<>();
+    private List<EventPhoto> deletePhotos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,8 @@ public class SetEventAddActivity extends AppCompatActivity {
 
         init();
 
-        loadData();
+        if(pk == null || "".equals(pk)) setNewData();
+        else loadData();
 
         initActionBar();
     }
@@ -158,11 +159,7 @@ public class SetEventAddActivity extends AppCompatActivity {
     }
 
     private void loadData(){
-        if(pk == null || "".equals(pk)){
-            setNewData();
-            return;
-        }
-
+        isAddMode = false;
         DomainManager.getEventApiService().select(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -188,6 +185,13 @@ public class SetEventAddActivity extends AppCompatActivity {
 
         //region primary photo
         primaryPhoto = new ThumbnailItem("", event.getPrimary_photo());
+        primaryPhoto.setOnClickListener(item -> {
+            if(!isAddMode && !isEditMode) return;
+            DialogManager.showCameraDialog(this, activityResultManager, value -> {
+                primaryPhoto.imageUrl = value;
+                adapter.refresh(primaryPhoto);
+            });
+        });
         adapter.addData(primaryPhoto);
         //endregion
         //region profile
@@ -229,7 +233,7 @@ public class SetEventAddActivity extends AppCompatActivity {
         //endregion
         //region maximumParticipant
         maximumParticipant = new TitleAndValueItem(getResStrng(R.string.event_maximum_participant)
-                , event.getPrice()
+                , event.getMaximum_participant()
                 , numTitleAndValueItemClickEvent);
         maximumParticipant.useBottomLine = true;
         adapter.addData(maximumParticipant);
@@ -304,7 +308,7 @@ public class SetEventAddActivity extends AppCompatActivity {
             if(thumbnailItem == null) return;
 
             IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
-            if(thumbnailPhoto != null && thumbnailPhoto instanceof HostingPhoto) deletePhotos.add((HostingPhoto) thumbnailPhoto);
+            if(thumbnailPhoto != null && thumbnailPhoto instanceof EventPhoto) deletePhotos.add((EventPhoto) thumbnailPhoto);
 
             thumbnailsItem.deleteThubnail(thumbnailItem);
 
@@ -364,12 +368,12 @@ public class SetEventAddActivity extends AppCompatActivity {
     }
 
     private IItemClickListener calenderClickEvent = i -> {
-        if (!isEditMode) return;
+        if(!isAddMode && !isEditMode) return;
 
         if (i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE) {
             TitleAndValueItem item = (TitleAndValueItem) i;
 
-            DialogManager.showDatePickerDialog(this, item, value -> {
+            DialogManager.showDateTimePickerDialog(this, item, value -> {
                 item.value = value;
                 adapter.refresh(item);
             });
@@ -456,29 +460,123 @@ public class SetEventAddActivity extends AppCompatActivity {
     private void addEvent(){
         if(!checkValidation()) return;
 
-//        DomainManager.getEventApiService().insert(DomainManager.getTokenHeader(), baseHosting)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(result -> {
-//                            if (result.isSuccess()) addPhoto(result.getHosting().getPk());
-//                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-//                        }
-//                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+        File file = TempUtil.createTempImage(this.getContentResolver(), Uri.parse(primaryPhoto.imageUrl));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part bPrimaryPhoto = MultipartBody.Part.createFormData("primary_photo", file.getName(), requestFile);
+        RequestBody bTtile = RequestBody.create(MediaType.parse("multipart/form-data"), title.value);
+        RequestBody bProgram = RequestBody.create(MediaType.parse("multipart/form-data"), program.content);
+        RequestBody bCategry = RequestBody.create(MediaType.parse("multipart/form-data"), category.valueCode);
+        RequestBody bCountry = RequestBody.create(MediaType.parse("multipart/form-data"), country.valueCode);
+        RequestBody bCity = RequestBody.create(MediaType.parse("multipart/form-data"), city.value == null? "":city.value);
+        RequestBody bPrice = RequestBody.create(MediaType.parse("multipart/form-data"), price.value);
+        RequestBody bMaximumParticipant = RequestBody.create(MediaType.parse("multipart/form-data"), maximumParticipant.value);
+        RequestBody bOpening = RequestBody.create(MediaType.parse("multipart/form-data"), openingDate.value);
+        RequestBody bClosing = RequestBody.create(MediaType.parse("multipart/form-data"), closingDate.value);
+        RequestBody bEventDate = RequestBody.create(MediaType.parse("multipart/form-data"), eventDate.value);
+        LatLng latLng = location.googleStaticMap.getLatLng();
+        RequestBody bLat = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.latitude + "");
+        RequestBody bLon = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.longitude + "");
+
+        DomainManager.getEventApiService().insert(
+                DomainManager.getTokenHeader(),
+                bPrimaryPhoto,
+                bTtile,
+                bProgram,
+                bCategry,
+                bCountry,
+                bCity,
+                bPrice,
+                bMaximumParticipant,
+                bOpening,
+                bClosing,
+                bEventDate,
+                bLat,
+                bLon
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) addPhoto(result.getEvent().getId());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
     private void updateEvent(MenuItem updateItem){
         if(!checkValidation()) return;
 
-//        DomainManager.getHostingApiService().update(DomainManager.getTokenHeader(), pk, baseHosting)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(result -> {
-//                            if (result.isSuccess()) updatePhoto(updateItem);
-//                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-//                        }
-//                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        RequestBody bTtile = RequestBody.create(MediaType.parse("multipart/form-data"), title.value);
+        RequestBody bProgram = RequestBody.create(MediaType.parse("multipart/form-data"), program.content);
+        RequestBody bCategry = RequestBody.create(MediaType.parse("multipart/form-data"), category.valueCode);
+        RequestBody bCountry = RequestBody.create(MediaType.parse("multipart/form-data"), country.valueCode);
+        RequestBody bCity = RequestBody.create(MediaType.parse("multipart/form-data"), city.value);
+        RequestBody bPrice = RequestBody.create(MediaType.parse("multipart/form-data"), price.value);
+        RequestBody bMaximumParticipant = RequestBody.create(MediaType.parse("multipart/form-data"), maximumParticipant.value);
+        RequestBody bOpening = RequestBody.create(MediaType.parse("multipart/form-data"), openingDate.value);
+        RequestBody bClosing = RequestBody.create(MediaType.parse("multipart/form-data"), closingDate.value);
+        RequestBody bEventDate = RequestBody.create(MediaType.parse("multipart/form-data"), eventDate.value);
+        LatLng latLng = location.googleStaticMap.getLatLng();
+        RequestBody bLat = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.latitude + "");
+        RequestBody bLon = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.longitude + "");
+
+        if(primaryPhoto.imageUrl.equals(baseEvent.getPrimary_photo())){
+            DomainManager.getEventApiService().update(
+                    DomainManager.getTokenHeader(),
+                    pk,
+                    bTtile,
+                    bProgram,
+                    bCategry,
+                    bCountry,
+                    bCity,
+                    bPrice,
+                    bMaximumParticipant,
+                    bOpening,
+                    bClosing,
+                    bEventDate,
+                    bLat,
+                    bLon
+            )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) updatePhoto(updateItem);
+                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+        else{
+            File file = TempUtil.createTempImage(this.getContentResolver(), Uri.parse(primaryPhoto.imageUrl));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part bPrimaryPhoto = MultipartBody.Part.createFormData("primary_photo", file.getName(), requestFile);
+
+
+            DomainManager.getEventApiService().update(
+                    DomainManager.getTokenHeader(),
+                    pk,
+                    bPrimaryPhoto,
+                    bTtile,
+                    bProgram,
+                    bCategry,
+                    bCountry,
+                    bCity,
+                    bPrice,
+                    bMaximumParticipant,
+                    bOpening,
+                    bClosing,
+                    bEventDate,
+                    bLat,
+                    bLon
+            )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) updatePhoto(updateItem);
+                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
     }
     private void deleteEvent(){
-        DomainManager.getHostingApiService().delete(DomainManager.getTokenHeader(), pk)
+        DomainManager.getEventApiService().delete(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> finish()
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -494,11 +592,10 @@ public class SetEventAddActivity extends AppCompatActivity {
         File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
-        RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.content);
-        RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.subContentCode);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        RequestBody bEvent = RequestBody.create(MediaType.parse("multipart/form-data"), pk);
 
-        DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
+        DomainManager.getEventPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, bEvent)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {}
@@ -518,15 +615,13 @@ public class SetEventAddActivity extends AppCompatActivity {
                 HostingPhoto hostingPhoto = (HostingPhoto) item.getThumbnailPhoto();
 
                 if(!hostingPhoto.getImageUrl().equals(item.imageUrl)){
-                    Uri uri = Uri.parse(item.imageUrl);
-                    File file = TempUtil.createTempImage(this.getContentResolver(), uri);
+                    File file = TempUtil.createTempImage(this.getContentResolver(), Uri.parse(item.imageUrl));
 
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                    MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
-                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
-                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+                    RequestBody bEvent = RequestBody.create(MediaType.parse("multipart/form-data"), pk);
 
-                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), body, caption, type)
+                    DomainManager.getEventPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), body, bEvent)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(result -> {
@@ -537,29 +632,15 @@ public class SetEventAddActivity extends AppCompatActivity {
                                     , () -> editPhotoFinishCheck()
                             );
                 }
-                else{
-                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
-                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
-
-                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), caption, type)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(result -> {
-                                        if (result.isSuccess()) ;
-                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                                    }
-                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                                    , () -> editPhotoFinishCheck()
-                            );
-                }
+                else editPhotoFinishCheck();
             }
             else addPhoto(pk, item);
         }
         //endregion
     }
     private void deletePhoto(){
-        for(HostingPhoto hostingPhoto : deletePhotos) {
-            DomainManager.getHostingPhotoApiService().delete(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk())
+        for(EventPhoto eventPhoto : deletePhotos) {
+            DomainManager.getEventPhotoApiService().delete(DomainManager.getTokenHeader(), pk, eventPhoto.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}
@@ -595,14 +676,16 @@ public class SetEventAddActivity extends AppCompatActivity {
 
     private boolean checkValidation(){
         String msg = "";
-//        if(!checkValidation(baseHosting.getTitle())) msg = getResStrng(R.string.hosting_title);
-//        else if(!checkValidation(baseHosting.getCategory())) msg = getResStrng(R.string.hosting_category);
-//        else if(!checkValidation(baseHosting.getSummary())) msg = getResStrng(R.string.hosting_summary);
-//        else if(!checkValidation(baseHosting.getHouse_type())) msg = getResStrng(R.string.hosting_house_type);
-//        else if(!checkValidation(baseHosting.getRoom_type())) msg = getResStrng(R.string.hosting_room_type);
-//        else if(!checkValidation(baseHosting.getMeal_type())) msg = getResStrng(R.string.hosting_meal_type);
-//        else if(baseHosting.getLanguage().size() == 0) msg = getResStrng(R.string.hosting_language);
-//        else if("0".equals(baseHosting.getLat()) && "0".equals(baseHosting.getLon())) msg = getResStrng(R.string.hosting_location);
+        if(!checkValidation(primaryPhoto.imageUrl)) msg = getResStrng(R.string.event_primary_photo);
+        else if(!checkValidation(title.value)) msg = getResStrng(R.string.event_title);
+        else if(!checkValidation(category.valueCode)) msg = getResStrng(R.string.event_category);
+        else if(!checkValidation(maximumParticipant.value)) msg = getResStrng(R.string.event_maximum_participant);
+        else if(!checkValidation(price.value)) msg = getResStrng(R.string.event_price);
+        else if(!checkValidation(country.valueCode)) msg = getResStrng(R.string.event_country);
+        else if(!checkValidation(city.value)) msg = getResStrng(R.string.event_city);
+        else if(!checkValidation(openingDate.value)) msg = getResStrng(R.string.event_opening_date);
+        else if(!checkValidation(closingDate.value)) msg = getResStrng(R.string.event_closing_date);
+        else if(!checkValidation(eventDate.value)) msg = getResStrng(R.string.event_event_date);
 
         if(msg.equals("")) return true;
         else{

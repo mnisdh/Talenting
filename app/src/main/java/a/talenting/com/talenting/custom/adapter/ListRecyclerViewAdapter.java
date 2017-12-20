@@ -51,6 +51,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         notifyDataSetChanged();
     }
 
+    public void clearData(){
+        data.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());

@@ -15,6 +15,7 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
+import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.event.Event;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -53,17 +54,22 @@ public class SetEventListActivity extends AppCompatActivity {
     }
 
     private void loadData(List<Event> events){
+        adapter.clearData();
+
         List<IDetailItem> items = new ArrayList<>();
 
         ImageContentItem item;
         for(Event event : events){
-            item = new ImageContentItem(true);
+            item = new ImageContentItem(false);
             item.imageUrl = event.getPrimary_photo();
             item.title = event.getTitle();
-            item.content = event.getClosing_date();
+            item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
+                    + event.getPrice() + "\n"
+                    + event.getEvent_date();
 
             item.setOnClickListener(j -> {
-                Intent intent = new Intent(this, SetEventActivity.class);
+                Intent intent = new Intent(this, SetEventAddActivity.class);
+                intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
                 startActivityForResult(intent, Constants.REQ_EDIT_EVENT);
             });
 
@@ -84,7 +90,7 @@ public class SetEventListActivity extends AppCompatActivity {
             case Constants.REQ_ADD_EVENT:
             case Constants.REQ_EDIT_EVENT:
                 if(resultCode == RESULT_OK){
-                    recreate();
+                    loadData();
                 }
                 break;
 

@@ -20,25 +20,29 @@ import retrofit2.http.Path;
 
 public interface IEventPhotoApiService {
     @GET("/event/{event_pk}/photo/")
-    Observable<GetEventPhotoList> selects(@Header("Authorization") String token, @Path("event_pk") String hostingPk);
+    Observable<GetEventPhotoList> selects(
+            @Header("Authorization") String token,
+            @Path("event_pk") String eventPk);
 
     @GET("/event/{event_pk}/photo/{photo_pk}/")
-    Observable<GetEventPhoto> select(@Header("Authorization") String token, @Path("event_pk") String hostingPk, @Path("photo_pk") String photoPk);
+    Observable<GetEventPhoto> select(
+            @Header("Authorization") String token,
+            @Path("event_pk") String eventPk,
+            @Path("photo_pk") String photoPk);
 
     @Multipart
     @POST("/event/{event_pk}/photo/")
     Observable<GetEventPhoto> insert(
             @Header("Authorization") String token,
-            @Path("event_pk") String hostingPk,
+            @Path("event_pk") String eventPk,
             @Part MultipartBody.Part image,
             @Part("events") RequestBody events);
-
 
     @Multipart
     @PUT("/event/{event_pk}/photo/{photo_pk}/")
     Observable<GetEventPhoto> update(
             @Header("Authorization") String token,
-            @Path("event_pk") String hostingPk,
+            @Path("event_pk") String eventPk,
             @Path("photo_pk") String photoPk,
             @Part MultipartBody.Part image,
             @Part("events") RequestBody events);
@@ -47,10 +51,13 @@ public interface IEventPhotoApiService {
     @PUT("/event/{event_pk}/photo/{photo_pk}/")
     Observable<GetHostingPhoto> update(
             @Header("Authorization") String token,
-            @Path("event_pk") String hostingPk,
+            @Path("event_pk") String eventPk,
             @Path("photo_pk") String photoPk,
             @Part("events") RequestBody events);
 
     @DELETE("/event/{event_pk}/photo/{photo_pk}/")
-    Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("event_pk") String hostingPk, @Path("photo_pk") String photoPk);
+    Observable<Response<Void>> delete(
+            @Header("Authorization") String token,
+            @Path("event_pk") String eventPk,
+            @Path("photo_pk") String photoPk);
 }
