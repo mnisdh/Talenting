@@ -87,7 +87,7 @@ public class SignupThirdActivity extends AppCompatActivity {
         DomainManager.getProfilePhotoApiService().create(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk(), body)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(result -> Toast.makeText(this,"Success Profile Enroll!",Toast.LENGTH_SHORT).show()
+            .subscribe(result -> {}
                 , e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

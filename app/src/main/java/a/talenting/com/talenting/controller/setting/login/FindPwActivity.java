@@ -2,11 +2,9 @@ package a.talenting.com.talenting.controller.setting.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
-import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.user.PwMissing;
 import a.talenting.com.talenting.domain.user.PwMissingResponse;
@@ -38,7 +35,6 @@ public class FindPwActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_pw);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initListener();
     }
@@ -74,15 +70,6 @@ public class FindPwActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                Intent intent = new Intent(this, LoginActivity.class);
-                NavUtils.navigateUpTo(this, intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void initListener(){
