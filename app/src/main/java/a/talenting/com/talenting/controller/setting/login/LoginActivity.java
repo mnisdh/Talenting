@@ -6,7 +6,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
-import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.user.LoginResponse;
 import a.talenting.com.talenting.domain.user.UserLogin;
@@ -42,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initListener();
     }
@@ -66,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result.isSuccess()) {
-                        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
                         SharedPreferenceManager.getInstance().setEmail(edit_email.getText().toString());
                         SharedPreferenceManager.getInstance().setPw(edit_pw.getText().toString());
                         SharedPreferenceManager.getInstance().setToken(result.getToken());
@@ -76,17 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                 },
                 e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                Intent intent = new Intent(this, LoginMainActivity.class);
-                startActivity(intent);
-                finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void findpassword(View view){

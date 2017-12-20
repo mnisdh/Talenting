@@ -91,6 +91,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(settingMenu.getVisibility()==View.VISIBLE){
+            closeSettingMenu();
+        }else{
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+
+            intent.addCategory(Intent.CATEGORY_HOME);
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
