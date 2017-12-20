@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +16,6 @@ import java.util.regex.Pattern;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
-import a.talenting.com.talenting.controller.LoginMainActivity;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.user.LoginResponse;
 import a.talenting.com.talenting.domain.user.SignupResponse;
@@ -48,7 +46,6 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initListener();
     }
@@ -81,7 +78,6 @@ public class SignupActivity extends AppCompatActivity {
                         SharedPreferenceManager.getInstance().setEmail(edit_signEmail.getText().toString());
                         SharedPreferenceManager.getInstance().setPw(edit_signPw.getText().toString());
                         SharedPreferenceManager.getInstance().setPk(result.getUser().getPk());
-                        Toast.makeText(this, "SignUp SUCCESS!", Toast.LENGTH_SHORT).show();
                         login();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
@@ -101,7 +97,6 @@ public class SignupActivity extends AppCompatActivity {
                 .subscribe(results -> {
                             if(results.isSuccess()) {
                                 SharedPreferenceManager.getInstance().setToken(results.getToken());
-                                Toast.makeText(this, "Login SUCCESS!", Toast.LENGTH_SHORT).show();
                                 success();
                             }
                             else {
@@ -116,17 +111,6 @@ public class SignupActivity extends AppCompatActivity {
     private void success(){
         Intent intent = new Intent(this, SignupFirstActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                Intent intent = new Intent(this, LoginMainActivity.class);
-                startActivity(intent);
-                finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initListener(){
