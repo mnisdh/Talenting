@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:scaleType="centerCrop"
+            android:onClick="@{item::onClick}"
             app:image_url="@{item.imageUrl}" />
 
         <EditText

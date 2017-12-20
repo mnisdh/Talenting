@@ -2,6 +2,7 @@
     <string name="event_none_title">Event</string>
     <string name="event_add_title">Event create</string>
     <string name="event_input">Input</string>
+    <string name="event_primary_photo">Primary photo</string>
     <string name="event_category">Category</string>
     <string name="event_title">Title</string>
     <string name="event_program">Program</string>
