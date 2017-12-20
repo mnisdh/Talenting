@@ -2,8 +2,9 @@
 <resources>
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303f9f</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
     <color name="circleLocation">#5601fffb</color>
     <color name="popupBacgroundColor">#a4ffffff</color>
     <color name="cardview_front_image_background">#c7ffffff</color>
+    <color name="radio_circle">#ffffff</color>
 </resources>

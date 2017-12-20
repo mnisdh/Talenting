@@ -29,6 +29,7 @@ public class TitleAndValueItem implements IDetailItem{
 
     public String valueCode = "";
 
+
     public boolean useBottomLine = false;
 
     public TitleAndValueItem(){

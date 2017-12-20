@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -44,7 +43,6 @@ public class SignupSecondActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup_second);
         Intent intent = getIntent();
         profile = (Profile)intent.getSerializableExtra(Constants.EXT_PROFILE);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initList();
         initListener();
@@ -96,18 +94,6 @@ public class SignupSecondActivity extends AppCompatActivity {
     public void initList() {
         talents = BaseData.getProfileTalent();
         langs = BaseData.getLanguage();
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                Intent intent = new Intent(this, SignupFirstActivity.class);
-                intent.putExtra(Constants.EXT_PROFILE, profile);
-                startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void initListener(){

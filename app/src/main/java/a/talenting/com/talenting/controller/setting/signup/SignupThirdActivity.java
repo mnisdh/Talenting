@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,7 +34,6 @@ public class SignupThirdActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_third);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         profile = (Profile)intent.getSerializableExtra(Constants.EXT_PROFILE);
         initView();
@@ -45,17 +43,6 @@ public class SignupThirdActivity extends AppCompatActivity {
         edit_occupation = findViewById(R.id.edit_occupation);
         edit_selfIntro = findViewById(R.id.edit_selfIntro);
         edit_talentIntro = findViewById(R.id.edit_talentIntro);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                Intent intent = new Intent(this,SignupSecondActivity.class);
-                intent.putExtra(Constants.EXT_PROFILE, profile);
-                startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -81,7 +68,6 @@ public class SignupThirdActivity extends AppCompatActivity {
             .subscribe(result -> {
                     if(result.isSuccess()) {
                         if(profile.getImages() != null && profile.getImages().size() == 1) createPhoto();
-                        else Toast.makeText(this,"Success Profile Enroll!",Toast.LENGTH_SHORT).show();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();}
                 , e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());

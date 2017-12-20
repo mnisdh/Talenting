@@ -2,10 +2,10 @@ package a.talenting.com.talenting.controller.setting.signup;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -55,7 +55,6 @@ public class SignupFirstActivity extends AppCompatActivity {
             profile = new Profile();
 
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         initListener();
     }
@@ -71,6 +70,8 @@ public class SignupFirstActivity extends AppCompatActivity {
         country.padding.setTop(0);
         country.padding.setLeft(0);
         country.padding.setRight(0);
+        country.titleStyle.setColor(Color.WHITE);
+        country.valueStyle.setColor(Color.WHITE);
         countryView.setDetailItem(country);
     }
 
@@ -99,16 +100,6 @@ public class SignupFirstActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignupSecondActivity.class);
         intent.putExtra(Constants.EXT_PROFILE, profile);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
