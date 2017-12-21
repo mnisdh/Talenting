@@ -61,7 +61,7 @@ public class SetJoinedEventListActivity extends AppCompatActivity {
     }
 
     private ImageContentItem createItem(JoinedEvent event){
-        ImageContentItem item = new ImageContentItem(false);
+        ImageContentItem item = new ImageContentItem(false, true);
         if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getPk());
         else item.imageUrl = event.getPrimary_photo();
         item.title = event.getTitle();

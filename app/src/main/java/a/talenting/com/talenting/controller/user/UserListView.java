@@ -65,7 +65,7 @@ public class UserListView extends FrameLayout {
 
         ImageContentItem item;
         for(int i = 0; i < 10; i++){
-            item = new ImageContentItem(false);
+            item = new ImageContentItem(false, false);
             item.imageUrl = sampleImage;
             item.title = "title" + i;
             item.content = "content" + i;

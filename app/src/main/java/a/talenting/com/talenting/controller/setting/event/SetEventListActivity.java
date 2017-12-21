@@ -61,7 +61,7 @@ public class SetEventListActivity extends AppCompatActivity {
 
         ImageContentItem item;
         for(Event event : events){
-            item = new ImageContentItem(false);
+            item = new ImageContentItem(false, true);
             if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
             else item.imageUrl = event.getPrimary_photo();
             item.useFavorite = false;
