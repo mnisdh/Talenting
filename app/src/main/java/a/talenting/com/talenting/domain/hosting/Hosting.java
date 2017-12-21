@@ -11,8 +11,6 @@ import java.util.List;
 
 public class Hosting {
     @Expose(serialize = false)
-    private String pk;
-    @Expose(serialize = false)
     private String owner;
     @Expose(serialize = false)
     private String created_at;
@@ -22,6 +20,8 @@ public class Hosting {
     private String recommend_counter;
     @Expose(serialize = false)
     private String updated_at;
+    @Expose(serialize = false)
+    private String primary_photo;
 
     @Expose private String summary;
     @Expose private String max_stay;
@@ -51,6 +51,14 @@ public class Hosting {
     @Expose private String postcode = "empty";
     @Expose private String city = "empty";
     @Expose private String distinct = "empty";
+
+    public String getPrimary_photo() {
+        return primary_photo;
+    }
+
+    public void setPrimary_photo(String primary_photo) {
+        this.primary_photo = primary_photo;
+    }
 
     public String getLat() {
         if(lat == null || "".equals(lat)) lat = "0";
@@ -379,20 +387,9 @@ public class Hosting {
         this.internet = internet;
     }
 
-    public String getPk ()
-    {
-        if(pk == null) pk = "";
-        return pk;
-    }
-
-    public void setPk (String pk)
-    {
-        this.pk = pk;
-    }
-
     @Override
     public String toString()
     {
-        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", lat = "+lat+", distinct = "+distinct+", city = "+city+", title = "+title+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", created_at = "+created_at+", capacity = "+capacity+", to_do = "+to_do+", published = "+published+", exchange = "+exchange+", meal_type = "+meal_type+", recommend_counter = "+recommend_counter+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", updated_at = "+updated_at+", address = "+address+", pet = "+pet+", lon = "+lon+", owner = "+owner+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+", pk = "+pk+"]";
+        return "ClassPojo [summary = "+summary+", street = "+street+", max_stay = "+max_stay+", transportation = "+transportation+", room_type = "+room_type+", lat = "+lat+", distinct = "+distinct+", city = "+city+", title = "+title+", house_type = "+house_type+", smoking = "+smoking+", description = "+description+", created_at = "+created_at+", capacity = "+capacity+", to_do = "+to_do+", published = "+published+", exchange = "+exchange+", meal_type = "+meal_type+", recommend_counter = "+recommend_counter+", neighborhood = "+neighborhood+", postcode = "+postcode+", rules = "+rules+", country = "+country+", category = "+category+", updated_at = "+updated_at+", address = "+address+", pet = "+pet+", lon = "+lon+", owner = "+owner+", min_stay = "+min_stay+", language = "+language+", internet = "+internet+"]";
     }
 }

@@ -9,6 +9,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by user on 2017-12-07.
@@ -17,6 +18,22 @@ import retrofit2.http.Path;
 public interface IHostingApiService {
     @GET("/hosting/")
     Observable<GetHostingList> selects(@Header("Authorization") String token);
+
+    @GET("/hosting/")
+    Observable<GetHostingList> selects(
+            @Header("Authorization") String token,
+            @Query("search_query") String address,
+            @Query("search_categories") String category);
+
+    @GET("/hosting/")
+    Observable<GetHostingList> selectsCategories(
+            @Header("Authorization") String token,
+            @Query("search_categories") String category);
+
+    @GET("/hosting/")
+    Observable<GetHostingList> selectsAddress(
+            @Header("Authorization") String token,
+            @Query("search_query") String address);
 
     @GET("/hosting/{pk}/")
     Observable<GetHosting> select(@Header("Authorization") String token, @Path("pk") String pk);

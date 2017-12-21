@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.Constants;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
+import a.talenting.com.talenting.controller.event.EventActivity;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
@@ -21,14 +22,14 @@ import a.talenting.com.talenting.domain.event.Event;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class SetEventListActivity extends AppCompatActivity {
+public class SetJoinedEventListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_event_list);
+        setContentView(R.layout.activity_set_joined_event_list);
 
         init();
         loadData();
@@ -43,7 +44,7 @@ public class SetEventListActivity extends AppCompatActivity {
     }
 
     private void loadData(){
-        DomainManager.getEventApiService().selectsCreated(DomainManager.getTokenHeader())
+        DomainManager.getEventApiService().selectsJoined(DomainManager.getTokenHeader(), SharedPreferenceManager.getInstance().getPk())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -68,20 +69,15 @@ public class SetEventListActivity extends AppCompatActivity {
                     + event.getEvent_date();
 
             item.setOnClickListener(j -> {
-                Intent intent = new Intent(this, SetEventAddActivity.class);
+                Intent intent = new Intent(this, EventActivity.class);
                 intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
-                startActivityForResult(intent, Constants.REQ_EDIT_EVENT);
+                startActivity(intent);
             });
 
             items.add(item);
         }
 
         adapter.addDataAndRefresh(items);
-    }
-
-    public void goAdd(View v){
-        Intent intent = new Intent(this, SetEventAddActivity.class);
-        startActivityForResult(intent, Constants.REQ_ADD_EVENT);
     }
 
     @Override

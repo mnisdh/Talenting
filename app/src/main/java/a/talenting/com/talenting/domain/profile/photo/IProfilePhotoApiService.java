@@ -19,7 +19,7 @@ import retrofit2.http.Path;
 public interface IProfilePhotoApiService {
     @Multipart
     @POST("/member/profile/{profile_pk}/image/")
-    Observable<ProfileImageResponse> create(
+    Observable<Response<Void>> create(
             @Header("Authorization") String token,
             @Path("profile_pk") String profilePk,
             @Part MultipartBody.Part image);

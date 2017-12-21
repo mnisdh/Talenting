@@ -56,7 +56,9 @@ public class RecyclerItem implements IDetailItem{
     public void setUseRemoveMode(boolean useRemoveMode) {
         this.useRemoveMode = useRemoveMode;
 
-        if(adapter != null) adapter.setUseRemove(this.useRemoveMode);
+        if(adapter != null) adapter.setUseRemove(useRemoveMode, item -> {
+            if(data.contains(item)) data.remove(item);
+        });
     }
 
     public void addItem(IDetailItem item){
@@ -104,7 +106,9 @@ public class RecyclerItem implements IDetailItem{
 
             recyclerView = view.findViewById(R.id.recyclerView);
             adapter = new ListRecyclerViewAdapter(false);
-            adapter.setUseRemove(useRemoveMode);
+            adapter.setUseRemove(useRemoveMode, item -> {
+                if(data.contains(item)) data.remove(item);
+            });
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(layoutInflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
 

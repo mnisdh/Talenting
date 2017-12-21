@@ -9,6 +9,7 @@ import a.talenting.com.talenting.domain.event.photo.IEventPhotoApiService;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
 import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
+import a.talenting.com.talenting.domain.place.IPlaceApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
 import a.talenting.com.talenting.domain.profile.mytrip.IMyTripApiService;
 import a.talenting.com.talenting.domain.profile.photo.IProfilePhotoApiService;
@@ -23,6 +24,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DomainManager {
     public static final String BASE_URL = "http://talenting-dev.ap-northeast-2.elasticbeanstalk.com";
+    public static final String BASE_PLACE_URL = "https://maps.googleapis.com";
+
+    private static Retrofit retrofitPlace;
+    private static IPlaceApiService iPlaceApiService;
 
     private static Retrofit retrofit;
     private static IUserApiService iUserApiService;
@@ -43,6 +48,23 @@ public class DomainManager {
                     .baseUrl(BASE_URL)
                     .build();
         }
+    }
+
+    private static void initRetrofitPlace(){
+        if(retrofitPlace == null){
+            retrofitPlace = new Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(BASE_PLACE_URL)
+                    .build();
+        }
+    }
+
+    public static IPlaceApiService getPlaceApiService(){
+        initRetrofitPlace();
+
+        if(iPlaceApiService == null) iPlaceApiService = retrofitPlace.create(IPlaceApiService.class);
+        return iPlaceApiService;
     }
 
     public static String getTokenHeader(){

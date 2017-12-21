@@ -31,10 +31,10 @@ public class ImageContentItem implements IDetailItem{
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
     public String title = "";
-    public TextStyle titleStyle = new TextStyle(Color.BLACK);
+    public TextStyle titleStyle = new TextStyle(Color.WHITE);
 
     public String content = "";
-    public TextStyle contentStyle = new TextStyle(Color.DKGRAY);
+    public TextStyle contentStyle = new TextStyle(Color.WHITE);
 
     public String imageUrl = "";
 
