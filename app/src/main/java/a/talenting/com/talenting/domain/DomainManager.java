@@ -10,6 +10,7 @@ import a.talenting.com.talenting.domain.hosting.IHostingApiService;
 import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
+import a.talenting.com.talenting.domain.profile.mytrip.IMyTripApiService;
 import a.talenting.com.talenting.domain.profile.photo.IProfilePhotoApiService;
 import a.talenting.com.talenting.domain.user.IUserApiService;
 import retrofit2.Retrofit;
@@ -32,6 +33,7 @@ public class DomainManager {
     private static IProfilePhotoApiService iProfilePhotoApiService;
     private static IEventApiService iEventApiService;
     private static IEventPhotoApiService iEventPhotoApiService;
+    private static IMyTripApiService iMyTripApiService;
 
     private static void initRetrofit(){
         if(retrofit == null){
@@ -97,6 +99,12 @@ public class DomainManager {
 
         if(iEventPhotoApiService == null) iEventPhotoApiService = retrofit.create(IEventPhotoApiService.class);
         return iEventPhotoApiService;
+    }
+    public static IMyTripApiService getMyTripApiService(){
+        initRetrofit();;
+
+        if(iMyTripApiService == null) iMyTripApiService = retrofit.create(IMyTripApiService.class);
+        return iMyTripApiService;
     }
 
 

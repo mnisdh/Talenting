@@ -31,6 +31,7 @@ import java.util.Map;
 
 import a.talenting.com.talenting.BuildConfig;
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.domain.detailItem.MyTripItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.util.FormatUtil;
@@ -46,8 +47,22 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class DialogManager {
+    public static void showMyTripDialog(Context context, MyTripItem item, IDialogStringEvent event){
+        showTextDialog(context, item, event);
+        showStartDatePickerDialog(context, item, event);
+        showEndDatePickerDialog(context, item, event);
+        showNumTextDialog(context, item, event);
+        showMultiLineTextDialog(context, item.descriptionTitle, item, event);
+    }
+
     public static void showDatePickerDialog(Context context, TitleAndValueItem item, IDialogStringEvent event) {
         showDatePickerDialog(context, item.title, item.value, event);
+    }
+    public static void showStartDatePickerDialog(Context context, MyTripItem item, IDialogStringEvent event) {
+        showDatePickerDialog(context, "Arrival Date", item.startDate, event);
+    }
+    public static void showEndDatePickerDialog(Context context, MyTripItem item, IDialogStringEvent event) {
+        showDatePickerDialog(context, "Departure Date", item.endDate, event);
     }
     public static void showDatePickerDialog(Context context, String title, String value, IDialogStringEvent event){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null, false);
@@ -135,6 +150,9 @@ public class DialogManager {
     public static void showTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
         showTextDialog(context, item.title, item.value, event);
     }
+    public static void showTextDialog(Context context, MyTripItem item, IDialogStringEvent event){
+        showTextDialog(context, item.desTitle, item.des, event);
+    }
     public static void showTextDialog(Context context, String title, String value, IDialogStringEvent event){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_input_text, null, false);
         EditText editText = v.findViewById(R.id.editText);
@@ -153,6 +171,9 @@ public class DialogManager {
 
     public static void showMultiLineTextDialog(Context context, String title, TextContentItem item, IDialogStringEvent event){
         showMultiLineTextDialog(context, title, item.content, event);
+    }
+    public static void showMultiLineTextDialog(Context context, String title, MyTripItem item, IDialogStringEvent event){
+        showMultiLineTextDialog(context, title, item.description, event);
     }
     public static void showMultiLineTextDialog(Context context, String title, String value, IDialogStringEvent event){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_input_multi_line_text, null, false);
@@ -217,6 +238,9 @@ public class DialogManager {
 
     public static void showNumTextDialog(Context context, TitleAndValueItem item, IDialogStringEvent event){
         showNumTextDialog(context, item.title, item.value, event);
+    }
+    public static void showNumTextDialog(Context context, MyTripItem item, IDialogStringEvent event){
+        showNumTextDialog(context, item.numTitle, item.num, event);
     }
     public static void showNumTextDialog(Context context, String title, String value, IDialogStringEvent event){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_input_num_text, null, false);

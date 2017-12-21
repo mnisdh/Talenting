@@ -12,4 +12,5 @@
     <string name="profile_talent_category">Talent</string>
     <string name="profile_available_language">Language</string>
     <string name="profile_birth">Birth</string>
+    <string name="mytrip">My Trip</string>
 </resources>

@@ -30,6 +30,8 @@ import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
 import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
+import a.talenting.com.talenting.custom.domain.detailItem.MyTripItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MyTripsItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -38,6 +40,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
+import a.talenting.com.talenting.domain.profile.mytrip.Mytrip;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
 import a.talenting.com.talenting.util.ResourceUtil;
 import a.talenting.com.talenting.util.TempUtil;
@@ -62,8 +65,11 @@ public class SetProfileEditActivity extends AppCompatActivity {
     private TextContentItem self_intro, talent_intro;
     private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
     private RecyclerItem available_languages, talent_category;
+    private MyTripsItem myTripsItem;
 
     private List<ProfileImage> deleteImages = new ArrayList<>();
+    private List<MyTripItem> deleteMytrips = new ArrayList<>();
+
 
 
     @Override
@@ -99,7 +105,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile_btnEdit:
-                if (isEditMode) updateProfile(item);
+                if (isEditMode){
+                    updateProfile(item);
+                }
                 else {
                     setEditMode(true);
 
@@ -131,6 +139,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
         boolean isEdit = isEditMode;
 
         thumbnailsItem.isEditMode = isEdit;
+        myTripsItem.isEditMode = isEdit;
         available_languages.setUseAddMode(isEdit);
         available_languages.setUseRemoveMode(isEdit);
         talent_category.setUseAddMode(isEdit);
@@ -146,8 +155,35 @@ public class SetProfileEditActivity extends AppCompatActivity {
                 .subscribe(result -> {
                             if (result.isSuccess()) loadData(result.getProfile());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+
+    }
+
+    private void loadMyTripData(){
+        DomainManager.getMyTripApiService().getMyList(DomainManager.getTokenHeader())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) loadMytripData(result.getMytrip());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+    private void loadMytripData(Mytrip[] mytrips){
+        for(Mytrip mytrip : mytrips){
+            MyTripItem myTripItem = new MyTripItem();
+            myTripItem.des = mytrip.getDestination();
+            myTripItem.startDate = mytrip.getArrival_date();
+            myTripItem.endDate = mytrip.getDeparture_date();
+            myTripItem.num = mytrip.getNumber_travelers();
+            myTripItem.description = mytrip.getDescription();
+
+            myTripsItem.addMyTrip(myTripItem);
+
+        }
+        adapter.refresh(myTripsItem);
     }
     private void loadData(Profile profile) {
         baseProfile = profile;
@@ -157,7 +193,6 @@ public class SetProfileEditActivity extends AppCompatActivity {
         for (ProfileImage image : profile.getImages()) {
             thumbnailsItem.addThumbnail(new ThumbnailItem(image));
         }
-        adapter.refresh(thumbnailsItem);
         thumbnailsItem.setOnAddClickListener(item -> {
             if (!isEditMode) return;
             DialogManager.showCameraDialog(this, activityResultManager, value -> {
@@ -179,7 +214,48 @@ public class SetProfileEditActivity extends AppCompatActivity {
             adapter.refresh(thumbnailsItem);
         });
         adapter.addData(thumbnailsItem);
+        //endregion
+        //region MyTrip
+        myTripsItem = new MyTripsItem(new ArrayList<>());
+        myTripsItem.setOnAddClickListener(item -> {
+            if (!isEditMode) return;
 
+            MyTripItem myTripItem = new MyTripItem();
+            DialogManager.showTextDialog(this,myTripItem, value->{
+                myTripItem.des = value;
+                DialogManager.showStartDatePickerDialog(this, myTripItem, start_value -> {
+                    myTripItem.startDate = start_value;
+                    DialogManager.showEndDatePickerDialog(this, myTripItem, date_value -> {
+                        myTripItem.endDate = date_value;
+                        DialogManager.showNumTextDialog(this, myTripItem, num_value -> {
+                            myTripItem.num = num_value;
+                            DialogManager.showMultiLineTextDialog(this, myTripItem.descriptionTitle, myTripItem, des_value -> {
+                                myTripItem.description = des_value;
+                                myTripsItem.addMyTrip(myTripItem);
+                                adapter.refresh(myTripsItem);
+                            });
+                        });
+                    });
+                });
+            });
+
+        });
+        myTripsItem.setOnDeleteClickListener(item -> {
+            if(!isEditMode) return;
+
+            MyTripItem myTripItem = myTripsItem.selectedMyTrip();
+            if(myTripItem == null){
+                return;
+            }else{
+                deleteMytrips.add(myTripItem);
+            }
+            myTripsItem.deleteMyTrip(myTripItem);
+
+            adapter.refresh(myTripsItem);
+        });
+        adapter.addData(myTripsItem);
+
+        loadMyTripData();
         //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
@@ -279,6 +355,32 @@ public class SetProfileEditActivity extends AppCompatActivity {
     private String getResStrng(int id) {
         return ResourceUtil.getString(this, id);
     }
+
+    private IItemClickListener myTripClickEvent = i -> {
+        if (!isEditMode) return;
+
+        if (i.getDetailItemType() == DetailItemType.MYTRIP) {
+            MyTripItem item = (MyTripItem) i;
+
+            DialogManager.showTextDialog(this, item, value -> {
+                item.des = value;
+            });
+
+            DialogManager.showStartDatePickerDialog(this, item, value -> {
+                item.startDate = value;
+            });
+            DialogManager.showEndDatePickerDialog(this, item, value -> {
+                item.endDate = value;
+            });
+            DialogManager.showTextDialog(this, item, value -> {
+                item.num = value;
+            });
+            DialogManager.showMultiLineTextDialog(this, item.descriptionTitle, item, value -> {
+                item.description = value;
+                adapter.refresh(item);
+            });
+        }
+    };
 
     private IItemClickListener calenderClickEvent = i -> {
         if (!isEditMode) return;
@@ -386,6 +488,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
         }
         baseProfile.setTalent_category(talent);
     }
+
     private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 

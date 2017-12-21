@@ -25,7 +25,7 @@ public class TextContentItem implements IDetailItem{
     public TextStyle titleStyle = new TextStyle(Color.BLACK);
 
     public String content = "";
-    public TextStyle contentStyle = new TextStyle(Color.DKGRAY);
+    public TextStyle contentStyle = new TextStyle(45,Color.DKGRAY);
 
     public boolean useBottomLine = false;
 

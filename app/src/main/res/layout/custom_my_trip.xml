@@ -1,0 +1,151 @@
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="a.talenting.com.talenting.custom.domain.detailItem.MyTripItem" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:onClick="@{item::onClick}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingTop="@{item.padding.top}">
+
+        <TextView
+            android:id="@+id/txt_desTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:text="@{item.desTitle}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.des}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_dateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_desTitle"
+            android:layout_marginTop="8dp"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:text="@{item.dateTitle}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_startDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txt_dateTitle"
+            android:layout_alignBottom="@+id/txt_dateTitle"
+            android:layout_marginRight="24dp"
+            android:layout_toLeftOf="@+id/txt_endDate"
+            android:layout_toStartOf="@+id/txt_endDate"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.startDate}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_endDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txt_startDate"
+            android:layout_alignBottom="@+id/txt_startDate"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.endDate}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_numTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_dateTitle"
+            android:layout_marginTop="8dp"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:text="@{item.numTitle}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/txt_numTitle"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.num}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_descriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_numTitle"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:text="@{item.descriptionTitle}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}" />
+
+        <TextView
+            android:id="@+id/txt_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txt_descriptionTitle"
+            android:layout_alignBottom="@+id/txt_descriptionTitle"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/txt_descriptionTitle"
+            android:layout_toRightOf="@+id/txt_descriptionTitle"
+            android:background="#55716f6f"
+            android:elevation="2dp"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.description}"
+            android:textColor="@{item.contentStyle.color}"
+            android:textSize="@{item.contentStyle.size}" />
+    </RelativeLayout>
+</layout>
