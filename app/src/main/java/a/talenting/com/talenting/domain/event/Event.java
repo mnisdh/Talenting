@@ -44,6 +44,10 @@ public class Event {
         this.address = address;
     }
 
+    public boolean isWish(){
+        return !(wish_status == null || wish_status.equals("") || wish_status.toUpperCase().equals("FALSE"));
+    }
+
     public String getWish_status ()
     {
         return wish_status;

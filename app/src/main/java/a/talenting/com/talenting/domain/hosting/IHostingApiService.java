@@ -46,4 +46,7 @@ public interface IHostingApiService {
 
     @DELETE("/hosting/{pk}/")
     Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("pk") String pk);
+
+    @POST("/hosting/{pk}/wish-list-toggle/")
+    Observable<Response<Void>> wishListToggle(@Header("Authorization") String token, @Path("pk") String pk);
 }

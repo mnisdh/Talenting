@@ -35,6 +35,7 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.hosting.GetHostingList;
 import a.talenting.com.talenting.domain.hosting.Hosting;
+import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -170,7 +171,6 @@ public class HostingListView extends FrameLayout {
     public void setData(List<Hosting> hostings){
         adapter.clearData();
 
-        ImageContentItem item;
         for(Hosting hosting : hostings){
             adapter.addDataAndRefresh(createItem(hosting));
         }
@@ -178,8 +178,10 @@ public class HostingListView extends FrameLayout {
 
     private ImageContentItem createItem(Hosting hosting){
         ImageContentItem item = new ImageContentItem(false);
-        item.imageUrl = hosting.getPrimary_photo();
+        if(hosting.getPrimary_photo() == null || hosting.getPrimary_photo().equals("")) setPhoto(item, hosting.getOwner());
+        else item.imageUrl = hosting.getPrimary_photo();
         item.title = hosting.getTitle();
+        item.isFavorite = hosting.isWish();
         item.content = BaseData.getCategoryText(hosting.getCategory()) + "\n"
                 + hosting.getSummary();
 
@@ -188,12 +190,43 @@ public class HostingListView extends FrameLayout {
             intent.putExtra(Constants.EXT_HOSTING_PK, hosting.getOwner());
             this.getContext().startActivity(intent);
         });
+        item.setOnFavoriteClickListener(j ->{
+            DomainManager.getHostingApiService().wishListToggle(DomainManager.getTokenHeader(), hosting.getOwner())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> item.isFavorite = !item.isFavorite
+                    );
+        });
 
         return item;
     }
 
+    private void setPhoto(ImageContentItem item, String pk){
+        DomainManager.getHostingPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            int first = 999;
+                            String image = "";
+                            for (HostingPhoto photo : result.getHostingPhoto()) {
+                                int photoId = Integer.parseInt(photo.getPk());
+                                if(first > photoId){
+                                    first = photoId;
+                                    image = photo.getImageUrl();
+                                }
+                            }
+
+                            item.imageUrl = image;
+
+                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.notifyDataSetChanged();
+                            else adapter.notifyDataSetChanged();
+                        }
+                );
+    }
+
     public void setSampleDataTemp() {
-        String[] tempAddress = {"America", "Australia", "Canada", "France", "Korea"};
+        String[] tempAddress = {"USA", "Australia", "Canada", "France", "Korea"};
 
         for (String tempAddr : tempAddress) {
             DomainManager.getHostingApiService().selectsAddress(DomainManager.getTokenHeader(), tempAddr)
@@ -203,7 +236,6 @@ public class HostingListView extends FrameLayout {
                                 if (result.isSuccess()) {
                                     List<IDetailItem> items = new ArrayList<>();
 
-                                    ImageContentItem item;
                                     for (Hosting hosting : result.getHosting()) {
                                         items.add(createItem(hosting));
                                     }

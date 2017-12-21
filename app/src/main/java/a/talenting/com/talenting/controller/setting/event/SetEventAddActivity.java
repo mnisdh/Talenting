@@ -537,10 +537,7 @@ public class SetEventAddActivity extends AppCompatActivity {
                     DomainManager.getEventPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), body, bEvent)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(result -> {
-                                        if (result.isSuccess()) ;
-                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                                    }
+                            .subscribe(result -> {}
                                     , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                                     , () -> editPhotoFinishCheck()
                             );

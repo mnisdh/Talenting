@@ -22,8 +22,11 @@ public class ThumbnailsItem implements IDetailItem{
     private List<ThumbnailItem> data = new ArrayList<>();
     private IItemClickListener onAddClickListener;
     private IItemClickListener onDeleteClickListener;
+    private IItemClickListener onFavoriteClickListener;
 
     public boolean isEditMode = false;
+    public boolean useFavorite = false;
+    public boolean isFavorite = false;
 
     public ThumbnailsItem(List<ThumbnailItem> items){
         data.addAll(items);
@@ -55,6 +58,13 @@ public class ThumbnailsItem implements IDetailItem{
     }
     public void setOnDeleteClickListener(IItemClickListener onDeleteClickListener) {
         this.onDeleteClickListener = onDeleteClickListener;
+    }
+
+    public void onFavoriteClick(View v){
+        if(onFavoriteClickListener != null) onFavoriteClickListener.run(this);
+    }
+    public void setOnFavoriteClickListener(IItemClickListener onFavoriteClickListener) {
+        this.onFavoriteClickListener = onFavoriteClickListener;
     }
 
     public ThumbnailItem selectedThubnail(){

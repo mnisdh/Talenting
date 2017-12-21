@@ -13,6 +13,7 @@ public class EventPhoto implements IThumbnailPhoto {
     @Expose private String events;
     @Expose private String created_at;
     @Expose private String image;
+    @Expose private String image_thumbnail;
 
     public String getId ()
     {
@@ -54,6 +55,14 @@ public class EventPhoto implements IThumbnailPhoto {
         this.image = image;
     }
 
+    public String getImage_thumbnail() {
+        return image_thumbnail;
+    }
+
+    public void setImage_thumbnail(String image_thumbnail) {
+        this.image_thumbnail = image_thumbnail;
+    }
+
     @Override
     public String toString()
     {
@@ -67,6 +76,6 @@ public class EventPhoto implements IThumbnailPhoto {
 
     @Override
     public String getImageUrl() {
-        return image;
+        return image_thumbnail;
     }
 }

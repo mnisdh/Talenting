@@ -53,6 +53,8 @@ public interface IEventApiService {
     Observable<Response<Void>> delete(@Header("Authorization") String token, @Path("pk") String pk);
 
     @POST("/event/{pk}/participate/")
-    Observable<GetEvent> participate(@Header("Authorization") String token, @Path("pk") String pk);
+    Observable<Response<Void>> participate(@Header("Authorization") String token, @Path("pk") String pk);
 
+    @POST("/event/{pk}/wish-list-toggle/")
+    Observable<Response<Void>> wishListToggle(@Header("Authorization") String token, @Path("pk") String pk);
 }

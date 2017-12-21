@@ -35,6 +35,7 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.event.Event;
 import a.talenting.com.talenting.domain.event.GetEventList;
+import a.talenting.com.talenting.domain.event.photo.EventPhoto;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -170,27 +171,63 @@ public class EventListView extends FrameLayout {
     public void setData(List<Event> events){
         adapter.clearData();
 
-        ImageContentItem item;
         for(Event event : events){
-            item = new ImageContentItem(false);
-            item.imageUrl = event.getPrimary_photo();
-            item.title = event.getTitle();
-            item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
-                    + event.getPrice() + "\n"
-                    + event.getEvent_date();
-
-            item.setOnClickListener(j -> {
-                Intent intent = new Intent(this.getContext(), EventActivity.class);
-                intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
-                this.getContext().startActivity(intent);
-            });
-
-            adapter.addDataAndRefresh(item);
+            adapter.addDataAndRefresh(createItem(event));
         }
     }
 
+    private ImageContentItem createItem(Event event){
+        ImageContentItem item = new ImageContentItem(false);
+        if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
+        else item.imageUrl = event.getPrimary_photo();
+        item.title = event.getTitle();
+        item.isFavorite = event.isWish();
+        item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
+                + event.getPrice() + "\n"
+                + event.getEvent_date();
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this.getContext(), EventActivity.class);
+            intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
+            this.getContext().startActivity(intent);
+        });
+        item.setOnFavoriteClickListener(j -> {
+            DomainManager.getEventApiService().wishListToggle(DomainManager.getTokenHeader(), event.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> item.isFavorite = !item.isFavorite
+                    );
+        });
+
+        return item;
+    }
+
+    private void setPhoto(ImageContentItem item, String pk){
+        DomainManager.getEventPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            int first = 999;
+                            String image = "";
+                            for (EventPhoto photo : result.getEvent_photo()) {
+                                int photoId = Integer.parseInt(photo.getId());
+                                if(first > photoId){
+                                    first = photoId;
+                                    image = photo.getImageUrl();
+                                }
+                            }
+
+                            item.imageUrl = image;
+
+                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.notifyDataSetChanged();
+                            else adapter.notifyDataSetChanged();
+                        }
+                );
+    }
+
     public void setSampleDataTemp() {
-        String[] tempAddress = {"America", "Australia", "Canada", "France", "Korea"};
+        String[] tempAddress = {"USA", "Australia", "Canada", "France", "Korea"};
 
         for (String tempAddr : tempAddress) {
             DomainManager.getEventApiService().selectsAddress(DomainManager.getTokenHeader(), tempAddr)
@@ -199,23 +236,8 @@ public class EventListView extends FrameLayout {
                     .subscribe(result -> {
                                 if (result.isSuccess()) {
                                     List<IDetailItem> items = new ArrayList<>();
-
-                                    ImageContentItem item;
                                     for (Event event : result.getEvent()) {
-                                        item = new ImageContentItem(false);
-                                        item.imageUrl = event.getPrimary_photo();
-                                        item.title = event.getTitle();
-                                        item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
-                                                + event.getPrice() + "\n"
-                                                + event.getEvent_date();
-
-                                        item.setOnClickListener(j -> {
-                                            Intent intent = new Intent(this.getContext(), EventActivity.class);
-                                            intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
-                                            this.getContext().startActivity(intent);
-                                        });
-
-                                        items.add(item);
+                                        items.add(createItem(event));
                                     }
 
                                     if(items.size() > 0) adapterTemp.addDataAndRefresh(new RecyclerItem(tempAddr, items));

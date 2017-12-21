@@ -29,7 +29,15 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
     public void addDataAndRefresh(IDetailItem item){
         data.add(item);
+        refresh(item);
+    }
+
+    public void refresh(){
         notifyDataSetChanged();
+    }
+
+    public void refresh(IDetailItem item){
+        notifyItemChanged(data.indexOf(item));
     }
 
     public void addDataAndRefresh(List<IDetailItem> items){
