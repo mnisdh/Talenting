@@ -47,7 +47,6 @@ public class EventActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
 
-    private ThumbnailItem primaryPhoto;
     private ThumbnailsItem thumbnailsItem;
     private ProfileItem profile;
     private TextContentItem program;
@@ -92,12 +91,21 @@ public class EventActivity extends AppCompatActivity {
     private void loadData(Event event){
         baseEvent = event;
 
-        //region primary photo
-        primaryPhoto = new ThumbnailItem("", event.getPrimary_photo());
-        primaryPhoto.setOnClickListener(item -> {
-
+        //region thumbnails
+        thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
+        thumbnailsItem.useFavorite = true;
+        thumbnailsItem.isFavorite = event.isWish();
+        thumbnailsItem.setOnFavoriteClickListener(i -> {
+            DomainManager.getEventApiService().wishListToggle(DomainManager.getTokenHeader(), event.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> thumbnailsItem.isFavorite = !thumbnailsItem.isFavorite
+                    );
         });
-        adapter.addData(primaryPhoto);
+        adapter.addData(thumbnailsItem);
+
+        loadPhotoData();
         //endregion
         //region profile
         profile = new ProfileItem("", "");
@@ -171,21 +179,6 @@ public class EventActivity extends AppCompatActivity {
         eventDate.useBottomLine = true;
         adapter.addData(eventDate);
         //endregion
-        //region country type
-        country = new TitleAndValueItem(getResStrng(R.string.event_country)
-                , BaseData.getCountryText(event.getCountry())
-                , event.getCountry()
-                , null);
-        country.useBottomLine = true;
-        adapter.addData(country);
-        //endregion
-        //region city
-        city = new TitleAndValueItem(getResStrng(R.string.event_city)
-                , event.getCity()
-                , null);
-        city.useBottomLine = true;
-        adapter.addData(city);
-        //endregion
         //region location
         locationTitle = new TitleAndValueItem(getResStrng(R.string.hosting_location), "");
         adapter.addData(locationTitle);
@@ -194,12 +187,6 @@ public class EventActivity extends AppCompatActivity {
         googleStaticMap.setLatlng(Double.parseDouble(event.getLat()), Double.parseDouble(event.getLon()), Color.RED);
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
-        //endregion
-        //region thumbnails
-        thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
-        adapter.addData(thumbnailsItem);
-
-        loadPhotoData();
         //endregion
 
         adapter.refresh();

@@ -19,9 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/viewPager"
-            android:layout_alignEnd="@+id/viewPager"
+
+            android:layout_alignRight="@+id/viewPager"
+
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:clickable="true"
             android:onClick="@{item::onDeleteClick}"
             android:tint="@android:color/background_light"
@@ -43,6 +45,20 @@
             android:visibility="@{item.isEditMode ? View.VISIBLE : View.GONE}"
             app:fabSize="mini"
             app:srcCompat="@android:drawable/ic_input_add" />
+
+        <ToggleButton
+            android:id="@+id/btnFavorite2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignRight="@+id/viewPager"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_favorite_bg"
+            android:checked="@{item.isFavorite}"
+            android:onClick="@{item::onFavoriteClick}"
+            android:textOff=""
+            android:textOn=""
+            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"

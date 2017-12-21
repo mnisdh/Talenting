@@ -18,6 +18,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.event.Event;
+import a.talenting.com.talenting.domain.event.photo.EventPhoto;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -61,7 +62,8 @@ public class SetEventListActivity extends AppCompatActivity {
         ImageContentItem item;
         for(Event event : events){
             item = new ImageContentItem(false);
-            item.imageUrl = event.getPrimary_photo();
+            if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
+            else item.imageUrl = event.getPrimary_photo();
             item.title = event.getTitle();
             item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
                     + event.getPrice() + "\n"
@@ -77,6 +79,27 @@ public class SetEventListActivity extends AppCompatActivity {
         }
 
         adapter.addDataAndRefresh(items);
+    }
+
+    private void setPhoto(ImageContentItem item, String pk){
+        DomainManager.getEventPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            int first = 999;
+                            String image = "";
+                            for (EventPhoto photo : result.getEvent_photo()) {
+                                int photoId = Integer.parseInt(photo.getId());
+                                if(first > photoId){
+                                    first = photoId;
+                                    image = photo.getImageUrl();
+                                }
+                            }
+
+                            item.imageUrl = image;
+                            adapter.refresh(item);
+                        }
+                );
     }
 
     public void goAdd(View v){

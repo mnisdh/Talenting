@@ -12,7 +12,7 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}"
         android:paddingBottom="@{item.padding.bottom}"
@@ -22,7 +22,7 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_gravity="right"
             android:onClick="@{item::onClick}"
@@ -64,10 +64,10 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/btn_favorite_bg"
             android:checked="@{item.isFavorite}"
+            android:onClick="@{item::onFavoriteClick}"
             android:textOff=""
             android:textOn=""
-            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}"
-            android:onClick="@{item::onFavoriteClick}"/>
+            android:visibility="@{item.useFavorite ? View.VISIBLE : View.GONE}" />
 
         <a.talenting.com.talenting.custom.ItemListView
             android:id="@+id/itemList"

@@ -22,6 +22,8 @@ public class Hosting {
     private String updated_at;
     @Expose(serialize = false)
     private String primary_photo;
+    @Expose(serialize = false)
+    private String wish_status;
 
     @Expose private String summary;
     @Expose private String max_stay;
@@ -45,12 +47,25 @@ public class Hosting {
     @Expose private String lat;
     @Expose private String lon;
 
+
     @Expose private String country = "KR";
     @Expose private String street = "empty";
     @Expose private String address = "empty";
     @Expose private String postcode = "empty";
     @Expose private String city = "empty";
     @Expose private String distinct = "empty";
+
+    public boolean isWish(){
+        return !(wish_status == null || wish_status.equals("") || wish_status.toUpperCase().equals("FALSE"));
+    }
+
+    public String getWish_status() {
+        return wish_status;
+    }
+
+    public void setWish_status(String wish_status) {
+        this.wish_status = wish_status;
+    }
 
     public String getPrimary_photo() {
         return primary_photo;

@@ -17,9 +17,9 @@ public class Profile implements Serializable{
     @Expose(serialize = false) private String last_name;
     @Expose(serialize = false) private String age;
     @Expose(serialize = false) private String pk;
+    @Expose(serialize = false) private String wish_status;
 
     @Expose(serialize = false) private List<ProfileImage> images;
-    @Expose(serialize = false) private boolean wishList;
 
     @Expose private String occupation;
     @Expose private String birth;
@@ -31,20 +31,24 @@ public class Profile implements Serializable{
     @Expose private String city;
     @Expose private String country;
 
+    public boolean isWish(){
+        return !(wish_status == null || wish_status.equals("") || wish_status.toUpperCase().equals("FALSE"));
+    }
+
+    public String getWish_status() {
+        return wish_status;
+    }
+
+    public void setWish_status(String wish_status) {
+        this.wish_status = wish_status;
+    }
+
     public String getProfilePk(){
         return pk;
     }
 
     public void setProfilePk(String pk) {
         this.pk = pk;
-    }
-
-    public boolean getWishList(){
-        return wishList;
-    }
-
-    public void setWishList(boolean wishList){
-        this.wishList = wishList;
     }
 
     public List<ProfileImage> getImages ()

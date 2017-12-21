@@ -1,6 +1,5 @@
 package a.talenting.com.talenting.domain.event.photo;
 
-import a.talenting.com.talenting.domain.hosting.photo.GetHostingPhoto;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -32,7 +31,7 @@ public interface IEventPhotoApiService {
 
     @Multipart
     @POST("/event/{event_pk}/photo/")
-    Observable<GetEventPhoto> insert(
+    Observable<Response<Void>> insert(
             @Header("Authorization") String token,
             @Path("event_pk") String eventPk,
             @Part MultipartBody.Part image,
@@ -40,7 +39,7 @@ public interface IEventPhotoApiService {
 
     @Multipart
     @PUT("/event/{event_pk}/photo/{photo_pk}/")
-    Observable<GetEventPhoto> update(
+    Observable<Response<Void>> update(
             @Header("Authorization") String token,
             @Path("event_pk") String eventPk,
             @Path("photo_pk") String photoPk,
@@ -49,7 +48,7 @@ public interface IEventPhotoApiService {
 
     @Multipart
     @PUT("/event/{event_pk}/photo/{photo_pk}/")
-    Observable<GetHostingPhoto> update(
+    Observable<Response<Void>> update(
             @Header("Authorization") String token,
             @Path("event_pk") String eventPk,
             @Path("photo_pk") String photoPk,

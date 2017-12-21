@@ -106,6 +106,16 @@ public class HostingActivity extends AppCompatActivity {
 
         //region thumbnails
         thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
+        thumbnailsItem.useFavorite = true;
+        thumbnailsItem.isFavorite = hosting.isWish();
+        thumbnailsItem.setOnFavoriteClickListener(i -> {
+            DomainManager.getHostingApiService().wishListToggle(DomainManager.getTokenHeader(), hosting.getOwner())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> thumbnailsItem.isFavorite = !thumbnailsItem.isFavorite
+                    );
+        });
         adapter.addData(thumbnailsItem);
 
         loadPhotoData();
