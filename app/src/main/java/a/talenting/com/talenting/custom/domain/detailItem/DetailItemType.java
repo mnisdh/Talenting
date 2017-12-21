@@ -19,5 +19,6 @@ public enum  DetailItemType {
     MSG_OTHER,
     MSG_MY,
     MYTRIP,
-    MyTRIPS
+    MyTRIPS,
+    TITLE_AND_TOOGLEBUTTON
 }

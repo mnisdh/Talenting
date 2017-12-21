@@ -30,6 +30,7 @@ import a.talenting.com.talenting.controller.event.EventListView;
 import a.talenting.com.talenting.controller.hosting.HostingListView;
 import a.talenting.com.talenting.controller.message.MessageListView;
 import a.talenting.com.talenting.controller.setting.event.SetEventListActivity;
+import a.talenting.com.talenting.controller.setting.event.SetJoinedEventListActivity;
 import a.talenting.com.talenting.controller.setting.hosting.SetHostingAddActivity;
 import a.talenting.com.talenting.controller.setting.profile.SetProfileEditActivity;
 import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
@@ -276,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
         closeSettingMenu();
     }
     public void goJoinEventSetting(View v){
-        Intent intent = new Intent(this, SetEventListActivity.class);
+        Intent intent = new Intent(this, SetJoinedEventListActivity.class);
         startActivity(intent);
 
         closeSettingMenu();

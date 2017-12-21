@@ -35,6 +35,9 @@ public class Event {
     @Expose private String lon;
     @Expose private String address;
 
+    public boolean isParticipation(String memberPk){
+        return getParticipants().contains(memberPk);
+    }
 
     public String getAddress() {
         return address;

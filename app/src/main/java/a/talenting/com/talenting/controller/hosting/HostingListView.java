@@ -147,7 +147,7 @@ public class HostingListView extends FrameLayout {
                                 if (r.isSuccess()) {
                                     Observable<GetHostingList> getHostingListObservable = null;
 
-                                    if(!categoryCode.equals("-1")){
+                                    if(!categoryCode.equals("")){
                                         getHostingListObservable = DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader(), r.getResult().getFormatted_address(), categoryCode);
                                     }
                                     else{
@@ -226,7 +226,7 @@ public class HostingListView extends FrameLayout {
     }
 
     public void setSampleDataTemp() {
-        String[] tempAddress = {"USA", "Australia", "Canada", "France", "Korea"};
+        String[] tempAddress = {"USA", "UK", "Australia", "Canada", "France", "Korea"};
 
         for (String tempAddr : tempAddress) {
             DomainManager.getHostingApiService().selectsAddress(DomainManager.getTokenHeader(), tempAddr)

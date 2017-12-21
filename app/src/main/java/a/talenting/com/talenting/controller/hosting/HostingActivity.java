@@ -17,8 +17,8 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.Constants;
-import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.controller.common.LocationActivity;
 import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
@@ -55,7 +55,7 @@ public class HostingActivity extends AppCompatActivity {
     private TextContentItem summary, rules, description, todo;
     private TitleAndCheckItem smoking, pet;
     private TitleAndValueItem title, category, houseType, roomType, mealType, internet,
-            capacity, min_stay, max_stay, exchange, neighborhood,
+            message, capacity, min_stay, max_stay, exchange, neighborhood,
             transportation, locationTitle;
     private MapPreviewItem location;
     private RecyclerItem language;
@@ -122,10 +122,20 @@ public class HostingActivity extends AppCompatActivity {
         //endregion
         //region profile
         profile = new ProfileItem("", "");
-        profile.useBottomLine = true;
+        profile.useBottomLine = false;
         adapter.addData(profile);
 
         loadProfileData(hosting.getOwner());
+        //endregion
+        //region message
+        message = new TitleAndValueItem(""
+                , getResStrng(R.string.hosting_send_message)
+                , i -> {
+            //todo:메세지 보내는 인텐트 추가
+        });
+        message.valueStyle.setColor(Color.GREEN);
+        message.useBottomLine = true;
+        adapter.addData(message);
         //endregion
         //region title
         title = new TitleAndValueItem(getResStrng(R.string.hosting_title)
@@ -338,13 +348,11 @@ public class HostingActivity extends AppCompatActivity {
             MapPreviewItem item = (MapPreviewItem) i;
             LatLng latLng = item.googleStaticMap.getLatLng();
 
-            GooglePlaceApi.startPlaceSelectMap(activityResultManager
-                    , p -> {
-                        item.googleStaticMap.setLatlng(p.getLatLng(), Color.RED);
-                        adapter.refresh(item);
-                    }
-                    , this
-                    , latLng);
+            Intent intent = new Intent(this, LocationActivity.class);
+            intent.putExtra(Constants.EXT_LAT, latLng.latitude);
+            intent.putExtra(Constants.EXT_LNG, latLng.longitude);
+            intent.putExtra(Constants.EXT_IS_DETAIL, false);
+            startActivity(intent);
         }
     };
 
