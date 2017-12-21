@@ -177,7 +177,7 @@ public class EventListView extends FrameLayout {
     }
 
     private ImageContentItem createItem(Event event){
-        ImageContentItem item = new ImageContentItem(false);
+        ImageContentItem item = new ImageContentItem(false, false);
         if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
         else item.imageUrl = event.getPrimary_photo();
         item.title = event.getTitle();

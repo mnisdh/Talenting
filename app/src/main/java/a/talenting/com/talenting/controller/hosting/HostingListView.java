@@ -177,7 +177,7 @@ public class HostingListView extends FrameLayout {
     }
 
     private ImageContentItem createItem(Hosting hosting){
-        ImageContentItem item = new ImageContentItem(false);
+        ImageContentItem item = new ImageContentItem(false, false);
         if(hosting.getPrimary_photo() == null || hosting.getPrimary_photo().equals("")) setPhoto(item, hosting.getOwner());
         else item.imageUrl = hosting.getPrimary_photo();
         item.title = hosting.getTitle();

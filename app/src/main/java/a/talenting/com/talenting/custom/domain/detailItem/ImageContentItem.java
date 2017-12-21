@@ -27,6 +27,7 @@ public class ImageContentItem implements IDetailItem{
     private IItemClickListener onClickListener;
     private IItemClickListener onFavoriteClickListener;
     private boolean isHorizontal = false;
+    private boolean useMatchParentWidth = false;
 
     public PaddingStyle padding = new PaddingStyle(50, 50, 50, 50);
 
@@ -44,42 +45,9 @@ public class ImageContentItem implements IDetailItem{
     public boolean useFavorite = true;
     public boolean isFavorite = false;
 
-    public ImageContentItem(){
-
-    }
-
-    public ImageContentItem(String title, String content, String imageUrl){
-        this.title = title;
-        this.content = content;
-        this.imageUrl = imageUrl;
-    }
-
-    public ImageContentItem(String title, String content, String imageUrl, List<String> itemList){
-        this.title = title;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.itemList = itemList;
-    }
-
-    public ImageContentItem(String title, String content, String imageUrl, List<String> itemList, IItemClickListener onClickListener, IItemClickListener onFavoriteClickListener){
-        this.title = title;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.itemList = itemList;
-        this.onClickListener = onClickListener;
-        this.onFavoriteClickListener = onFavoriteClickListener;
-    }
-
-    public ImageContentItem(String title, String content, String imageUrl, IItemClickListener onClickListener, IItemClickListener onFavoriteClickListener){
-        this.title = title;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.onClickListener = onClickListener;
-        this.onFavoriteClickListener = onFavoriteClickListener;
-    }
-
-    public ImageContentItem(boolean useHorizontal){
+    public ImageContentItem(boolean useHorizontal, boolean useMatchParentWidth){
         isHorizontal = useHorizontal;
+        this.useMatchParentWidth = useMatchParentWidth;
     }
 
     public void onClick(View v){
@@ -115,16 +83,17 @@ public class ImageContentItem implements IDetailItem{
                 }
 
                 view = binding.getRoot();
-            } else {
+            }
+            else {
                 CustomDetailItemImageContentVerticalBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.custom_detail_item_image_content_vertical, parent, false);
                 binding.setItem(this);
-                binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
+                if(useMatchParentWidth) binding.imageView.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
                 if (!itemList.isEmpty()) {
                     ItemListView itemListView = binding.getRoot().findViewById(R.id.itemList);
                     itemListView.addItems(itemList);
                 }
                 view = binding.getRoot();
-                view.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                if(useMatchParentWidth) view.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
             }
         //}
 
