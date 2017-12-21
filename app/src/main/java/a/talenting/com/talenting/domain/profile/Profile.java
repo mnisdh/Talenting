@@ -3,38 +3,70 @@ package a.talenting.com.talenting.domain.profile;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
 
 /**
  * Created by user on 2017-12-13.
  */
 
 public class Profile implements Serializable{
-    @Expose(serialize = false)
-    private String first_name;
-    @Expose(serialize = false)
-    private String last_name;
-    @Expose(serialize = false)
-    private String age;
-    @Expose
-    private String occupation;
-    @Expose
-    private String birth;
-    @Expose
-    private String talent_intro;
-    @Expose
-    private List<String> talent_category;
-    @Expose
-    private String gender;
-    @Expose
-    private String self_intro;
-    @Expose
-    private List<String> available_languages;
-    @Expose
-    private String city;
-    @Expose
-    private String country;
+    @Expose(serialize = false) private String first_name;
+    @Expose(serialize = false) private String last_name;
+    @Expose(serialize = false) private String age;
+    @Expose(serialize = false) private String pk;
+    @Expose(serialize = false) private String wish_status;
 
+    @Expose(serialize = false) private List<ProfileImage> images;
+
+    @Expose private String occupation;
+    @Expose private String birth;
+    @Expose private String talent_intro;
+    @Expose private List<String> talent_category;
+    @Expose private String gender;
+    @Expose private String self_intro;
+    @Expose private List<String> available_languages;
+    @Expose private String city;
+    @Expose private String country;
+
+    public boolean isWish(){
+        return !(wish_status == null || wish_status.equals("") || wish_status.toUpperCase().equals("FALSE"));
+    }
+
+    public String getWish_status() {
+        return wish_status;
+    }
+
+    public void setWish_status(String wish_status) {
+        this.wish_status = wish_status;
+    }
+
+    public String getProfilePk(){
+        return pk;
+    }
+
+    public void setProfilePk(String pk) {
+        this.pk = pk;
+    }
+
+    public List<ProfileImage> getImages ()
+    {
+        if(images == null) images = new ArrayList<>();
+        return images;
+    }
+
+    public String getFirstImageUrl(){
+        if(getImages().size() > 0) return getImages().get(0).getImageUrl();
+
+        return "";
+    }
+
+    public void setImages (List<ProfileImage> images)
+    {
+        this.images = images;
+    }
     public String getFirst_name ()
     {
         return first_name;
@@ -77,6 +109,7 @@ public class Profile implements Serializable{
 
     public List<String> getTalent_category ()
     {
+        if(talent_category==null) talent_category=new ArrayList<>();
         return talent_category;
     }
 
@@ -127,6 +160,7 @@ public class Profile implements Serializable{
 
     public List<String> getAvailable_languages ()
     {
+        if(available_languages==null) available_languages=new ArrayList<>();
         return available_languages;
     }
 

@@ -2,17 +2,21 @@ package a.talenting.com.talenting.controller.setting.hosting;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,11 +28,14 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.DialogManager;
 import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.common.LocationActivity;
+import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
+import a.talenting.com.talenting.custom.domain.detailItem.IThumbnailPhoto;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
@@ -40,9 +47,15 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.hosting.Hosting;
+import a.talenting.com.talenting.domain.hosting.photo.HostingPhoto;
+import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.util.ResourceUtil;
+import a.talenting.com.talenting.util.TempUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class SetHostingAddActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -51,10 +64,9 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private boolean isAddMode = true;
     private boolean isEditMode = false;
 
+    private ConstraintLayout progress;
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
-
-    private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     private ThumbnailsItem thumbnailsItem;
     private ProfileItem profile;
@@ -66,24 +78,22 @@ public class SetHostingAddActivity extends AppCompatActivity {
     private MapPreviewItem location;
     private RecyclerItem language;
 
+    private List<HostingPhoto> deletePhotos = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_hosting_add);
 
+        pk = SharedPreferenceManager.getInstance().getPk();
+
         activityResultManager = new ActivityResultManager();
 
-        pk = getIntent().getStringExtra(Constants.EXT_HOSTING_PK);
-        isAddMode = ("".equals(pk) || pk == null);
-
-        initActionBar();
         init();
 
-        if(isAddMode) {
-            loadData(new Hosting());
-            setEditModeViews();
-        }
-        else loadData();
+        loadData();
+
+        initActionBar();
     }
 
     private void initActionBar(){
@@ -131,6 +141,8 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        progress = findViewById(R.id.progress);
     }
 
     private void setEditMode(boolean use){
@@ -154,15 +166,27 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
     private void loadData(){
         DomainManager.getHostingApiService().select(DomainManager.getTokenHeader(), pk)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) loadData(result.getHosting());
-                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(result -> {
+                        if (result.isSuccess()){
+                            isAddMode = false;
+                            loadData(result.getHosting());
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        else setNewData();
+                    }
+                    , error -> setNewData()
+            );
     }
+    private void setNewData(){
+        isAddMode = true;
 
+        Hosting newHosting = new Hosting();
+        newHosting.setOwner(pk);
+
+        loadData(newHosting);
+        setEditModeViews();
+    }
     private void loadData(Hosting hosting){
         baseHosting = hosting;
 
@@ -171,19 +195,43 @@ public class SetHostingAddActivity extends AppCompatActivity {
         thumbnailsItem.setOnAddClickListener(item -> {
             if(!isAddMode && !isEditMode) return;
             DialogManager.showCameraDialog(this, activityResultManager, value -> {
-                thumbnailsItem.addThumbnail(new ThumbnailItem("", value));
+                ThumbnailItem thumbnailItem = new ThumbnailItem("", value);
+                thumbnailItem.setOnContentClickListener(thumbnailContentClickEvent);
+                thumbnailItem.setOnSubContentClickListener(thumbnailSubContentClickEvent);
+
+                thumbnailItem.useContent = true;
+                thumbnailItem.contentHint = getResStrng(R.string.hosting_thumbnail_caption_hint);
+                thumbnailItem.useSubContent = true;
+                thumbnailItem.subContent = BaseData.getHostigPhotoText("1");
+                thumbnailItem.subContentCode = "1";
+                thumbnailsItem.addThumbnail(thumbnailItem);
+
                 adapter.refresh(thumbnailsItem);
             });
         });
         thumbnailsItem.setOnDeleteClickListener(item -> {
             if(!isAddMode && !isEditMode) return;
+
+            ThumbnailItem thumbnailItem = thumbnailsItem.selectedThubnail();
+            if(thumbnailItem == null) return;
+
+            IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
+            if(thumbnailPhoto != null && thumbnailPhoto instanceof HostingPhoto) deletePhotos.add((HostingPhoto) thumbnailPhoto);
+
+            thumbnailsItem.deleteThubnail(thumbnailItem);
+
+            adapter.refresh(thumbnailsItem);
         });
         adapter.addData(thumbnailsItem);
+
+        if(!isAddMode) loadPhotoData();
         //endregion
         //region profile
-        profile = new ProfileItem("Host name", sampleImage);
+        profile = new ProfileItem("", "");
         profile.useBottomLine = true;
         adapter.addData(profile);
+
+        loadProfileData(hosting.getOwner());
         //endregion
         //region title
         title = new TitleAndValueItem(getResStrng(R.string.hosting_title)
@@ -201,7 +249,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         //endregion
         //region category type
         category = new TitleAndValueItem(getResStrng(R.string.hosting_category)
-                , BaseData.getHostigCategoryText(hosting.getCategory())
+                , BaseData.getCategoryText(hosting.getCategory())
                 , hosting.getCategory()
                 , typeItemClickEvent);
         category.useBottomLine = true;
@@ -298,7 +346,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         description.useBottomLine = true;
         adapter.addData(description);
         //endregion
-        //region todo
+        //region to_do
         todo = new TextContentItem(getResStrng(R.string.hosting_to_do)
                 , hosting.getTo_do()
                 , contentItemClickEvent);
@@ -331,12 +379,64 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.addData(locationTitle);
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
-        googleStaticMap.setLatlng(Double.parseDouble(hosting.getMax_lat()), Double.parseDouble(hosting.getMin_lon()), Color.RED);
+        googleStaticMap.setAddress(hosting.getAddress());
+        googleStaticMap.setLatlng(Double.parseDouble(hosting.getLat()), Double.parseDouble(hosting.getLon()), Color.RED);
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
         //endregion
 
         adapter.refresh();
+    }
+    private void loadProfileData(String owner){
+        if("".equals(owner)) return;
+
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), owner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                Profile ownerProfile = result.getProfile();
+
+                                profile.content = ownerProfile.getFirst_name() + " " + ownerProfile.getLast_name();
+                                profile.imageUrl = ownerProfile.getFirstImageUrl();
+                                profile.setOnClickListener(item -> {
+                                    Intent intent = new Intent(this, UserActivity.class);
+                                    intent.putExtra(Constants.EXT_USER_PK, owner);
+                                    startActivity(intent);
+                                });
+
+                                adapter.refresh(profile);
+                            }
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void loadPhotoData(){
+        DomainManager.getHostingPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) loadPhotoData(result.getHostingPhoto());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+    private void loadPhotoData(List<HostingPhoto> hostingPhotos){
+        for(HostingPhoto hostingPhoto : hostingPhotos){
+            ThumbnailItem thumbnailItem = new ThumbnailItem(hostingPhoto);
+            thumbnailItem.setOnContentClickListener(thumbnailContentClickEvent);
+            thumbnailItem.setOnSubContentClickListener(thumbnailSubContentClickEvent);
+
+            thumbnailItem.useContent = true;
+            thumbnailItem.content = hostingPhoto.getCaption();
+            thumbnailItem.contentHint = "Input content";
+            thumbnailItem.useSubContent = true;
+            thumbnailItem.subContent = BaseData.getHostigPhotoText(hostingPhoto.getType());
+            thumbnailItem.subContentCode = hostingPhoto.getType();
+
+            thumbnailsItem.addThumbnail(thumbnailItem);
+        }
     }
 
     private String getResStrng(int id){
@@ -373,7 +473,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
             TitleAndValueItem item = (TitleAndValueItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == category) data = BaseData.getHostingCategory();
+            if(item == category) data = BaseData.getCategory();
             else if(item == houseType) data = BaseData.getHostingHouseType();
             else if(item == roomType) data = BaseData.getHostingRoomType();
             else if(item == mealType) data = BaseData.getHostingMealType();
@@ -403,6 +503,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 GooglePlaceApi.startPlaceSelectMap(activityResultManager
                         , p -> {
                             item.googleStaticMap.setLatlng(p.getLatLng(), Color.RED);
+                            item.googleStaticMap.setPlaceId(p.getId());
                             adapter.refresh(item);
                         }
                         , this
@@ -415,8 +516,18 @@ public class SetHostingAddActivity extends AppCompatActivity {
 
         if(i.getDetailItemType() == DetailItemType.RECYCLER){
             RecyclerItem item = (RecyclerItem) i;
+
             Map<String, String> data = new LinkedHashMap<>();
-            if(item == language) data = BaseData.getLanguage();
+            if(item == language) {
+                List<String> exceptList = new ArrayList<>();
+                for(IDetailItem langItem : item.getItems()){
+                    if(langItem.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
+                        exceptList.add(((TitleAndValueItem)langItem).valueCode);
+                    }
+                }
+
+                data = BaseData.getLanguage(exceptList);
+            }
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -438,6 +549,31 @@ public class SetHostingAddActivity extends AppCompatActivity {
             DialogManager.showNumTextDialog(this, item, value -> {
                 item.value = value;
                 adapter.refresh(item);
+            });
+        }
+    };
+    private IItemClickListener thumbnailContentClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.THUMBNAIL) {
+            ThumbnailItem item = (ThumbnailItem) i;
+
+            DialogManager.showTextDialog(this, getResStrng(R.string.hosting_thumbnail_caption), item.content, value -> {
+                item.content = value;
+                adapter.refresh(thumbnailsItem);
+            });
+        }
+    };
+    private IItemClickListener thumbnailSubContentClickEvent = i -> {
+        if(!isAddMode && !isEditMode) return;
+
+        if(i.getDetailItemType() == DetailItemType.THUMBNAIL){
+            ThumbnailItem item = (ThumbnailItem) i;
+            DialogManager.showTypeListDialog(this, getResStrng(R.string.hosting_thumbnail_type), BaseData.getHostingPhotoType(), (String code, String text) ->
+            {
+                item.subContentCode = code;
+                item.subContent = text;
+                adapter.refresh(thumbnailsItem);
             });
         }
     };
@@ -471,10 +607,9 @@ public class SetHostingAddActivity extends AppCompatActivity {
         baseHosting.setNeighborhood(neighborhood.value);
         baseHosting.setTransportation(transportation.value);
         LatLng latLng = location.googleStaticMap.getLatLng();
-        baseHosting.setMin_lat(latLng.latitude + "");
-        baseHosting.setMax_lat(latLng.latitude + "");
-        baseHosting.setMin_lon(latLng.longitude + "");
-        baseHosting.setMax_lon(latLng.longitude + "");
+        baseHosting.setLat(latLng.latitude + "");
+        baseHosting.setLon(latLng.longitude + "");
+        baseHosting.setAddress(location.googleStaticMap.getAddress());
     }
 
     private void addHosting(){
@@ -486,12 +621,11 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (result.isSuccess()) addPhoto();
+                    if (result.isSuccess()) addPhoto(result.getHosting().getOwner());
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                     , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void updateHosting(MenuItem updateItem){
         updateHostingData();
 
@@ -506,7 +640,6 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
     private void deleteHosting(){
         DomainManager.getHostingApiService().delete(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
@@ -514,26 +647,113 @@ public class SetHostingAddActivity extends AppCompatActivity {
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void addPhoto(){
-        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
+    private void addPhoto(String pk){
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()) addPhoto(pk, item);
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
         finish();
     }
+    private void addPhoto(String pk, ThumbnailItem thumbnailItem){
+        Uri uri = Uri.parse(thumbnailItem.imageUrl);
+        File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+        RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.content);
+        RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), thumbnailItem.subContentCode);
+
+        DomainManager.getHostingPhotoApiService().insert(DomainManager.getTokenHeader(), pk, body, caption, type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {}
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                        , () -> editPhotoFinishCheck()
+                );
+    }
     private void updatePhoto(MenuItem updateItem){
-        a.talenting.com.talenting.domain.hosting.photo.Hosting hosting = new a.talenting.com.talenting.domain.hosting.photo.Hosting();
+        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deletePhotos.size());
 
+        //region delete
+        deletePhoto();
+        //endregion
+        //region update/create
+        for(ThumbnailItem item : thumbnailsItem.getThumbnail()){
+            if(item.getThumbnailPhoto() instanceof HostingPhoto){
+                HostingPhoto hostingPhoto = (HostingPhoto) item.getThumbnailPhoto();
 
+                if(!hostingPhoto.getImageUrl().equals(item.imageUrl)){
+                    Uri uri = Uri.parse(item.imageUrl);
+                    File file = TempUtil.createTempImage(this.getContentResolver(), uri);
 
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("hosting_image", file.getName(), requestFile);
+                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
+                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
 
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), body, caption, type)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> {
+                                        if (result.isSuccess()) ;
+                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , () -> editPhotoFinishCheck()
+                            );
+                }
+                else{
+                    RequestBody caption = RequestBody.create(MediaType.parse("multipart/form-data"), item.content);
+                    RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), item.subContentCode);
 
-        setEditMode(false);
+                    DomainManager.getHostingPhotoApiService().update(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk(), caption, type)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> {
+                                        if (result.isSuccess()) ;
+                                        else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , () -> editPhotoFinishCheck()
+                            );
+                }
+            }
+            else addPhoto(pk, item);
+        }
+        //endregion
+    }
+    private void deletePhoto(){
+        for(HostingPhoto hostingPhoto : deletePhotos) {
+            DomainManager.getHostingPhotoApiService().delete(DomainManager.getTokenHeader(), pk, hostingPhoto.getPk())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {}
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck());
+        }
 
-        updateItem.setIcon(R.drawable.edit);
-        updateItem.setTitle(getResStrng(R.string.edit));
+        deletePhotos.clear();
+    }
 
-        Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+    private MenuItem updateItem;
+    private int uploadCount = -1;
+    private void editPhotoStart(MenuItem updateItem, int uploadCount){
+        this.updateItem = updateItem;
+        this.uploadCount = uploadCount;
+
+        progress.setVisibility(View.VISIBLE);
+    }
+    private void editPhotoFinishCheck(){
+        uploadCount--;
+
+        if(uploadCount == 0){
+            setEditMode(false);
+
+            updateItem.setIcon(R.drawable.edit);
+            updateItem.setTitle(getResStrng(R.string.edit));
+
+            progress.setVisibility(View.GONE);
+
+            Toast.makeText(this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean checkValidation(){
@@ -545,7 +765,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         else if(!checkValidation(baseHosting.getRoom_type())) msg = getResStrng(R.string.hosting_room_type);
         else if(!checkValidation(baseHosting.getMeal_type())) msg = getResStrng(R.string.hosting_meal_type);
         else if(baseHosting.getLanguage().size() == 0) msg = getResStrng(R.string.hosting_language);
-        else if("".equals(baseHosting.getMax_lat()) && "".equals(baseHosting.getMax_lon())) msg = getResStrng(R.string.hosting_location);
+        else if("0".equals(baseHosting.getLat()) && "0".equals(baseHosting.getLon())) msg = getResStrng(R.string.hosting_location);
 
         if(msg.equals("")) return true;
         else{

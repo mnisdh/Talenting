@@ -5,7 +5,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
 import java.util.Map;
 
+import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.util.FormatUtil;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by daeho on 2017. 12. 7..
@@ -16,14 +18,41 @@ public class GoogleStaticMap {
     private static final String URL_STATIC = "https://maps.googleapis.com/maps/api/staticmap?";
 
     private int zoom = 14;
-    private int width = 500;
-    private int height = 300;
+    private int width = 1000;
+    private int height = 600;
     private String mapType = "roadmap";
     private String url = "";
+    private String placeId = "";
+    private String address = "";
     private Map<LatLng, String> latlngs = new HashMap<>();
 
     public GoogleStaticMap(){
 
+    }
+
+    public String getAddress(){
+        return address;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+
+        DomainManager.getPlaceApiService().select(placeId, "en", GooglePlaceApi.DETAIL_KEY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(result -> {
+                            if (result.isSuccess()) address = result.getResult().getFormatted_address();
+                        }
+                        , error -> {
+                        });
     }
 
     public int getZoom() {

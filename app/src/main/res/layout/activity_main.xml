@@ -93,89 +93,262 @@
 
     <FrameLayout
         android:id="@+id/settingMenu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/popupBacgroundColor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/common_google_signin_btn_text_light_focused"
         android:clickable="true"
         android:elevation="2dp"
         android:onClick="closeSettingMenu"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="80dp"
             android:elevation="2dp"
-            android:gravity="center"
+            android:gravity="right"
             android:orientation="vertical"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/btnSetting"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <a.talenting.com.talenting.custom.ImageTextButton
-                android:id="@+id/btnSetProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_profile"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:onClick="goProfile"
-                android:padding="10dp"
-                app:image="@drawable/profile"
-                app:imageTint="?android:attr/colorSecondary"
-                app:text="@string/profile"
-                app:textColor="?android:attr/colorSecondary" />
+                app:cardBackgroundColor="#f9c00c"
+                app:cardCornerRadius="35dp">
 
-            <a.talenting.com.talenting.custom.ImageTextButton
-                android:id="@+id/btnSetHosting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="goHostingSetting"
-                android:padding="10dp"
-                app:image="@drawable/hosting_on"
-                app:imageTint="?android:attr/colorSecondary"
-                app:text="@string/hosting"
-                app:textColor="?android:attr/colorSecondary" />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <a.talenting.com.talenting.custom.ImageTextButton
-                android:id="@+id/btnSetEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="goEventSetting"
-                android:padding="10dp"
-                app:image="@drawable/event_on"
-                app:imageTint="?android:attr/colorSecondary"
-                app:text="@string/event_setting"
-                app:textColor="?android:attr/colorSecondary" />
+                    <a.talenting.com.talenting.custom.ImageTextButton
+                        android:id="@+id/btnSetProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="goProfile"
+                        app:image="@drawable/ic_hosting_white"
+                        app:imageTint="@color/cardview_light_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:text="@string/profile"
+                        app:textColor="@color/cardview_light_background" />
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
 
-            <a.talenting.com.talenting.custom.ImageTextButton
-                android:id="@+id/btnSetRecommend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_hosting"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:onClick="goRecommend"
-                android:padding="10dp"
-                app:image="@drawable/recommend"
-                app:imageTint="?android:attr/colorSecondary"
-                app:text="@string/recommend"
-                app:textColor="?android:attr/colorSecondary" />
+                app:cardBackgroundColor="#00b9f1"
+                app:cardCornerRadius="35dp">
 
-            <a.talenting.com.talenting.custom.ImageTextButton
-                android:id="@+id/btnLogout"
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <a.talenting.com.talenting.custom.ImageTextButton
+                        android:id="@+id/btnSetHosting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="goHostingSetting"
+                        android:padding="10dp"
+                        app:image="@drawable/hosting_on"
+                        app:imageTint="@color/cardview_light_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:text="@string/hosting"
+                        app:textColor="@color/cardview_light_background">
+
+                    </a.talenting.com.talenting.custom.ImageTextButton>
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="goLogout"
-                android:padding="10dp"
-                app:image="@drawable/logout"
-                app:imageTint="@android:color/holo_red_dark"
-                app:text="Logout"
-                app:textColor="@android:color/holo_red_dark" />
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_myEvent"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible"
+                    app:cardBackgroundColor="#f349eb"
+                    app:cardCornerRadius="35dp">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <a.talenting.com.talenting.custom.ImageTextButton
+                            android:id="@+id/btnSetMyEvent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="goMyEventSetting"
+                            android:padding="10dp"
+                            app:image="@drawable/ic_my_event"
+                            app:imageTint="@color/cardview_light_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:text="@string/my_event"
+                            app:textColor="@color/cardview_light_background" />
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_joinEvent"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible"
+                    app:cardBackgroundColor="#f199bc"
+                    app:cardCornerRadius="35dp">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <a.talenting.com.talenting.custom.ImageTextButton
+                            android:id="@+id/btnSetJoinEvent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="goJoinEventSetting"
+                            android:padding="10dp"
+                            app:image="@drawable/ic_join_event"
+                            app:imageTint="@color/cardview_light_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:text="@string/join_event"
+                            app:textColor="@color/cardview_light_background" />
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_event"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#7200da"
+                    app:cardCornerRadius="35dp">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <a.talenting.com.talenting.custom.ImageTextButton
+                            android:id="@+id/btnSetEvent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="goEventSetting"
+                            android:padding="10dp"
+                            app:image="@drawable/event_on"
+                            app:imageTint="@color/cardview_light_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:text="@string/event"
+                            app:textColor="@color/cardview_light_background" />
+
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_review"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#3ac569"
+                app:cardCornerRadius="35dp">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <a.talenting.com.talenting.custom.ImageTextButton
+                        android:id="@+id/btnSetReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="goRecommend"
+                        android:padding="10dp"
+                        app:image="@drawable/recommend"
+                        app:imageTint="@color/cardview_light_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:text="@string/review"
+                        app:textColor="@color/cardview_light_background" />
+
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_logout"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#f9320c"
+                app:cardCornerRadius="35dp">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <a.talenting.com.talenting.custom.ImageTextButton
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="goLogout"
+                        android:padding="10dp"
+                        app:image="@drawable/logout"
+                        app:imageTint="@color/cardview_light_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:text="Logout"
+                        app:textColor="@color/cardview_light_background" />
+
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

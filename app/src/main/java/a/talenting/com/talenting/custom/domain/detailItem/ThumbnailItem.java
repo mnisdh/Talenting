@@ -18,32 +18,61 @@ import a.talenting.com.talenting.databinding.CustomDetailItemThumbnailBinding;
 public class ThumbnailItem implements IDetailItem{
     private final DetailItemType detailItemType = DetailItemType.THUMBNAIL;
     private IItemClickListener onClickListener;
+    private IItemClickListener onContentClickListener;
+    private IItemClickListener onSubContentClickListener;
 
     public PaddingStyle padding = new PaddingStyle();
 
+    public boolean useContent = false;
+    public boolean useSubContent = false;
+
     public String content = "";
-    public TextStyle contentStyle = new TextStyle(Color.WHITE);
+    public String contentCode = "";
+    public String contentHint = "";
+    public TextStyle contentStyle = new TextStyle(Color.DKGRAY);
+
+    public String subContent = "";
+    public String subContentCode = "";
+    public String subContentHint = "";
+    public TextStyle subContentStyle = new TextStyle(Color.DKGRAY);
 
     public String imageUrl = "";
 
+    private IThumbnailPhoto thumbnailPhoto;
+
     public ThumbnailItem(){
-        contentStyle.getPadding().setLeft(10);
-        contentStyle.getPadding().setBottom(10);
+        init();
+    }
+    public ThumbnailItem(IThumbnailPhoto thumbnailPhoto){
+        init();
+
+        this.thumbnailPhoto = thumbnailPhoto;
+        this.content = thumbnailPhoto.getContent();
+        this.imageUrl = thumbnailPhoto.getImageUrl();
     }
     public ThumbnailItem(String content, String imageUrl){
-        contentStyle.getPadding().setLeft(10);
-        contentStyle.getPadding().setBottom(10);
+        init();
 
         this.content = content;
         this.imageUrl = imageUrl;
     }
     public ThumbnailItem(String content, String imageUrl, IItemClickListener onClickListener){
-        contentStyle.getPadding().setLeft(10);
-        contentStyle.getPadding().setBottom(10);
+        init();
 
         this.content = content;
         this.imageUrl = imageUrl;
         this.onClickListener = onClickListener;
+    }
+
+    private void init(){
+        contentStyle.getPadding().setLeft(10);
+        contentStyle.getPadding().setBottom(10);
+        subContentStyle.getPadding().setLeft(10);
+        subContentStyle.getPadding().setBottom(10);
+    }
+
+    public IThumbnailPhoto getThumbnailPhoto(){
+        return thumbnailPhoto;
     }
 
     public void onClick(View v){
@@ -51,6 +80,20 @@ public class ThumbnailItem implements IDetailItem{
     }
     public void setOnClickListener(IItemClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void onContentClick(View v){
+        if(onContentClickListener != null) onContentClickListener.run(this);
+    }
+    public void setOnContentClickListener(IItemClickListener onContentClickListener) {
+        this.onContentClickListener = onContentClickListener;
+    }
+
+    public void onSubContentClick(View v){
+        if(onSubContentClickListener != null) onSubContentClickListener.run(this);
+    }
+    public void setOnSubContentClickListener(IItemClickListener onSubContentClickListener) {
+        this.onSubContentClickListener = onSubContentClickListener;
     }
 
     @Override

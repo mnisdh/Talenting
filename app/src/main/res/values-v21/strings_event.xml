@@ -1,0 +1,23 @@
+<resources>
+    <string name="event_none_title">Event</string>
+    <string name="event_add_title">Event create</string>
+    <string name="event_input">Input</string>
+    <string name="event_primary_photo">Primary photo</string>
+    <string name="event_category">Category</string>
+    <string name="event_title">Title</string>
+    <string name="event_program">Program</string>
+    <string name="event_noted_item">Noted item</string>
+    <string name="event_maximum_participant">Maximum participant</string>
+    <string name="event_participant_counter">Participant counter</string>
+    <string name="event_participant">Participant</string>
+    <string name="event_participation">Yse</string>
+    <string name="event_nonparticipation">No</string>
+    <string name="event_price">Price</string>
+    <string name="event_opening_date">Opening</string>
+    <string name="event_closing_date">Closing</string>
+    <string name="event_event_date">Event date</string>
+    <string name="event_country">Country</string>
+    <string name="event_city">City</string>
+    <string name="event_location">Location</string>
+    <string name="event_address">Address</string>
+</resources>

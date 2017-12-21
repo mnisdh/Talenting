@@ -36,14 +36,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCG8mC5u906BADgsyDNuD7NI39zwE0gN18" />
 
-        <activity android:name=".controller.MainActivity">
+        <activity android:name=".controller.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".controller.LoginMainActivity" />
+        <activity android:name=".controller.LoginMainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -60,38 +65,71 @@
                 android:value=".controller.LoginMainActivity" />
         </provider>
 
-        <activity android:name=".controller.setting.login.LoginActivity">
+        <!-- Common start -->
+        <activity android:name=".controller.common.LocationActivity"
+            android:screenOrientation="portrait"/>
+        <!-- Common end -->
+        <!-- Setting start -->
+        <activity android:name=".controller.setting.login.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.MainActivity" />
         </activity>
-        <activity android:name=".controller.setting.login.FindPwActivity" />
-        <activity
-            android:name=".controller.setting.signup.SignupActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".controller.setting.signup.SignupFirstActivity">
+        <activity android:name=".controller.setting.login.FindPwActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".controller.setting.signup.SignupActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.setting.signup.SignupFirstActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </activity>
-        <activity android:name=".controller.setting.signup.SignupSecondActivity" />
-        <activity android:name=".controller.setting.signup.SignupThirdActivity">
+        <activity android:name=".controller.setting.signup.SignupSecondActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.setting.signup.SignupThirdActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controller.LoginMainActivity" />
         </activity>
-        <activity android:name=".controller.setting.profile.ProfileActivity" />
-        <activity android:name=".controller.setting.hosting.SetHostingListActivity" />
-        <activity android:name=".controller.setting.hosting.SetHostingActivity" />
-        <activity android:name=".controller.setting.profile.ProfileEditActivity" />
-        <activity android:name=".controller.setting.hosting.SetHostingAddActivity" />
-        <activity android:name=".controller.event.EventActivity" />
-        <activity android:name=".controller.setting.event.SetEventListActivity" />
-        <activity android:name=".controller.setting.event.SetEventAddActivity" />
-        <activity android:name=".controller.setting.event.SetEventActivity" />
-        <activity android:name=".controller.common.LocationActivity" />
-        <activity android:name=".controller.hosting.HostingActivity"/>
 
+        <activity android:name=".controller.setting.hosting.SetHostingAddActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".controller.setting.profile.SetProfileEditActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".controller.setting.event.SetJoinedEventListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.setting.event.SetEventListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.setting.event.SetEventAddActivity"
+            android:screenOrientation="portrait"/>
+        <!-- Setting end -->
+        <!-- Main Menu start -->
+        <activity android:name=".controller.event.EventActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.hosting.HostingActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.user.UserActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".controller.message.MessageActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import a.talenting.com.talenting.R;
 
@@ -20,13 +20,12 @@ public class CategorySpinnerAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflator;
-    List <String> data = new ArrayList<>();
+    Map<String,String> data = new HashMap<>();
 
-    public CategorySpinnerAdapter(Context context, List <String> data){
+    public CategorySpinnerAdapter(Context context, Map<String,String> data){
         this.context = context;
         inflator = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.data = data;
-
     }
 
     @Override
@@ -36,7 +35,15 @@ public class CategorySpinnerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return data.get(position);
+        String text="";
+        int i = 0;
+        for(String key : data.keySet()){
+            if(i == position){
+                text=data.get(key);
+            }
+            i++;
+        }
+        return text;
     }
 
     @Override
@@ -49,7 +56,14 @@ public class CategorySpinnerAdapter extends BaseAdapter {
         if(convertView == null){
             convertView = inflator.inflate(R.layout.item_list_spinner_normal, parent, false);
         }
-        String text = data.get(position);
+        String text="";
+        int i = 0;
+        for(String key : data.keySet()){
+            if(i == position){
+                text=data.get(key);
+            }
+            i++;
+        }
         ((TextView)convertView.findViewById(R.id.spinnerText)).setText(text);
 
         return convertView;
@@ -61,7 +75,14 @@ public class CategorySpinnerAdapter extends BaseAdapter {
             convertView = inflator.inflate(R.layout.item_list_spinner_dropdown, parent, false);
         }
         if (data != null){
-            String text = data.get(position);
+            String text="";
+            int i = 0;
+            for(String key : data.keySet()){
+                if(i == position){
+                    text=data.get(key);
+                }
+                i++;
+            }
             ((TextView)convertView.findViewById(R.id.spinnerText)).setText(text);
         }
 

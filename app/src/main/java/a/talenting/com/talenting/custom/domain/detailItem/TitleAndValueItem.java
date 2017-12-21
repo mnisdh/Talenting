@@ -25,9 +25,10 @@ public class TitleAndValueItem implements IDetailItem{
     public TextStyle titleStyle = new TextStyle(Color.BLACK);
 
     public String value = "";
-    public TextStyle valueStyle = new TextStyle(Color.DKGRAY);
+    public TextStyle valueStyle = new TextStyle(45,Color.DKGRAY);
 
     public String valueCode = "";
+
 
     public boolean useBottomLine = false;
 

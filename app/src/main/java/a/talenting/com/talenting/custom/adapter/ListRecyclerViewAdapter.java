@@ -21,6 +21,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private List<IDetailItem> data = new ArrayList<>();
     private boolean useWidthMatchParent = false;
     private boolean useRemove = false;
+    private IDetailItemRemovedListener iDetailItemRemovedListener;
 
     public ListRecyclerViewAdapter(boolean useWidthMatchParent){
         this.useWidthMatchParent = useWidthMatchParent;
@@ -28,7 +29,15 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
 
     public void addDataAndRefresh(IDetailItem item){
         data.add(item);
+        refresh(item);
+    }
+
+    public void refresh(){
         notifyDataSetChanged();
+    }
+
+    public void refresh(IDetailItem item){
+        notifyItemChanged(data.indexOf(item));
     }
 
     public void addDataAndRefresh(List<IDetailItem> items){
@@ -36,8 +45,9 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         notifyDataSetChanged();
     }
 
-    public void setUseRemove(boolean use){
-        useRemove = use;
+    public void setUseRemove(boolean useRemove, IDetailItemRemovedListener iDetailItemRemovedListener){
+        this.useRemove = useRemove;
+        this.iDetailItemRemovedListener = iDetailItemRemovedListener;
 
         notifyDataSetChanged();
     }
@@ -47,7 +57,15 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     }
 
     public void removeData(IDetailItem item){
+        if(!useRemove) return;
+
         data.remove(item);
+        if(iDetailItemRemovedListener != null) iDetailItemRemovedListener.callback(item);
+        notifyDataSetChanged();
+    }
+
+    public void clearData(){
+        data.clear();
         notifyDataSetChanged();
     }
 
@@ -73,6 +91,10 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public interface IDetailItemRemovedListener{
+        void callback(IDetailItem item);
     }
 
     class Holder extends RecyclerView.ViewHolder{

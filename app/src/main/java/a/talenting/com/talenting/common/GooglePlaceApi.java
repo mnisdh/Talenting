@@ -17,6 +17,8 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class GooglePlaceApi {
+    public static String DETAIL_KEY = "AIzaSyC3NrPEH7SC4Tc7VMlCIgkNF5sBtMr65ik";
+
     private static LatLngBounds getBounds(double lat, double lng){
         LatLng latLng1 = new LatLng(lat - 0.01, lng - 0.01);
         LatLng latLng2 = new LatLng(lat + 0.01, lng + 0.01);

@@ -22,8 +22,11 @@ public class ThumbnailsItem implements IDetailItem{
     private List<ThumbnailItem> data = new ArrayList<>();
     private IItemClickListener onAddClickListener;
     private IItemClickListener onDeleteClickListener;
+    private IItemClickListener onFavoriteClickListener;
 
     public boolean isEditMode = false;
+    public boolean useFavorite = false;
+    public boolean isFavorite = false;
 
     public ThumbnailsItem(List<ThumbnailItem> items){
         data.addAll(items);
@@ -32,6 +35,15 @@ public class ThumbnailsItem implements IDetailItem{
     public void addThumbnail(ThumbnailItem item){
         data.add(item);
         if(adapter != null) adapter.addItem(item);
+    }
+
+    public void deleteThubnail(ThumbnailItem item){
+        data.remove(item);
+        if(adapter != null) adapter.deleteItem(item);
+    }
+
+    public List<ThumbnailItem> getThumbnail(){
+        return data;
     }
 
     public void onAddClick(View v){
@@ -48,11 +60,26 @@ public class ThumbnailsItem implements IDetailItem{
         this.onDeleteClickListener = onDeleteClickListener;
     }
 
+    public void onFavoriteClick(View v){
+        if(onFavoriteClickListener != null) onFavoriteClickListener.run(this);
+    }
+    public void setOnFavoriteClickListener(IItemClickListener onFavoriteClickListener) {
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
+
+    public ThumbnailItem selectedThubnail(){
+        if(currentPosition < 0) return null;
+        if(data.size() == 0) return null;
+
+        return data.get(currentPosition);
+    }
+
     @Override
     public DetailItemType getDetailItemType() {
         return detailItemType;
     }
 
+    private int currentPosition = 0;
     private View view;
     private ViewPager viewPager;
     private ThumbnailViewPagerAdapter adapter;
@@ -64,6 +91,22 @@ public class ThumbnailsItem implements IDetailItem{
 
             view = binding.getRoot();
             viewPager = view.findViewById(R.id.viewPager);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    currentPosition = position;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             adapter = new ThumbnailViewPagerAdapter();
             viewPager.setAdapter(adapter);
             adapter.addItem(data);

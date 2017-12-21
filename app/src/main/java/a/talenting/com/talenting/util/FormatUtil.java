@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FormatUtil {
     /**
@@ -23,6 +24,19 @@ public class FormatUtil {
         DateFormat df = new SimpleDateFormat(format);
         String str_time = df.format(time);
         return str_time;
+    }
+
+    public static Date utcStringToDate(String dateString){
+        Date d = new Date();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        try {
+            d = sdf.parse(dateString);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return d;
     }
 
     public static Uri decodeUri(Context c, Uri uri, final int requiredSize) throws FileNotFoundException {

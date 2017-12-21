@@ -1,16 +1,16 @@
 package a.talenting.com.talenting.domain.profile;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by user on 2017-12-13.
  */
 
 public class ProfileResponse
 {
-    private String code;
-
-    private String msg;
-
-    private Profile profile;
+    @Expose private String code;
+    @Expose private String msg;
+    @Expose private Profile profile;
 
     public boolean isSuccess(){
         return code.substring(0, 1).equals("2");
