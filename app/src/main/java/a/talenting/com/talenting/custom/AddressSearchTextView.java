@@ -32,6 +32,8 @@ public class AddressSearchTextView extends FrameLayout {
     private LinearLayout layout;
     private TextView textView;
 
+    private IOnPlaceChangedListener placeChangedListener;
+
     public AddressSearchTextView(@NonNull Context context) {
         super(context);
 
@@ -69,9 +71,14 @@ public class AddressSearchTextView extends FrameLayout {
                 , p -> {
                     place = p;
                     textView.setText(place.getName());
+                    if(placeChangedListener != null) placeChangedListener.callback(place);
                 }
                 ,parentActivity);
     };
+
+    public void setOnPlaceChangedListener(IOnPlaceChangedListener placeChangedListener){
+        this.placeChangedListener = placeChangedListener;
+    }
 
     public void setParentActivity(Activity activity, ActivityResultManager manager){
         this.parentActivity = activity;
@@ -102,5 +109,9 @@ public class AddressSearchTextView extends FrameLayout {
 
     public Place getPlace(){
         return place;
+    }
+
+    public interface IOnPlaceChangedListener{
+        void callback(Place place);
     }
 }

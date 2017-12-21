@@ -71,7 +71,7 @@ public class SetEventAddActivity extends AppCompatActivity {
     private ThumbnailsItem thumbnailsItem;
     private ProfileItem profile;
     private TextContentItem program;
-    private TitleAndValueItem title, maximumParticipant, price, city, country, category, notedItem,
+    private TitleAndValueItem title, maximumParticipant, price, category, notedItem,
                                 openingDate, closingDate, eventDate, locationTitle;
     private MapPreviewItem location;
 
@@ -183,16 +183,44 @@ public class SetEventAddActivity extends AppCompatActivity {
     private void loadData(Event event){
         baseEvent = event;
 
-        //region primary photo
-        primaryPhoto = new ThumbnailItem("", event.getPrimary_photo());
-        primaryPhoto.setOnClickListener(item -> {
+        //region thumbnails
+        thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
+        thumbnailsItem.setOnAddClickListener(item -> {
             if(!isAddMode && !isEditMode) return;
             DialogManager.showCameraDialog(this, activityResultManager, value -> {
-                primaryPhoto.imageUrl = value;
-                adapter.refresh(primaryPhoto);
+                ThumbnailItem thumbnailItem = new ThumbnailItem("", value);
+                thumbnailsItem.addThumbnail(thumbnailItem);
+
+                adapter.refresh(thumbnailsItem);
             });
         });
-        adapter.addData(primaryPhoto);
+        thumbnailsItem.setOnDeleteClickListener(item -> {
+            if(!isAddMode && !isEditMode) return;
+
+            ThumbnailItem thumbnailItem = thumbnailsItem.selectedThubnail();
+            if(thumbnailItem == null) return;
+
+            IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
+            if(thumbnailPhoto != null && thumbnailPhoto instanceof EventPhoto) deletePhotos.add((EventPhoto) thumbnailPhoto);
+
+            thumbnailsItem.deleteThubnail(thumbnailItem);
+
+            adapter.refresh(thumbnailsItem);
+        });
+        adapter.addData(thumbnailsItem);
+
+        if(!isAddMode) loadPhotoData();
+        //endregion
+        //region primary photo
+//        primaryPhoto = new ThumbnailItem("", event.getPrimary_photo());
+//        primaryPhoto.setOnClickListener(item -> {
+//            if(!isAddMode && !isEditMode) return;
+//            DialogManager.showCameraDialog(this, activityResultManager, value -> {
+//                primaryPhoto.imageUrl = value;
+//                adapter.refresh(primaryPhoto);
+//            });
+//        });
+//        adapter.addData(primaryPhoto);
         //endregion
         //region profile
         profile = new ProfileItem("", "");
@@ -266,57 +294,15 @@ public class SetEventAddActivity extends AppCompatActivity {
         eventDate.useBottomLine = true;
         adapter.addData(eventDate);
         //endregion
-        //region country type
-        country = new TitleAndValueItem(getResStrng(R.string.event_country)
-                , BaseData.getCountryText(event.getCountry())
-                , event.getCountry()
-                , typeItemClickEvent);
-        country.useBottomLine = true;
-        adapter.addData(country);
-        //endregion
-        //region city
-        city = new TitleAndValueItem(getResStrng(R.string.event_city)
-                , event.getCity()
-                , titleAndValueItemClickEvent);
-        city.useBottomLine = true;
-        adapter.addData(city);
-        //endregion
         //region location
         locationTitle = new TitleAndValueItem(getResStrng(R.string.hosting_location), "");
         adapter.addData(locationTitle);
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
+        googleStaticMap.setAddress(event.getAddress());
         googleStaticMap.setLatlng(Double.parseDouble(event.getLat()), Double.parseDouble(event.getLon()), Color.RED);
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
-        //endregion
-        //region thumbnails
-        thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
-        thumbnailsItem.setOnAddClickListener(item -> {
-            if(!isAddMode && !isEditMode) return;
-            DialogManager.showCameraDialog(this, activityResultManager, value -> {
-                ThumbnailItem thumbnailItem = new ThumbnailItem("", value);
-                thumbnailsItem.addThumbnail(thumbnailItem);
-
-                adapter.refresh(thumbnailsItem);
-            });
-        });
-        thumbnailsItem.setOnDeleteClickListener(item -> {
-            if(!isAddMode && !isEditMode) return;
-
-            ThumbnailItem thumbnailItem = thumbnailsItem.selectedThubnail();
-            if(thumbnailItem == null) return;
-
-            IThumbnailPhoto thumbnailPhoto = thumbnailItem.getThumbnailPhoto();
-            if(thumbnailPhoto != null && thumbnailPhoto instanceof EventPhoto) deletePhotos.add((EventPhoto) thumbnailPhoto);
-
-            thumbnailsItem.deleteThubnail(thumbnailItem);
-
-            adapter.refresh(thumbnailsItem);
-        });
-        adapter.addData(thumbnailsItem);
-
-        if(!isAddMode) loadPhotoData();
         //endregion
 
         adapter.refresh();
@@ -411,7 +397,6 @@ public class SetEventAddActivity extends AppCompatActivity {
             Map<String, String> data = new LinkedHashMap<>();
             if(item == category) data = BaseData.getCategory();
             else if(item == notedItem) data = BaseData.getLanguage();
-            else if(item == country) data = BaseData.getCountry();
 
             DialogManager.showTypeListDialog(this, item.title, data, (String code, String text) ->
             {
@@ -437,6 +422,7 @@ public class SetEventAddActivity extends AppCompatActivity {
                 GooglePlaceApi.startPlaceSelectMap(activityResultManager
                         , p -> {
                             item.googleStaticMap.setLatlng(p.getLatLng(), Color.RED);
+                            item.googleStaticMap.setPlaceId(p.getId());
                             adapter.refresh(item);
                         }
                         , this
@@ -457,42 +443,29 @@ public class SetEventAddActivity extends AppCompatActivity {
         }
     };
 
+    private void updateEventData(){
+        if(baseEvent == null) baseEvent = new Event();
+
+        baseEvent.setTitle(title.value);
+        baseEvent.setProgram(program.content);
+        baseEvent.setEvent_categories(category.valueCode);
+        baseEvent.setPrice(price.value);
+        baseEvent.setMaximum_participant(maximumParticipant.value);
+        baseEvent.setOpening_date(openingDate.value);
+        baseEvent.setClosing_date(closingDate.value);
+        baseEvent.setEvent_date(eventDate.value);
+        LatLng latLng = location.googleStaticMap.getLatLng();
+        baseEvent.setLat(latLng.latitude + "");
+        baseEvent.setLon(latLng.longitude + "");
+        baseEvent.setAddress(location.googleStaticMap.getAddress());
+    }
+
     private void addEvent(){
+        updateEventData();
+
         if(!checkValidation()) return;
 
-        File file = TempUtil.createTempImage(this.getContentResolver(), Uri.parse(primaryPhoto.imageUrl));
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part bPrimaryPhoto = MultipartBody.Part.createFormData("primary_photo", file.getName(), requestFile);
-        RequestBody bTtile = RequestBody.create(MediaType.parse("multipart/form-data"), title.value);
-        RequestBody bProgram = RequestBody.create(MediaType.parse("multipart/form-data"), program.content);
-        RequestBody bCategry = RequestBody.create(MediaType.parse("multipart/form-data"), category.valueCode);
-        RequestBody bCountry = RequestBody.create(MediaType.parse("multipart/form-data"), country.valueCode);
-        RequestBody bCity = RequestBody.create(MediaType.parse("multipart/form-data"), city.value == null? "":city.value);
-        RequestBody bPrice = RequestBody.create(MediaType.parse("multipart/form-data"), price.value);
-        RequestBody bMaximumParticipant = RequestBody.create(MediaType.parse("multipart/form-data"), maximumParticipant.value);
-        RequestBody bOpening = RequestBody.create(MediaType.parse("multipart/form-data"), openingDate.value);
-        RequestBody bClosing = RequestBody.create(MediaType.parse("multipart/form-data"), closingDate.value);
-        RequestBody bEventDate = RequestBody.create(MediaType.parse("multipart/form-data"), eventDate.value);
-        LatLng latLng = location.googleStaticMap.getLatLng();
-        RequestBody bLat = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.latitude + "");
-        RequestBody bLon = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.longitude + "");
-
-        DomainManager.getEventApiService().insert(
-                DomainManager.getTokenHeader(),
-                bPrimaryPhoto,
-                bTtile,
-                bProgram,
-                bCategry,
-                bCountry,
-                bCity,
-                bPrice,
-                bMaximumParticipant,
-                bOpening,
-                bClosing,
-                bEventDate,
-                bLat,
-                bLon
-                )
+        DomainManager.getEventApiService().insert(DomainManager.getTokenHeader(), baseEvent)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -502,78 +475,18 @@ public class SetEventAddActivity extends AppCompatActivity {
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
     private void updateEvent(MenuItem updateItem){
+        updateEventData();
+
         if(!checkValidation()) return;
 
-        RequestBody bTtile = RequestBody.create(MediaType.parse("multipart/form-data"), title.value);
-        RequestBody bProgram = RequestBody.create(MediaType.parse("multipart/form-data"), program.content);
-        RequestBody bCategry = RequestBody.create(MediaType.parse("multipart/form-data"), category.valueCode);
-        RequestBody bCountry = RequestBody.create(MediaType.parse("multipart/form-data"), country.valueCode);
-        RequestBody bCity = RequestBody.create(MediaType.parse("multipart/form-data"), city.value);
-        RequestBody bPrice = RequestBody.create(MediaType.parse("multipart/form-data"), price.value);
-        RequestBody bMaximumParticipant = RequestBody.create(MediaType.parse("multipart/form-data"), maximumParticipant.value);
-        RequestBody bOpening = RequestBody.create(MediaType.parse("multipart/form-data"), openingDate.value);
-        RequestBody bClosing = RequestBody.create(MediaType.parse("multipart/form-data"), closingDate.value);
-        RequestBody bEventDate = RequestBody.create(MediaType.parse("multipart/form-data"), eventDate.value);
-        LatLng latLng = location.googleStaticMap.getLatLng();
-        RequestBody bLat = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.latitude + "");
-        RequestBody bLon = RequestBody.create(MediaType.parse("multipart/form-data"), latLng.longitude + "");
-
-        if(primaryPhoto.imageUrl.equals(baseEvent.getPrimary_photo())){
-            DomainManager.getEventApiService().update(
-                    DomainManager.getTokenHeader(),
-                    pk,
-                    bTtile,
-                    bProgram,
-                    bCategry,
-                    bCountry,
-                    bCity,
-                    bPrice,
-                    bMaximumParticipant,
-                    bOpening,
-                    bClosing,
-                    bEventDate,
-                    bLat,
-                    bLon
-            )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-                                if (result.isSuccess()) updatePhoto(updateItem);
-                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
-        else{
-            File file = TempUtil.createTempImage(this.getContentResolver(), Uri.parse(primaryPhoto.imageUrl));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            MultipartBody.Part bPrimaryPhoto = MultipartBody.Part.createFormData("primary_photo", file.getName(), requestFile);
-
-
-            DomainManager.getEventApiService().update(
-                    DomainManager.getTokenHeader(),
-                    pk,
-                    bPrimaryPhoto,
-                    bTtile,
-                    bProgram,
-                    bCategry,
-                    bCountry,
-                    bCity,
-                    bPrice,
-                    bMaximumParticipant,
-                    bOpening,
-                    bClosing,
-                    bEventDate,
-                    bLat,
-                    bLon
-            )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-                                if (result.isSuccess()) updatePhoto(updateItem);
-                                else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
+        DomainManager.getEventApiService().update(DomainManager.getTokenHeader(), pk, baseEvent)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) updatePhoto(updateItem);
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
     private void deleteEvent(){
         DomainManager.getEventApiService().delete(DomainManager.getTokenHeader(), pk)
@@ -676,16 +589,14 @@ public class SetEventAddActivity extends AppCompatActivity {
 
     private boolean checkValidation(){
         String msg = "";
-        if(!checkValidation(primaryPhoto.imageUrl)) msg = getResStrng(R.string.event_primary_photo);
-        else if(!checkValidation(title.value)) msg = getResStrng(R.string.event_title);
-        else if(!checkValidation(category.valueCode)) msg = getResStrng(R.string.event_category);
-        else if(!checkValidation(maximumParticipant.value)) msg = getResStrng(R.string.event_maximum_participant);
-        else if(!checkValidation(price.value)) msg = getResStrng(R.string.event_price);
-        else if(!checkValidation(country.valueCode)) msg = getResStrng(R.string.event_country);
-        else if(!checkValidation(city.value)) msg = getResStrng(R.string.event_city);
-        else if(!checkValidation(openingDate.value)) msg = getResStrng(R.string.event_opening_date);
-        else if(!checkValidation(closingDate.value)) msg = getResStrng(R.string.event_closing_date);
-        else if(!checkValidation(eventDate.value)) msg = getResStrng(R.string.event_event_date);
+        if(!checkValidation(baseEvent.getTitle())) msg = getResStrng(R.string.event_title);
+        else if(!checkValidation(baseEvent.getEvent_categories())) msg = getResStrng(R.string.event_category);
+        else if(!checkValidation(baseEvent.getMaximum_participant())) msg = getResStrng(R.string.event_maximum_participant);
+        else if(!checkValidation(baseEvent.getPrice())) msg = getResStrng(R.string.event_price);
+        else if(!checkValidation(baseEvent.getOpening_date())) msg = getResStrng(R.string.event_opening_date);
+        else if(!checkValidation(baseEvent.getClosing_date())) msg = getResStrng(R.string.event_closing_date);
+        else if(!checkValidation(baseEvent.getEvent_date())) msg = getResStrng(R.string.event_event_date);
+        else if("0".equals(baseEvent.getLat()) && "0".equals(baseEvent.getLon())) msg = getResStrng(R.string.hosting_location);
 
         if(msg.equals("")) return true;
         else{

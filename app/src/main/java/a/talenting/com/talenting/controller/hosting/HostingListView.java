@@ -9,19 +9,33 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.Place;
+
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
-import a.talenting.com.talenting.controller.event.EventActivity;
+import a.talenting.com.talenting.common.Constants;
+import a.talenting.com.talenting.common.DialogManager;
+import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.custom.AddressSearchTextView;
+import a.talenting.com.talenting.custom.DetailItemView;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.adapter.MultiListRecyclerViewAdapter;
+import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
+import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
+import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
+import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.hosting.GetHostingList;
+import a.talenting.com.talenting.domain.hosting.Hosting;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -33,11 +47,15 @@ public class HostingListView extends FrameLayout {
     private Activity activity;
     private ActivityResultManager manager;
 
+    private Place place;
+    private String categoryCode = "";
+
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
     private MultiListRecyclerViewAdapter adapterTemp;
     private AddressSearchTextView tvAddressSearch;
-    private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
+    private TitleAndValueItem category;
+    private DetailItemView categoryView;
 
     public HostingListView(Activity activity, ActivityResultManager manager) {
         super(activity);
@@ -48,7 +66,7 @@ public class HostingListView extends FrameLayout {
 
         init();
 
-        getData();
+        setSampleDataTemp();
     }
 
     private void init(){
@@ -60,75 +78,141 @@ public class HostingListView extends FrameLayout {
         adapter = new ListRecyclerViewAdapter(true);
         adapterTemp = new MultiListRecyclerViewAdapter();
 
-        //recyclerView.setAdapter(adapter);
         recyclerView.setAdapter(adapterTemp);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
         tvAddressSearch = v.findViewById(R.id.tvAddressSearch);
         tvAddressSearch.setParentActivity(activity, manager);
+        tvAddressSearch.setOnPlaceChangedListener(place -> {
+            this.place = place;
+            getData();
+        });
+
+        category = new TitleAndValueItem("Category", "", categoryClickEvent);
+        category.value = "All";
+        category.valueCode = "";
+
+        categoryView = v.findViewById(R.id.categoryView);
+        categoryView.setDetailItem(category);
     }
+
+    private IItemClickListener categoryClickEvent = i -> {
+        if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
+            TitleAndValueItem item = (TitleAndValueItem) i;
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("", "All");
+            if(item == category) data.putAll(BaseData.getCategory());
+
+            DialogManager.showTypeListDialog(activity, item.title, data, (String code, String text) ->
+            {
+                item.value = text;
+                item.valueCode = code;
+
+                categoryView.setDetailItem(category);
+
+                categoryCode = code;
+                getData();
+            });
+        }
+    };
 
     public void getData(){
-        DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            if (result.isSuccess()) {
-                                Toast.makeText(activity, "SUCCESS!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
-    }
+        if(recyclerView.getAdapter() == adapterTemp) recyclerView.setAdapter(adapter);
 
-    public void setSampleData(){
-        List<IDetailItem> items = new ArrayList<>();
+        if(place == null){
+            Observable<GetHostingList> getHostingListObservable = null;
 
-        ImageContentItem item;
-        for(int i = 0; i < 10; i++){
-            item = new ImageContentItem(false);
-            item.imageUrl = sampleImage;
-            item.title = "title" + i;
-            item.content = "content" + i;
-
-            item.setOnClickListener(j -> {
-                Intent intent = new Intent(this.getContext(), HostingActivity.class);
-                this.getContext().startActivity(intent);
-            });
-
-            items.add(item);
-        }
-
-        adapter.addDataAndRefresh(items);
-    }
-
-    public void setSampleDataTemp(){
-        List<RecyclerItem> itemsTemp = new ArrayList<>();
-
-        for(int j = 0; j < 5; j++) {
-            List<IDetailItem> items = new ArrayList<>();
-
-            ImageContentItem item;
-            for (int i = 0; i < 10; i++) {
-                item = new ImageContentItem(false);
-                item.imageUrl = sampleImage;
-                item.title = "title" + i;
-                item.content = "content" + i;
-
-                item.setOnClickListener(k -> {
-                    Intent intent = new Intent(this.getContext(), EventActivity.class);
-                    this.getContext().startActivity(intent);
-                });
-
-                items.add(item);
+            if(categoryCode.equals("")){
+                getHostingListObservable = DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader());
+            }
+            else{
+                getHostingListObservable = DomainManager.getHostingApiService().selectsCategories(DomainManager.getTokenHeader(), categoryCode);
             }
 
-            itemsTemp.add(new RecyclerItem("Title" + j, items));
+            getHostingListObservable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) setData(result.getHosting());
+                                else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                            , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
         }
+        else{
+            DomainManager.getPlaceApiService().select(place.getId(), "en", GooglePlaceApi.DETAIL_KEY)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .subscribe(r -> {
+                                if (r.isSuccess()) {
+                                    Observable<GetHostingList> getHostingListObservable = null;
 
-        adapterTemp.addDataAndRefresh(itemsTemp);
+                                    if(!categoryCode.equals("-1")){
+                                        getHostingListObservable = DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader(), r.getResult().getFormatted_address(), categoryCode);
+                                    }
+                                    else{
+                                        getHostingListObservable = DomainManager.getHostingApiService().selectsAddress(DomainManager.getTokenHeader(), r.getResult().getFormatted_address());
+                                    }
+
+                                    getHostingListObservable.subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(result -> {
+                                                        if (result.isSuccess()) setData(result.getHosting());
+                                                        else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+                                }
+                            }
+                            , error -> {
+                            });
+        }
+    }
+
+    public void setData(List<Hosting> hostings){
+        adapter.clearData();
+
+        ImageContentItem item;
+        for(Hosting hosting : hostings){
+            adapter.addDataAndRefresh(createItem(hosting));
+        }
+    }
+
+    private ImageContentItem createItem(Hosting hosting){
+        ImageContentItem item = new ImageContentItem(false);
+        item.imageUrl = hosting.getPrimary_photo();
+        item.title = hosting.getTitle();
+        item.content = BaseData.getCategoryText(hosting.getCategory()) + "\n"
+                + hosting.getSummary();
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this.getContext(), HostingActivity.class);
+            intent.putExtra(Constants.EXT_HOSTING_PK, hosting.getOwner());
+            this.getContext().startActivity(intent);
+        });
+
+        return item;
+    }
+
+    public void setSampleDataTemp() {
+        String[] tempAddress = {"America", "Australia", "Canada", "France", "Korea"};
+
+        for (String tempAddr : tempAddress) {
+            DomainManager.getHostingApiService().selectsAddress(DomainManager.getTokenHeader(), tempAddr)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) {
+                                    List<IDetailItem> items = new ArrayList<>();
+
+                                    ImageContentItem item;
+                                    for (Hosting hosting : result.getHosting()) {
+                                        items.add(createItem(hosting));
+                                    }
+
+                                    if(items.size() > 0) adapterTemp.addDataAndRefresh(new RecyclerItem(tempAddr, items));
+                                }
+                            }
+                            , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+        }
     }
 
     public void addData(ImageContentItem item){

@@ -96,11 +96,11 @@
         <activity android:name=".controller.setting.profile.SetProfileEditActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".controller.setting.event.SetJoinedEventListActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".controller.setting.event.SetEventListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".controller.setting.event.SetEventAddActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".controller.setting.event.SetEventActivity"
             android:screenOrientation="portrait"/>
         <!-- Setting end -->
         <!-- Main Menu start -->

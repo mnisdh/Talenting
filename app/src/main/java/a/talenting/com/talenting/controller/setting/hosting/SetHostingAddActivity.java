@@ -169,7 +169,10 @@ public class SetHostingAddActivity extends AppCompatActivity {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(result -> {
-                        if (result.isSuccess()) loadData(result.getHosting());
+                        if (result.isSuccess()){
+                            isAddMode = false;
+                            loadData(result.getHosting());
+                        }
                         else setNewData();
                     }
                     , error -> setNewData()
@@ -376,6 +379,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         adapter.addData(locationTitle);
 
         GoogleStaticMap googleStaticMap = new GoogleStaticMap();
+        googleStaticMap.setAddress(hosting.getAddress());
         googleStaticMap.setLatlng(Double.parseDouble(hosting.getLat()), Double.parseDouble(hosting.getLon()), Color.RED);
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
@@ -499,6 +503,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 GooglePlaceApi.startPlaceSelectMap(activityResultManager
                         , p -> {
                             item.googleStaticMap.setLatlng(p.getLatLng(), Color.RED);
+                            item.googleStaticMap.setPlaceId(p.getId());
                             adapter.refresh(item);
                         }
                         , this
@@ -604,6 +609,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
         LatLng latLng = location.googleStaticMap.getLatLng();
         baseHosting.setLat(latLng.latitude + "");
         baseHosting.setLon(latLng.longitude + "");
+        baseHosting.setAddress(location.googleStaticMap.getAddress());
     }
 
     private void addHosting(){
@@ -615,7 +621,7 @@ public class SetHostingAddActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if (result.isSuccess()) addPhoto(result.getHosting().getPk());
+                    if (result.isSuccess()) addPhoto(result.getHosting().getOwner());
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                     , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());

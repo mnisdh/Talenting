@@ -108,15 +108,12 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initHosting(){
         hostingListView = new HostingListView(this, activityResultManager);
-        hostingListView.setSampleDataTemp();
     }
     private void initUsers(){
         usersListView = new UserListView(this, activityResultManager);
-        usersListView.setSampleData();
     }
     private void initEvent(){
         eventListView = new EventListView(this, activityResultManager);
-        eventListView.setSampleData();
     }
     private void initMessage(){
         messageListView = new MessageListView(this, activityResultManager);

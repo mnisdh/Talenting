@@ -9,29 +9,40 @@ import java.util.List;
  */
 
 public class Event {
-    @Expose private String wish_status;
-    @Expose private String lon;
-    @Expose private String noted_item;
-    @Expose private String state;
-    @Expose private String primary_photo;
-    @Expose private String closing_date;
+    @Expose(serialize = false) private String id;
+    @Expose(serialize = false) private String updated_at;
+    @Expose(serialize = false) private String primary_photo;
+    @Expose(serialize = false) private String wish_status;
+    @Expose(serialize = false) private String state;
+    @Expose(serialize = false) private Author author;
+    @Expose(serialize = false) private List<String> participants;
+
     @Expose private String event_categories;
-    @Expose private List<String> participants;
     @Expose private String city;
     @Expose private String country;
-    @Expose private String id;
-    @Expose private Author author;
     @Expose private String title;
-    @Expose private String updated_at;
+    @Expose private String noted_item;
     @Expose private String price;
     @Expose private String maximum_participant;
     @Expose private String program;
-    @Expose private String event_date;
+    @Expose private String participants_count;
     @Expose private String participants_counter;
     @Expose private String created_at;
     @Expose private String opening_date;
+    @Expose private String closing_date;
+    @Expose private String event_date;
     @Expose private String lat;
-    @Expose private String participants_count;
+    @Expose private String lon;
+    @Expose private String address;
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getWish_status ()
     {
