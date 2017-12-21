@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import a.talenting.com.talenting.ApplicationInitializer;
 import a.talenting.com.talenting.R;
@@ -37,6 +38,10 @@ import a.talenting.com.talenting.controller.setting.signup.SignupActivity;
 import a.talenting.com.talenting.controller.user.UserListView;
 import a.talenting.com.talenting.custom.ImageTextButton;
 import a.talenting.com.talenting.domain.BaseData;
+import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.fcm.FCMToken;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
@@ -76,6 +81,17 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent =  new Intent(this, LoginMainActivity.class);
         startActivityForResult(intent, Constants.REQ_LOG_IN_ACTIVITY);
+    }
+
+    private void setFCMToken(){
+        FCMToken fcmToken = new FCMToken();
+        fcmToken.setRegistration_id(FirebaseInstanceId.getInstance().getToken());
+
+        DomainManager.getFCMApiService().insert(DomainManager.getTokenHeader(), fcmToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> { }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -156,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == Constants.REQ_LOG_IN_ACTIVITY){
+            setFCMToken();
             init();
             return;
         }

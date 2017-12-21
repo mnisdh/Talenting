@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.domain.event.IEventApiService;
 import a.talenting.com.talenting.domain.event.photo.IEventPhotoApiService;
+import a.talenting.com.talenting.domain.fcm.IFCMApiService;
 import a.talenting.com.talenting.domain.hosting.IHostingApiService;
 import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiService;
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
@@ -30,6 +31,7 @@ public class DomainManager {
     private static IPlaceApiService iPlaceApiService;
 
     private static Retrofit retrofit;
+    private static IFCMApiService ifcmApiService;
     private static IUserApiService iUserApiService;
     private static IHostingApiService iHostingApiService;
     private static IHostingPhotoApiService iHostingPhotoApiService;
@@ -69,6 +71,13 @@ public class DomainManager {
 
     public static String getTokenHeader(){
         return "token " + SharedPreferenceManager.getInstance().getToken();
+    }
+
+    public static IFCMApiService getFCMApiService(){
+        initRetrofit();
+
+        if(ifcmApiService == null) ifcmApiService = retrofit.create(IFCMApiService.class);
+        return ifcmApiService;
     }
 
     public static IUserApiService getUserApiService(){
