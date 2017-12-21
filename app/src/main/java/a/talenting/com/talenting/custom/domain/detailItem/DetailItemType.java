@@ -17,5 +17,7 @@ public enum  DetailItemType {
     RECYCLER,
     MSG_PREIVEW,
     MSG_OTHER,
-    MSG_MY
+    MSG_MY,
+    MYTRIP,
+    MyTRIPS
 }

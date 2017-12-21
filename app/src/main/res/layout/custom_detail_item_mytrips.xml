@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="item"
+            type="a.talenting.com.talenting.custom.domain.detailItem.MyTripsItem" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/viewPager"
+            android:layout_alignEnd="@+id/viewPager"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:onClick="@{item::onDeleteClick}"
+            android:tint="@android:color/background_light"
+            android:visibility="@{item.isEditMode ? View.VISIBLE : View.GONE}"
+            app:elevation="2dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_delete" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/viewPager"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/btnDelete"
+            android:clickable="true"
+            android:onClick="@{item::onAddClick}"
+            android:tint="@android:color/background_light"
+            android:visibility="@{item.isEditMode ? View.VISIBLE : View.GONE}"
+            app:elevation="2dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_image">
+
+        </android.support.v4.view.ViewPager>
+
+    </RelativeLayout>
+</layout>
