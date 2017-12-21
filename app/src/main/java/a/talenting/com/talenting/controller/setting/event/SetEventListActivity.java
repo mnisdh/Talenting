@@ -64,6 +64,7 @@ public class SetEventListActivity extends AppCompatActivity {
             item = new ImageContentItem(false);
             if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
             else item.imageUrl = event.getPrimary_photo();
+            item.useFavorite = false;
             item.title = event.getTitle();
             item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
                     + event.getPrice() + "\n"

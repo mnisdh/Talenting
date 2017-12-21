@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="a.talenting.com.talenting.custom.domain.detailItem.TitleAndToogleButtonItem" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}"
+        android:paddingBottom="@{item.padding.bottom}"
+        android:paddingLeft="@{item.padding.left}"
+        android:paddingRight="@{item.padding.right}"
+        android:paddingTop="@{item.padding.top}">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:onClick="@{item::onClick}"
+            android:text="@{item.title}"
+            android:textColor="@{item.titleStyle.color}"
+            android:textSize="@{item.titleStyle.size}" />
+
+        <ToggleButton
+            android:id="@+id/btnToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:onClick="@{item::onButtonClick}"
+            android:textColor="@{item.buttonTextStyle.color}"
+            android:textOff="@{item.btnOffText}"
+            android:textOn="@{item.btnOnText}"
+            android:checked="@{item.isButtonChecked}"
+            android:textSize="@{item.buttonTextStyle.size}" />
+
+    </RelativeLayout>
+</layout>

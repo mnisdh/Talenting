@@ -38,7 +38,7 @@ public interface IEventApiService {
     Observable<GetEventList> selectsCreated(@Header("Authorization") String token);
 
     @GET("member/profile/{profile_pk}/my-event/")
-    Observable<GetEventList> selectsJoined(@Header("Authorization") String token, @Path("profile_pk") String profilePk);
+    Observable<GetJoinedEventList> selectsJoined(@Header("Authorization") String token, @Path("profile_pk") String profilePk);
 
     @GET("/event/{pk}/")
     Observable<GetEvent> select(@Header("Authorization") String token, @Path("pk") String pk);

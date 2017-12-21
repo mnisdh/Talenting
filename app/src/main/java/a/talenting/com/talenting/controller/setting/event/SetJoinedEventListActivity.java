@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
@@ -14,11 +13,9 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.event.EventActivity;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
-import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
-import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
-import a.talenting.com.talenting.domain.event.Event;
+import a.talenting.com.talenting.domain.event.JoinedEvent;
 import a.talenting.com.talenting.domain.event.photo.EventPhoto;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -55,31 +52,28 @@ public class SetJoinedEventListActivity extends AppCompatActivity {
                 );
     }
 
-    private void loadData(List<Event> events){
+    private void loadData(List<JoinedEvent> events){
         adapter.clearData();
 
-        List<IDetailItem> items = new ArrayList<>();
-
-        ImageContentItem item;
-        for(Event event : events){
-            item = new ImageContentItem(false);
-            if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
-            else item.imageUrl = event.getPrimary_photo();
-            item.title = event.getTitle();
-            item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
-                    + event.getPrice() + "\n"
-                    + event.getEvent_date();
-
-            item.setOnClickListener(j -> {
-                Intent intent = new Intent(this, EventActivity.class);
-                intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
-                startActivity(intent);
-            });
-
-            items.add(item);
+        for(JoinedEvent event : events){
+            adapter.addDataAndRefresh(createItem(event));
         }
+    }
 
-        adapter.addDataAndRefresh(items);
+    private ImageContentItem createItem(JoinedEvent event){
+        ImageContentItem item = new ImageContentItem(false);
+        if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getPk());
+        else item.imageUrl = event.getPrimary_photo();
+        item.title = event.getTitle();
+        item.useFavorite = false;
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this, EventActivity.class);
+            intent.putExtra(Constants.EXT_EVENT_PK, event.getPk());
+            startActivityForResult(intent, Constants.REQ_EDIT_EVENT);
+        });
+
+        return item;
     }
 
     private void setPhoto(ImageContentItem item, String pk){
@@ -106,7 +100,6 @@ public class SetJoinedEventListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case Constants.REQ_ADD_EVENT:
             case Constants.REQ_EDIT_EVENT:
                 loadData();
                 break;

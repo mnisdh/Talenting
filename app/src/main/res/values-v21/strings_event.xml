@@ -8,6 +8,10 @@
     <string name="event_program">Program</string>
     <string name="event_noted_item">Noted item</string>
     <string name="event_maximum_participant">Maximum participant</string>
+    <string name="event_participant_counter">Participant counter</string>
+    <string name="event_participant">Participant</string>
+    <string name="event_participation">Yse</string>
+    <string name="event_nonparticipation">No</string>
     <string name="event_price">Price</string>
     <string name="event_opening_date">Opening</string>
     <string name="event_closing_date">Closing</string>

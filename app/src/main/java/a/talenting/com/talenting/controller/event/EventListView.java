@@ -49,7 +49,7 @@ public class EventListView extends FrameLayout {
     private ActivityResultManager manager;
 
     private Place place;
-    private String categoryCode = "-1";
+    private String categoryCode = "";
 
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
@@ -92,7 +92,7 @@ public class EventListView extends FrameLayout {
 
         category = new TitleAndValueItem("Category", "", categoryClickEvent);
         category.value = "All";
-        category.valueCode = "-1";
+        category.valueCode = "";
 
         categoryView = v.findViewById(R.id.categoryView);
         categoryView.setDetailItem(category);
@@ -102,7 +102,7 @@ public class EventListView extends FrameLayout {
         if(i.getDetailItemType() == DetailItemType.TITLE_AND_VALUE){
             TitleAndValueItem item = (TitleAndValueItem) i;
             Map<String, String> data = new LinkedHashMap<>();
-            data.put("-1", "All");
+            data.put("", "All");
             if(item == category) data.putAll(BaseData.getCategory());
 
             DialogManager.showTypeListDialog(activity, item.title, data, (String code, String text) ->
@@ -124,7 +124,7 @@ public class EventListView extends FrameLayout {
         if(place == null){
             Observable<GetEventList> getEventListObservable = null;
 
-            if(categoryCode.equals("-1")){
+            if(categoryCode.equals("")){
                 getEventListObservable = DomainManager.getEventApiService().selects(DomainManager.getTokenHeader());
             }
             else{
@@ -147,7 +147,7 @@ public class EventListView extends FrameLayout {
                                 if (r.isSuccess()) {
                                     Observable<GetEventList> getEventListObservable = null;
 
-                                    if(!categoryCode.equals("-1")){
+                                    if(!categoryCode.equals("")){
                                         getEventListObservable = DomainManager.getEventApiService().selects(DomainManager.getTokenHeader(), r.getResult().getFormatted_address(), categoryCode);
                                     }
                                     else{
@@ -227,7 +227,7 @@ public class EventListView extends FrameLayout {
     }
 
     public void setSampleDataTemp() {
-        String[] tempAddress = {"USA", "Australia", "Canada", "France", "Korea"};
+        String[] tempAddress = {"USA", "UK", "Australia", "Canada", "France", "Korea"};
 
         for (String tempAddr : tempAddress) {
             DomainManager.getEventApiService().selectsAddress(DomainManager.getTokenHeader(), tempAddr)

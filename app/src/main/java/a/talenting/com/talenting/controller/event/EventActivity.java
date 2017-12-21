@@ -18,6 +18,7 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.common.LocationActivity;
 import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
@@ -28,6 +29,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
+import a.talenting.com.talenting.custom.domain.detailItem.TitleAndToogleButtonItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
@@ -48,10 +50,11 @@ public class EventActivity extends AppCompatActivity {
     private DetailRecyclerViewAdapter adapter;
 
     private ThumbnailsItem thumbnailsItem;
+    private TitleAndToogleButtonItem participate;
     private ProfileItem profile;
     private TextContentItem program;
-    private TitleAndValueItem title, maximumParticipant, price, city, country, category, notedItem,
-            openingDate, closingDate, eventDate, locationTitle;
+    private TitleAndValueItem title, maximumParticipant, price, category, notedItem,
+            openingDate, closingDate, eventDate, locationTitle, participant;
     private MapPreviewItem location;
 
     @Override
@@ -107,6 +110,25 @@ public class EventActivity extends AppCompatActivity {
 
         loadPhotoData();
         //endregion
+        //region participate
+        participate = new TitleAndToogleButtonItem(
+                getResStrng(R.string.event_participant),
+                getResStrng(R.string.event_participation),
+                getResStrng(R.string.event_nonparticipation),
+                i -> {
+                    DomainManager.getEventApiService().participate(DomainManager.getTokenHeader(), event.getId())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(result -> { },
+                                    e -> participate.isButtonChecked = !participate.isButtonChecked
+                            );
+                }
+        );
+        participate.isButtonChecked = true;
+        participate.isButtonChecked = event.isParticipation(SharedPreferenceManager.getInstance().getPk());
+        participate.useBottomLine = true;
+        adapter.addData(participate);
+        //endregion
         //region profile
         profile = new ProfileItem("", "");
         profile.useBottomLine = true;
@@ -150,6 +172,13 @@ public class EventActivity extends AppCompatActivity {
                 , null);
         maximumParticipant.useBottomLine = true;
         adapter.addData(maximumParticipant);
+        //endregion
+        //region participant
+        participant = new TitleAndValueItem(getResStrng(R.string.event_participant_counter)
+                , event.getParticipants_counter()
+                , null);
+        participant.useBottomLine = true;
+        adapter.addData(participant);
         //endregion
         //region price
         price = new TitleAndValueItem(getResStrng(R.string.event_price)
