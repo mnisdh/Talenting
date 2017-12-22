@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
  * Created by user on 2017-12-21.
  */
 
-public class Mytrip {
+public class My_trip {
     @Expose
     private String arrival_date;
     @Expose
@@ -97,4 +97,5 @@ public class Mytrip {
     {
         return "ClassPojo [arrival_date = "+arrival_date+", description = "+description+", number_travelers = "+number_travelers+", departure_date = "+departure_date+", user = "+user+", destination = "+destination+", pk = "+pk+"]";
     }
+
 }

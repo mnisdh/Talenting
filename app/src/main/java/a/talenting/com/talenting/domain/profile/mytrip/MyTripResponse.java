@@ -8,7 +8,7 @@ import com.google.gson.annotations.Expose;
 
 public class MyTripResponse {
     @Expose
-    private Mytrip[] mytrip;
+    private My_trip[] my_trip;
     @Expose
     private String code;
     @Expose
@@ -18,15 +18,15 @@ public class MyTripResponse {
         return code.substring(0, 1).equals("2");
     }
 
-    public Mytrip[] getMytrip ()
+    public My_trip[] getMytrip ()
     {
-        return mytrip;
+        return my_trip;
     }
 
 
-    public void setMytrip (Mytrip[] mytrip)
+    public void setMytrip (My_trip[] mytrip)
     {
-        this.mytrip = mytrip;
+        this.my_trip = my_trip;
     }
 
     public String getCode ()
@@ -52,6 +52,6 @@ public class MyTripResponse {
     @Override
     public String toString()
     {
-        return "ClassPojo [mytrip = "+mytrip+", code = "+code+", msg = "+msg+"]";
+        return "ClassPojo [mytrip = "+my_trip+", code = "+code+", msg = "+msg+"]";
     }
 }

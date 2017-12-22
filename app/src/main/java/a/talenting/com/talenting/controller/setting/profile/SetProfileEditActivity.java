@@ -40,7 +40,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
-import a.talenting.com.talenting.domain.profile.mytrip.Mytrip;
+import a.talenting.com.talenting.domain.profile.mytrip.My_trip;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
 import a.talenting.com.talenting.util.ResourceUtil;
 import a.talenting.com.talenting.util.TempUtil;
@@ -171,8 +171,8 @@ public class SetProfileEditActivity extends AppCompatActivity {
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-    private void loadMytripData(Mytrip[] mytrips){
-        for(Mytrip mytrip : mytrips){
+    private void loadMytripData(My_trip[] mytrips){
+        for(My_trip mytrip : mytrips){
             MyTripItem myTripItem = new MyTripItem();
             myTripItem.des = mytrip.getDestination();
             myTripItem.startDate = mytrip.getArrival_date();
@@ -246,7 +246,8 @@ public class SetProfileEditActivity extends AppCompatActivity {
             MyTripItem myTripItem = myTripsItem.selectedMyTrip();
             if(myTripItem == null){
                 return;
-            }else{
+            }
+            else{
                 deleteMytrips.add(myTripItem);
             }
             myTripsItem.deleteMyTrip(myTripItem);
@@ -489,6 +490,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
         baseProfile.setTalent_category(talent);
     }
 
+
     private void updateProfile(MenuItem updateItem) {
         updateProfileData();
 
@@ -498,7 +500,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                            if (result.isSuccess()) updatePhoto(updateItem);
+                            if (result.isSuccess()){
+                                updatePhoto(updateItem);
+                            }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -519,9 +523,31 @@ public class SetProfileEditActivity extends AppCompatActivity {
                         , () -> editPhotoFinishCheck()
                 );
     }
-    private void updatePhoto(MenuItem updateItem) {
-        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size());
 
+    private void updateMyTrip(MenuItem updateItem){
+        deleteMyTrip();
+
+
+        for(MyTripItem item : myTripsItem.getMyTripItems()){
+            My_trip mytrip = new My_trip();
+            mytrip.setDestination(item.des);
+            mytrip.setArrival_date(item.startDate);
+            mytrip.setDeparture_date(item.endDate);
+            mytrip.setNumber_travelers(item.num);
+            mytrip.setDescription(item.description);
+            DomainManager.getMyTripApiService().create(DomainManager.getTokenHeader(), mytrip)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {}
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck()
+                    );
+        }
+    }
+
+    private void updatePhoto(MenuItem updateItem) {
+        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size() + myTripsItem.getMyTripItems().size() + deleteMytrips.size());
+        updateMyTrip(updateItem);
         //region delete
         deletePhoto();
         //endregion
@@ -565,12 +591,33 @@ public class SetProfileEditActivity extends AppCompatActivity {
         deleteImages.clear();
     }
 
+    private void deleteMyTrip() {
+        for(MyTripItem mytripItem : deleteMytrips) {
+            My_trip mytrip = new My_trip();
+            mytrip.setDestination(mytripItem.des);
+            mytrip.setArrival_date(mytripItem.startDate);
+            mytrip.setDeparture_date(mytripItem.endDate);
+            mytrip.setNumber_travelers(mytripItem.num);
+            mytrip.setDescription(mytripItem.description);
+            DomainManager.getMyTripApiService().delete(DomainManager.getTokenHeader(), mytrip.getPk())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {}
+                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , () -> editPhotoFinishCheck()
+                    );
+        }
+
+        deleteMytrips.clear();
+    }
+
     private MenuItem updateItem;
     private int uploadCount = -1;
     private void editPhotoStart(MenuItem updateItem, int uploadCount){
         this.updateItem = updateItem;
         this.uploadCount = uploadCount;
     }
+
     private void editPhotoFinishCheck(){
         uploadCount--;
 
