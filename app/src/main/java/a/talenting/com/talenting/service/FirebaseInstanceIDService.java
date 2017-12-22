@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.common;
+package a.talenting.com.talenting.service;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
