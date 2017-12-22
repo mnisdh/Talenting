@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.Place;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,7 +26,9 @@ import java.util.Map;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.DialogManager;
+import a.talenting.com.talenting.common.GooglePlaceApi;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
+import a.talenting.com.talenting.custom.AddressSearchTextView;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
@@ -52,6 +56,8 @@ import okhttp3.RequestBody;
 
 public class SetProfileEditActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
+    private AddressSearchTextView.IOnPlaceChangedListener placeChangedListener;
+    private Place place;
     private String pk;
     private Profile baseProfile = null;
     private boolean isEditMode = false;
@@ -219,26 +225,37 @@ public class SetProfileEditActivity extends AppCompatActivity {
         myTripsItem = new MyTripsItem(new ArrayList<>());
         myTripsItem.setOnAddClickListener(item -> {
             if (!isEditMode) return;
-
             MyTripItem myTripItem = new MyTripItem();
-            DialogManager.showTextDialog(this,myTripItem, value->{
-                myTripItem.des = value;
-                DialogManager.showStartDatePickerDialog(this, myTripItem, start_value -> {
-                    myTripItem.startDate = start_value;
-                    DialogManager.showEndDatePickerDialog(this, myTripItem, date_value -> {
-                        myTripItem.endDate = date_value;
-                        DialogManager.showNumTextDialog(this, myTripItem, num_value -> {
-                            myTripItem.num = num_value;
-                            DialogManager.showMultiLineTextDialog(this, myTripItem.descriptionTitle, myTripItem, des_value -> {
-                                myTripItem.description = des_value;
-                                myTripsItem.addMyTrip(myTripItem);
-                                adapter.refresh(myTripsItem);
-                            });
+            DialogManager.showStartDatePickerDialog(this, myTripItem, start_value -> {
+                myTripItem.startDate = start_value;
+                DialogManager.showEndDatePickerDialog(this, myTripItem, date_value -> {
+                    myTripItem.endDate = date_value;
+                    DialogManager.showNumTextDialog(this, myTripItem, num_value -> {
+                        myTripItem.num = num_value;
+                        DialogManager.showMultiLineTextDialog(this, myTripItem.descriptionTitle, myTripItem, des_value -> {
+                            myTripItem.description = des_value;
+                            GooglePlaceApi.startAutoComplateAddress(activityResultManager
+                                    , p -> {
+                                        place = p;
+                                        DomainManager.getPlaceApiService().select(place.getId(), "en", GooglePlaceApi.DETAIL_KEY)
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(Schedulers.io())
+                                                .subscribe(result -> {
+                                                            if (result.isSuccess()) {
+                                                                myTripItem.des = result.getResult().getFormatted_address();
+                                                            }
+                                                        }
+                                                        , error -> {
+                                                        });
+                                    }
+                                    ,this);
+                            myTripsItem.addMyTrip(myTripItem);
+                            adapter.refresh(myTripsItem);
+
                         });
                     });
                 });
             });
-
         });
         myTripsItem.setOnDeleteClickListener(item -> {
             if(!isEditMode) return;
@@ -344,7 +361,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
         //endregion
         //region occupation
         occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
-                , profile.getFirst_name()
+                , profile.getOccupation()
                 , titleAndValueItemClickEvent);
         occupation.useBottomLine = true;
         adapter.addData(occupation);
@@ -535,6 +552,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
             mytrip.setDeparture_date(item.endDate);
             mytrip.setNumber_travelers(item.num);
             mytrip.setDescription(item.description);
+            mytrip.setPk(item.getPk());
             DomainManager.getMyTripApiService().create(DomainManager.getTokenHeader(), mytrip)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -599,7 +617,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
             mytrip.setDeparture_date(mytripItem.endDate);
             mytrip.setNumber_travelers(mytripItem.num);
             mytrip.setDescription(mytripItem.description);
-            DomainManager.getMyTripApiService().delete(DomainManager.getTokenHeader(), mytrip.getPk())
+            DomainManager.getMyTripApiService().delete(DomainManager.getTokenHeader(), mytripItem.getPk())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}

@@ -33,6 +33,7 @@ public class MyTripItem implements IDetailItem{
     public String description = "";
     public TextStyle titleStyle = new TextStyle(Color.WHITE);
     public TextStyle contentStyle = new TextStyle(45,Color.WHITE);
+    private String pk = "";
 
     private boolean useAddMode = false;
     private boolean useRemoveMode = false;
@@ -70,6 +71,13 @@ public class MyTripItem implements IDetailItem{
         this.onClickListener = onClickListener;
     }
 
+    public String getPk(){
+        return pk;
+    }
+
+    public void setPk(String pk){
+        this.pk=pk;
+    }
 
     private View view;
 
