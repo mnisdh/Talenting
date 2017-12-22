@@ -251,7 +251,6 @@ public class SetProfileEditActivity extends AppCompatActivity {
                                     ,this);
                             myTripsItem.addMyTrip(myTripItem);
                             adapter.refresh(myTripsItem);
-
                         });
                     });
                 });
