@@ -255,8 +255,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
                     });
                 });
             });
-
-            });
+        });
         myTripsItem.setOnDeleteClickListener(item -> {
             if(!isEditMode) return;
 
@@ -361,7 +360,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
         //endregion
         //region occupation
         occupation = new TitleAndValueItem(getResStrng(R.string.profile_occupation)
-                , profile.getFirst_name()
+                , profile.getOccupation()
                 , titleAndValueItemClickEvent);
         occupation.useBottomLine = true;
         adapter.addData(occupation);

@@ -79,7 +79,6 @@ public class MyTripItem implements IDetailItem{
         this.pk=pk;
     }
 
-
     private View view;
 
     @Override
