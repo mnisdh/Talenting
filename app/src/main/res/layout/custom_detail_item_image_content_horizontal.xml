@@ -27,6 +27,7 @@
             android:layout_width="170dp"
             android:layout_height="100dp"
             android:layout_gravity="right"
+            android:background="@drawable/background_image"
             android:onClick="@{item::onClick}"
             android:scaleType="centerCrop"
             app:image_url="@{item.imageUrl}" />
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imageView"
+            android:background="#55716f6f"
             android:onClick="@{item::onClick}"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
@@ -50,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
             android:layout_toRightOf="@+id/imageView"
+            android:background="#55716f6f"
             android:onClick="@{item::onClick}"
             android:paddingLeft="10dp"
             android:text="@{item.content}"
