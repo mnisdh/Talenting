@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -145,6 +146,8 @@ public class HostingListView extends FrameLayout {
                     .observeOn(Schedulers.io())
                     .subscribe(r -> {
                                 if (r.isSuccess()) {
+                                    Log.d("getFormatted_address",place.getId() + " : " + r.getResult().getFormatted_address());
+
                                     Observable<GetHostingList> getHostingListObservable = null;
 
                                     if(!categoryCode.equals("")){

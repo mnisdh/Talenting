@@ -12,4 +12,6 @@ import retrofit2.http.POST;
 public interface IFCMApiService {
     @POST("/fcm/device/")
     Observable<FCMToken> insert(@Header("Authorization") String token, @Body FCMToken fcmToken);
+
+
 }
