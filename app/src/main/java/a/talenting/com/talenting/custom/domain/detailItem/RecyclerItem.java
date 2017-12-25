@@ -74,6 +74,10 @@ public class RecyclerItem implements IDetailItem{
         return data;
     }
 
+    public void refresh(IDetailItem item){
+        if(adapter != null) adapter.refresh(item);
+    }
+
     public void onAddClick(View v){
         if(onAddClickListener != null) onAddClickListener.run(this);
     }
