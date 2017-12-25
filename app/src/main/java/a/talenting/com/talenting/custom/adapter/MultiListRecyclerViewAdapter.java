@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 
 /**
@@ -27,6 +28,21 @@ public class MultiListRecyclerViewAdapter extends RecyclerView.Adapter<MultiList
     public void addDataAndRefresh(List<RecyclerItem> items){
         data.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public void refresh(IDetailItem item){
+        if(data.contains(item)) {
+            notifyItemChanged(data.indexOf(item));
+            return;
+        }
+
+        for(RecyclerItem recyclerItem : data) {
+            List<IDetailItem> subItems = recyclerItem.getItems();
+            if(subItems.contains(item)){
+                recyclerItem.refresh(item);
+                return;
+            }
+        }
     }
 
     @Override

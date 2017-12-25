@@ -37,7 +37,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     }
 
     public void refresh(IDetailItem item){
-        notifyItemChanged(data.indexOf(item));
+        if(data.contains(item)) notifyItemChanged(data.indexOf(item));
     }
 
     public void addDataAndRefresh(List<IDetailItem> items){

@@ -172,12 +172,12 @@ public class EventListView extends FrameLayout {
         adapter.clearData();
 
         for(Event event : events){
-            adapter.addDataAndRefresh(createItem(event));
+            adapter.addDataAndRefresh(createItem(event, true));
         }
     }
 
-    private ImageContentItem createItem(Event event){
-        ImageContentItem item = new ImageContentItem(false, false);
+    private ImageContentItem createItem(Event event, boolean useMatchParentWidth){
+        ImageContentItem item = new ImageContentItem(false, useMatchParentWidth);
         if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
         else item.imageUrl = event.getPrimary_photo();
         item.title = event.getTitle();
@@ -220,8 +220,8 @@ public class EventListView extends FrameLayout {
 
                             item.imageUrl = image;
 
-                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.notifyDataSetChanged();
-                            else adapter.notifyDataSetChanged();
+                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.refresh(item);
+                            else adapter.refresh(item);
                         }
                 );
     }
@@ -237,7 +237,7 @@ public class EventListView extends FrameLayout {
                                 if (result.isSuccess()) {
                                     List<IDetailItem> items = new ArrayList<>();
                                     for (Event event : result.getEvent()) {
-                                        items.add(createItem(event));
+                                        items.add(createItem(event, false));
                                     }
 
                                     if(items.size() > 0) adapterTemp.addDataAndRefresh(new RecyclerItem(tempAddr, items));

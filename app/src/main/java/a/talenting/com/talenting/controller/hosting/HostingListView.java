@@ -175,12 +175,12 @@ public class HostingListView extends FrameLayout {
         adapter.clearData();
 
         for(Hosting hosting : hostings){
-            adapter.addDataAndRefresh(createItem(hosting));
+            adapter.addDataAndRefresh(createItem(hosting, true));
         }
     }
 
-    private ImageContentItem createItem(Hosting hosting){
-        ImageContentItem item = new ImageContentItem(false, false);
+    private ImageContentItem createItem(Hosting hosting, boolean useMatchParentWidth){
+        ImageContentItem item = new ImageContentItem(false, useMatchParentWidth);
         if(hosting.getPrimary_photo() == null || hosting.getPrimary_photo().equals("")) setPhoto(item, hosting.getOwner());
         else item.imageUrl = hosting.getPrimary_photo();
         item.title = hosting.getTitle();
@@ -222,8 +222,8 @@ public class HostingListView extends FrameLayout {
 
                             item.imageUrl = image;
 
-                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.notifyDataSetChanged();
-                            else adapter.notifyDataSetChanged();
+                            if(recyclerView.getAdapter() == adapterTemp) adapterTemp.refresh(item);
+                            else adapter.refresh(item);
                         }
                 );
     }
@@ -240,7 +240,7 @@ public class HostingListView extends FrameLayout {
                                     List<IDetailItem> items = new ArrayList<>();
 
                                     for (Hosting hosting : result.getHosting()) {
-                                        items.add(createItem(hosting));
+                                        items.add(createItem(hosting, false));
                                     }
 
                                     if(items.size() > 0) adapterTemp.addDataAndRefresh(new RecyclerItem(tempAddr, items));

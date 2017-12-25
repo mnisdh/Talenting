@@ -13,6 +13,7 @@ import a.talenting.com.talenting.domain.hosting.options.MealTypes;
 import a.talenting.com.talenting.domain.hosting.options.PhotoTypes;
 import a.talenting.com.talenting.domain.hosting.options.RoomTypes;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -22,10 +23,18 @@ import io.reactivex.schedulers.Schedulers;
 public class BaseData {
     private static int initCount = 8;
     private static IBaseDataEvent iBaseDataEvent;
+
+    private static CompositeDisposable disposable;
+
     private static void checkInitSuccess(){
         initCount--;
         if(initCount == 0) iBaseDataEvent.finished(true);
     }
+
+    public void destroy() {
+        disposable.clear();
+    }
+
     public static void init(IBaseDataEvent event){
         iBaseDataEvent = event;
 
@@ -35,7 +44,7 @@ public class BaseData {
         }
 
         //region languages
-        DomainManager.getHostingOptionsApiService().selectLanguages()
+        disposable.add(DomainManager.getHostingOptionsApiService().selectLanguages()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result -> {
@@ -45,7 +54,7 @@ public class BaseData {
                     }
                 }
                 , error -> {}
-                , () -> checkInitSuccess());
+                , () -> checkInitSuccess()));
         //endregion
         //region category
         DomainManager.getHostingOptionsApiService().selectCategories()
