@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.domain.profile.mytrip;
+package a.talenting.com.talenting.domain.profile.trip;
 
 import com.google.gson.annotations.Expose;
 
@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
  * Created by user on 2017-12-21.
  */
 
-public class My_trip {
+public class MyTrip {
     @Expose
     private String arrival_date;
     @Expose

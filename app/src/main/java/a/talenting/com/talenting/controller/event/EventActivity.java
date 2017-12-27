@@ -23,9 +23,12 @@ import a.talenting.com.talenting.controller.common.LocationActivity;
 import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
+import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
+import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
+import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailsItem;
@@ -56,6 +59,7 @@ public class EventActivity extends AppCompatActivity {
     private TitleAndValueItem title, maximumParticipant, price, category, notedItem,
             openingDate, closingDate, eventDate, locationTitle, participant;
     private MapPreviewItem location;
+    private RecyclerItem recyclerItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,6 +221,26 @@ public class EventActivity extends AppCompatActivity {
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
         //endregion
+        //region recycler Item
+        DomainManager.getEventApiService().selectsAddress(DomainManager.getTokenHeader(), event.getAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                List<IDetailItem> items = new ArrayList<>();
+                                for (Event tempEvent : result.getEvent()) {
+                                    if(tempEvent.getId().equals(pk)) continue;
+                                    items.add(createItem(tempEvent, false));
+                                }
+
+                                if(items.size() > 0) {
+                                    recyclerItem = new RecyclerItem("", items);
+                                    adapter.addDataAndRefresh(recyclerItem);
+                                }
+                            }
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+        //endregion
 
         adapter.refresh();
     }
@@ -243,6 +267,54 @@ public class EventActivity extends AppCompatActivity {
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private ImageContentItem createItem(Event event, boolean useMatchParentWidth){
+        ImageContentItem item = new ImageContentItem(false, useMatchParentWidth);
+        if(event.getPrimary_photo() == null || event.getPrimary_photo().equals("")) setPhoto(item, event.getId());
+        else item.imageUrl = event.getPrimary_photo();
+        item.title = event.getTitle();
+        item.isFavorite = event.isWish();
+        item.content = BaseData.getCountryText(event.getCountry()) + " " + event.getCity() + "\n"
+                + event.getPrice() + "\n"
+                + event.getEvent_date();
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this, EventActivity.class);
+            intent.putExtra(Constants.EXT_EVENT_PK, event.getId());
+            this.startActivity(intent);
+        });
+        item.setOnFavoriteClickListener(j -> {
+            DomainManager.getEventApiService().wishListToggle(DomainManager.getTokenHeader(), event.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> item.isFavorite = !item.isFavorite
+                    );
+        });
+
+        return item;
+    }
+
+    private void setPhoto(ImageContentItem item, String pk){
+        DomainManager.getEventPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            int first = 999;
+                            String image = "";
+                            for (EventPhoto photo : result.getEvent_photo()) {
+                                int photoId = Integer.parseInt(photo.getId());
+                                if(first > photoId){
+                                    first = photoId;
+                                    image = photo.getImageUrl();
+                                }
+                            }
+
+                            item.imageUrl = image;
+                            recyclerItem.refresh(item);
+                        }
+                );
     }
 
     private void loadPhotoData(){

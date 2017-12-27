@@ -42,5 +42,6 @@ public class Constants {
 
     public static final String EXT_HOSTING_PK = "hosting_pk";
     public static final String EXT_USER_PK = "user_pk";
+    public static final String EXT_USER_TRIP_ADDR = "user_trip_address";
     public static final String EXT_EVENT_PK = "event_pk";
 }
