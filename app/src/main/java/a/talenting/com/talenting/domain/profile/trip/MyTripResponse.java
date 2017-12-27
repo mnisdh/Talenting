@@ -1,6 +1,8 @@
-package a.talenting.com.talenting.domain.profile.mytrip;
+package a.talenting.com.talenting.domain.profile.trip;
 
 import com.google.gson.annotations.Expose;
+
+import java.util.List;
 
 /**
  * Created by user on 2017-12-21.
@@ -8,7 +10,7 @@ import com.google.gson.annotations.Expose;
 
 public class MyTripResponse {
     @Expose
-    private My_trip[] my_trip;
+    private List<MyTrip> my_trip;
     @Expose
     private String code;
     @Expose
@@ -18,13 +20,13 @@ public class MyTripResponse {
         return code.substring(0, 1).equals("2");
     }
 
-    public My_trip[] getMytrip ()
+    public List<MyTrip> getMytrip ()
     {
         return my_trip;
     }
 
 
-    public void setMytrip (My_trip[] mytrip)
+    public void setMytrip (List<MyTrip> my_trip)
     {
         this.my_trip = my_trip;
     }

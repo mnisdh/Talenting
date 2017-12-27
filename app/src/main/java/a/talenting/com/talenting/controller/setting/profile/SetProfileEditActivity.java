@@ -44,7 +44,7 @@ import a.talenting.com.talenting.custom.domain.detailItem.TitleAndValueItem;
 import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
-import a.talenting.com.talenting.domain.profile.mytrip.My_trip;
+import a.talenting.com.talenting.domain.profile.trip.MyTrip;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
 import a.talenting.com.talenting.util.ResourceUtil;
 import a.talenting.com.talenting.util.TempUtil;
@@ -177,8 +177,8 @@ public class SetProfileEditActivity extends AppCompatActivity {
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
-    private void loadMytripData(My_trip[] mytrips){
-        for(My_trip mytrip : mytrips){
+    private void loadMytripData(List<MyTrip> mytrips){
+        for(MyTrip mytrip : mytrips){
             MyTripItem myTripItem = new MyTripItem();
             myTripItem.des = mytrip.getDestination();
             myTripItem.startDate = mytrip.getArrival_date();
@@ -545,7 +545,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
 
 
         for(MyTripItem item : myTripsItem.getMyTripItems()){
-            My_trip mytrip = new My_trip();
+            MyTrip mytrip = new MyTrip();
             mytrip.setDestination(item.des);
             mytrip.setArrival_date(item.startDate);
             mytrip.setDeparture_date(item.endDate);
@@ -610,7 +610,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
 
     private void deleteMyTrip() {
         for(MyTripItem mytripItem : deleteMytrips) {
-            My_trip mytrip = new My_trip();
+            MyTrip mytrip = new MyTrip();
             mytrip.setDestination(mytripItem.des);
             mytrip.setArrival_date(mytripItem.startDate);
             mytrip.setDeparture_date(mytripItem.endDate);

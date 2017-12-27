@@ -24,6 +24,7 @@ import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
+import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MapPreviewItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ProfileItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
@@ -59,6 +60,7 @@ public class HostingActivity extends AppCompatActivity {
             transportation, locationTitle;
     private MapPreviewItem location;
     private RecyclerItem language;
+    private RecyclerItem recyclerItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +289,26 @@ public class HostingActivity extends AppCompatActivity {
         location = new MapPreviewItem(googleStaticMap, mapPreviewClickEvent);
         adapter.addData(location);
         //endregion
+        //region recycler Item
+        DomainManager.getHostingApiService().selects(DomainManager.getTokenHeader(), hosting.getAddress(), hosting.getCategory())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                List<IDetailItem> items = new ArrayList<>();
+                                for (Hosting tempHosting : result.getHosting()) {
+                                    if(tempHosting.getOwner().equals(pk)) continue;
+                                    items.add(createItem(tempHosting, false));
+                                }
+
+                                if(items.size() > 0) {
+                                    recyclerItem = new RecyclerItem("", items);
+                                    adapter.addDataAndRefresh(recyclerItem);
+                                }
+                            }
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+        //endregion
 
         adapter.refresh();
     }
@@ -313,6 +335,54 @@ public class HostingActivity extends AppCompatActivity {
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private ImageContentItem createItem(Hosting hosting, boolean useMatchParentWidth){
+        ImageContentItem item = new ImageContentItem(false, useMatchParentWidth);
+        if(hosting.getPrimary_photo() == null || hosting.getPrimary_photo().equals("")) setPhoto(item, hosting.getOwner());
+        else item.imageUrl = hosting.getPrimary_photo();
+        item.title = hosting.getTitle();
+        item.isFavorite = hosting.isWish();
+        item.content = BaseData.getCategoryText(hosting.getCategory()) + "\n"
+                + hosting.getSummary();
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this, HostingActivity.class);
+            intent.putExtra(Constants.EXT_HOSTING_PK, hosting.getOwner());
+            this.startActivity(intent);
+        });
+        item.setOnFavoriteClickListener(j ->{
+            DomainManager.getHostingApiService().wishListToggle(DomainManager.getTokenHeader(), hosting.getOwner())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> item.isFavorite = !item.isFavorite
+                    );
+        });
+
+        return item;
+    }
+
+    private void setPhoto(ImageContentItem item, String pk){
+        DomainManager.getHostingPhotoApiService().selects(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            int first = 999;
+                            String image = "";
+                            for (HostingPhoto photo : result.getHostingPhoto()) {
+                                int photoId = Integer.parseInt(photo.getPk());
+                                if(first > photoId){
+                                    first = photoId;
+                                    image = photo.getImageUrl();
+                                }
+                            }
+
+                            item.imageUrl = image;
+
+                            recyclerItem.refresh(item);
+                        }
+                );
     }
 
     private void loadPhotoData(){

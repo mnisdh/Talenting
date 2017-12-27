@@ -1,4 +1,4 @@
-package a.talenting.com.talenting.domain.profile.mytrip;
+package a.talenting.com.talenting.domain.profile.trip;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -22,13 +22,13 @@ public interface IMyTripApiService {
     Observable<MyTripResponse> getMyList(@Header("Authorization") String token);
 
     @POST("/member/mytrip/")
-    Observable<MyTripResponse> create(@Header("Authorization") String token,@Body My_trip mytrip);
+    Observable<MyTripResponse> create(@Header("Authorization") String token,@Body MyTrip mytrip);
 
     @GET("/member/mytrip/{mytrip_pk}/")
     Observable<MyTripResponse> retrieve(@Header("Authorization") String token,@Path("mytrip_pk")String pk);
 
     @PUT("/member/mytrip/{mytrip_pk}/")
-    Observable<MyTripResponse> update(@Header("Authorization") String token,@Path("mytrip_pk")String pk,@Body My_trip mytrip);
+    Observable<MyTripResponse> update(@Header("Authorization") String token,@Path("mytrip_pk")String pk,@Body MyTrip mytrip);
 
     @DELETE("/member/mytrip/{mytrip_pk}/")
     Observable<MyTripResponse> delete(@Header("Authorization") String token,@Path("mytrip_pk")String pk);

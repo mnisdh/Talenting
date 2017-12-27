@@ -44,7 +44,7 @@ public class BaseData {
         }
 
         //region languages
-        disposable.add(DomainManager.getHostingOptionsApiService().selectLanguages()
+        DomainManager.getHostingOptionsApiService().selectLanguages()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result -> {
@@ -54,7 +54,7 @@ public class BaseData {
                     }
                 }
                 , error -> {}
-                , () -> checkInitSuccess()));
+                , () -> checkInitSuccess());
         //endregion
         //region category
         DomainManager.getHostingOptionsApiService().selectCategories()

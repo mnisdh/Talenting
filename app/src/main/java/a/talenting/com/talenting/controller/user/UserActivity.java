@@ -19,6 +19,7 @@ import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
+import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -28,6 +29,7 @@ import a.talenting.com.talenting.domain.BaseData;
 import a.talenting.com.talenting.domain.DomainManager;
 import a.talenting.com.talenting.domain.profile.Profile;
 import a.talenting.com.talenting.domain.profile.photo.ProfileImage;
+import a.talenting.com.talenting.domain.profile.trip.MyTrip;
 import a.talenting.com.talenting.util.ResourceUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -35,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 public class UserActivity extends AppCompatActivity {
     private ActivityResultManager activityResultManager;
     private String pk;
+    private String userTripAddress;
     private Profile baseProfile = null;
 
     private RecyclerView recyclerView;
@@ -44,6 +47,7 @@ public class UserActivity extends AppCompatActivity {
     private TextContentItem self_intro, talent_intro;
     private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
     private RecyclerItem available_languages, talent_category;
+    private RecyclerItem recyclerItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,8 @@ public class UserActivity extends AppCompatActivity {
 
         pk = getIntent().getStringExtra(Constants.EXT_USER_PK);
         if(pk == null || "".equals(pk)) finish();
+
+        userTripAddress = getIntent().getStringExtra(Constants.EXT_USER_TRIP_ADDR);
 
         activityResultManager = new ActivityResultManager();
 
@@ -89,13 +95,20 @@ public class UserActivity extends AppCompatActivity {
 
         //region thumbnails
         thumbnailsItem = new ThumbnailsItem(new ArrayList<>());
+        thumbnailsItem.useFavorite = true;
+        thumbnailsItem.isFavorite = profile.isWish();
+        thumbnailsItem.setOnFavoriteClickListener(i -> {
+            DomainManager.getProfileApiService().wishListToggle(DomainManager.getTokenHeader(), profile.getProfilePk())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> { },
+                            e -> thumbnailsItem.isFavorite = !thumbnailsItem.isFavorite
+                    );
+        });
         for (ProfileImage image : profile.getImages()) {
             thumbnailsItem.addThumbnail(new ThumbnailItem(image));
         }
-        adapter.refresh(thumbnailsItem);
-
         adapter.addData(thumbnailsItem);
-
         //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
@@ -186,8 +199,75 @@ public class UserActivity extends AppCompatActivity {
         occupation.useBottomLine = true;
         adapter.addData(occupation);
         //endregion
+        //region recycler Item
+        if(userTripAddress != null && !"".equals(userTripAddress)) {
+            DomainManager.getMyTripApiService().search(DomainManager.getTokenHeader(), userTripAddress)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                                if (result.isSuccess()) {
+                                    List<IDetailItem> items = new ArrayList<>();
+                                    for (MyTrip tempMytrip : result.getMytrip()) {
+                                        if(tempMytrip.getUser().equals(pk)) continue;
+                                        items.add(createItem(tempMytrip, false));
+                                    }
+
+                                    if (items.size() > 0) {
+                                        recyclerItem = new RecyclerItem("", items);
+                                        adapter.addDataAndRefresh(recyclerItem);
+                                    }
+                                }
+                            }
+                            , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+        //endregion
 
         adapter.refresh();
+    }
+
+    private ImageContentItem createItem(MyTrip myTrip, boolean useMatchParentWidth){
+        ImageContentItem item = new ImageContentItem(false, useMatchParentWidth);
+        item.useFavorite = false;
+
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), myTrip.getUser())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                Profile profile = result.getProfile();
+                                item.imageUrl = profile.getImages().get(0).getImageUrl();
+                                item.title = profile.getFirst_name() + profile.getLast_name();
+                                item.isFavorite = profile.isWish();
+
+                                String content="";
+                                for(String talent : profile.getTalent_category()){
+                                    content+=BaseData.getCategoryText(talent) + " ";
+                                }
+                                content+="\n";
+                                for(String language : profile.getAvailable_languages()){
+                                    content+=BaseData.getLanguageText(language)+ " ";
+                                }
+                                item.content = content;
+                            }
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this, UserActivity.class);
+            intent.putExtra(Constants.EXT_USER_PK, myTrip.getUser());
+            this.startActivity(intent);
+        });
+//        item.setOnFavoriteClickListener(j ->{
+//            DomainManager.getProfileApiService().wishListToggle(DomainManager.getTokenHeader(), myTrip.getUser())
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(result -> { },
+//                            e -> item.isFavorite = !item.isFavorite
+//                    );
+//        });
+
+        return item;
     }
 
     private String getResStrng(int id) {

@@ -12,7 +12,7 @@ import a.talenting.com.talenting.domain.hosting.options.IHostingOptionsApiServic
 import a.talenting.com.talenting.domain.hosting.photo.IHostingPhotoApiService;
 import a.talenting.com.talenting.domain.place.IPlaceApiService;
 import a.talenting.com.talenting.domain.profile.IProfileApiService;
-import a.talenting.com.talenting.domain.profile.mytrip.IMyTripApiService;
+import a.talenting.com.talenting.domain.profile.trip.IMyTripApiService;
 import a.talenting.com.talenting.domain.profile.photo.IProfilePhotoApiService;
 import a.talenting.com.talenting.domain.user.IUserApiService;
 import retrofit2.Retrofit;
