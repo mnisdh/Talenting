@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tvContent"
             android:background="#55716f6f"
@@ -53,7 +53,7 @@
 
         <TextView
             android:id="@+id/tvContent"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView"
             android:background="#55716f6f"

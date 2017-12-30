@@ -75,7 +75,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
 
     private List<ProfileImage> deleteImages = new ArrayList<>();
     private List<MyTripItem> deleteMytrips = new ArrayList<>();
-
+    private List<MyTripItem> addMytrips = new ArrayList<>();
 
 
     @Override
@@ -185,6 +185,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
             myTripItem.endDate = mytrip.getDeparture_date();
             myTripItem.num = mytrip.getNumber_travelers();
             myTripItem.description = mytrip.getDescription();
+            myTripItem.setPk(mytrip.getPk());
 
             myTripsItem.addMyTrip(myTripItem);
 
@@ -250,6 +251,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
                                     }
                                     ,this);
                             myTripsItem.addMyTrip(myTripItem);
+                            addMytrips.add(myTripItem);
                             adapter.refresh(myTripsItem);
                         });
                     });
@@ -543,8 +545,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
     private void updateMyTrip(MenuItem updateItem){
         deleteMyTrip();
 
-
-        for(MyTripItem item : myTripsItem.getMyTripItems()){
+        for(MyTripItem item : addMytrips){
             MyTrip mytrip = new MyTrip();
             mytrip.setDestination(item.des);
             mytrip.setArrival_date(item.startDate);
@@ -552,6 +553,7 @@ public class SetProfileEditActivity extends AppCompatActivity {
             mytrip.setNumber_travelers(item.num);
             mytrip.setDescription(item.description);
             mytrip.setPk(item.getPk());
+
             DomainManager.getMyTripApiService().create(DomainManager.getTokenHeader(), mytrip)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -560,10 +562,11 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             , () -> editPhotoFinishCheck()
                     );
         }
+        addMytrips.clear();
     }
 
     private void updatePhoto(MenuItem updateItem) {
-        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size() + myTripsItem.getMyTripItems().size() + deleteMytrips.size());
+        editPhotoStart(updateItem, thumbnailsItem.getThumbnail().size() + deleteImages.size() + addMytrips.size() + deleteMytrips.size());
         updateMyTrip(updateItem);
         //region delete
         deletePhoto();
@@ -610,12 +613,6 @@ public class SetProfileEditActivity extends AppCompatActivity {
 
     private void deleteMyTrip() {
         for(MyTripItem mytripItem : deleteMytrips) {
-            MyTrip mytrip = new MyTrip();
-            mytrip.setDestination(mytripItem.des);
-            mytrip.setArrival_date(mytripItem.startDate);
-            mytrip.setDeparture_date(mytripItem.endDate);
-            mytrip.setNumber_travelers(mytripItem.num);
-            mytrip.setDescription(mytripItem.description);
             DomainManager.getMyTripApiService().delete(DomainManager.getTokenHeader(), mytripItem.getPk())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -624,7 +621,6 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             , () -> editPhotoFinishCheck()
                     );
         }
-
         deleteMytrips.clear();
     }
 

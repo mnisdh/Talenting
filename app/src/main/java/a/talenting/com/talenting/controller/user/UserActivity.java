@@ -20,6 +20,8 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MyTripItem;
+import a.talenting.com.talenting.custom.domain.detailItem.MyTripsItem;
 import a.talenting.com.talenting.custom.domain.detailItem.RecyclerItem;
 import a.talenting.com.talenting.custom.domain.detailItem.TextContentItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ThumbnailItem;
@@ -48,6 +50,7 @@ public class UserActivity extends AppCompatActivity {
     private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
     private RecyclerItem available_languages, talent_category;
     private RecyclerItem recyclerItem;
+    private MyTripsItem myTripsItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,11 @@ public class UserActivity extends AppCompatActivity {
             thumbnailsItem.addThumbnail(new ThumbnailItem(image));
         }
         adapter.addData(thumbnailsItem);
+        //endregion
+        //region mytrip
+        myTripsItem = new MyTripsItem(new ArrayList<>());
+        adapter.addData(myTripsItem);
+        loadMyTripData();
         //endregion
         //region first_name
         first_name = new TitleAndValueItem(getResStrng(R.string.profile_firstname)
@@ -223,6 +231,34 @@ public class UserActivity extends AppCompatActivity {
         //endregion
 
         adapter.refresh();
+    }
+
+    private void loadMyTripData(){
+        DomainManager.getMyTripApiService().getEveryList(DomainManager.getTokenHeader())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) loadMytripData(result.getMytrip());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+    private void loadMytripData(List<MyTrip> mytrips){
+        for(MyTrip mytrip : mytrips){
+            if(mytrip.getUser().equals(pk)){
+                MyTripItem myTripItem = new MyTripItem();
+                myTripItem.des = mytrip.getDestination();
+                myTripItem.startDate = mytrip.getArrival_date();
+                myTripItem.endDate = mytrip.getDeparture_date();
+                myTripItem.num = mytrip.getNumber_travelers();
+                myTripItem.description = mytrip.getDescription();
+                myTripItem.setPk(mytrip.getPk());
+
+                myTripsItem.addMyTrip(myTripItem);
+            }
+
+        }
+        adapter.refresh(myTripsItem);
     }
 
     private ImageContentItem createItem(MyTrip myTrip, boolean useMatchParentWidth){
