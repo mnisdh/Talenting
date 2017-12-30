@@ -14,8 +14,8 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="100dp"
         android:background="@{item.useBottomLine ? @drawable/border : @drawable/nonborder}"
         android:paddingBottom="@{item.padding.bottom}"
         android:paddingLeft="@{item.padding.left}"
@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imageView"
             android:background="#55716f6f"
@@ -55,15 +55,15 @@
 
         <TextView
             android:id="@+id/tvContent"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
             android:layout_toRightOf="@+id/imageView"
             android:background="#55716f6f"
-            android:onClick="@{item::onClick}"
-            android:paddingLeft="10dp"
             android:ellipsize="end"
             android:lines="3"
+            android:onClick="@{item::onClick}"
+            android:paddingLeft="10dp"
             android:text="@{item.content}"
             android:textColor="@{item.contentStyle.color}"
             android:textSize="@{item.contentStyle.size}" />
