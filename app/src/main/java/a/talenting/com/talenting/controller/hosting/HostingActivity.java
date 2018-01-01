@@ -18,7 +18,9 @@ import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.GoogleStaticMap;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.common.LocationActivity;
+import a.talenting.com.talenting.controller.message.MessageActivity;
 import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
@@ -85,7 +87,6 @@ public class HostingActivity extends AppCompatActivity {
 
         progress = findViewById(R.id.progress);
     }
-
     private void loadData(){
         DomainManager.getHostingApiService().select(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
@@ -130,14 +131,20 @@ public class HostingActivity extends AppCompatActivity {
         loadProfileData(hosting.getOwner());
         //endregion
         //region message
-        message = new TitleAndValueItem(""
-                , getResStrng(R.string.hosting_send_message)
-                , i -> {
-            //todo:메세지 보내는 인텐트 추가
-        });
-        message.valueStyle.setColor(Color.GREEN);
-        message.useBottomLine = true;
-        adapter.addData(message);
+        if(!pk.equals(SharedPreferenceManager.getInstance().getPk())){
+            message = new TitleAndValueItem(""
+                    , getResStrng(R.string.hosting_send_message)
+                    , i -> {
+                Intent intent = new Intent(this, MessageActivity.class);
+                intent.putExtra(Constants.EXT_CHAT_PK, "");
+                intent.putExtra(Constants.EXT_FROM_USER_PK, SharedPreferenceManager.getInstance().getPk());
+                intent.putExtra(Constants.EXT_TO_USER_PK, pk);
+                this.startActivity(intent);
+            });
+            message.valueStyle.setColor(Color.GREEN);
+            message.useBottomLine = true;
+            adapter.addData(message);
+        }
         //endregion
         //region title
         title = new TitleAndValueItem(getResStrng(R.string.hosting_title)

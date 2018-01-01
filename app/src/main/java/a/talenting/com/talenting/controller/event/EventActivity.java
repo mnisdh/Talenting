@@ -20,6 +20,7 @@ import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.common.GoogleStaticMap;
 import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.controller.common.LocationActivity;
+import a.talenting.com.talenting.controller.message.MessageActivity;
 import a.talenting.com.talenting.controller.user.UserActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.DetailItemType;
@@ -57,7 +58,7 @@ public class EventActivity extends AppCompatActivity {
     private ProfileItem profile;
     private TextContentItem program;
     private TitleAndValueItem title, maximumParticipant, price, category, notedItem,
-            openingDate, closingDate, eventDate, locationTitle, participant;
+            openingDate, closingDate, eventDate, locationTitle, participant, message;
     private MapPreviewItem location;
     private RecyclerItem recyclerItem;
 
@@ -139,6 +140,22 @@ public class EventActivity extends AppCompatActivity {
         adapter.addData(profile);
 
         loadProfileData(event.getAuthor().getPk());
+        //endregion
+        //region message
+        if(!event.getAuthor().getPk().equals(SharedPreferenceManager.getInstance().getPk())){
+            message = new TitleAndValueItem(""
+                    , getResStrng(R.string.hosting_send_message)
+                    , i -> {
+                Intent intent = new Intent(this, MessageActivity.class);
+                intent.putExtra(Constants.EXT_CHAT_PK, "");
+                intent.putExtra(Constants.EXT_FROM_USER_PK, SharedPreferenceManager.getInstance().getPk());
+                intent.putExtra(Constants.EXT_TO_USER_PK, event.getAuthor().getPk());
+                this.startActivity(intent);
+            });
+            message.valueStyle.setColor(Color.GREEN);
+            message.useBottomLine = true;
+            adapter.addData(message);
+        }
         //endregion
         //region title
         title = new TitleAndValueItem(getResStrng(R.string.event_title)

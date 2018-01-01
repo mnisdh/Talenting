@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initMessage(){
         messageListView = new MessageListView(this, activityResultManager);
-        messageListView.setSampleData();
     }
     private void initSetting(){
         settingMenu = findViewById(R.id.settingMenu);
@@ -225,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         stage.addView(eventListView);
     }
     private void onMessage(){
+        initMessage();
         stage.removeAllViews();
         stage.addView(messageListView);
     }
