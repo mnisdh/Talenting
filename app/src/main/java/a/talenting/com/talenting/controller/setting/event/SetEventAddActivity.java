@@ -329,7 +329,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void loadPhotoData(){
@@ -340,7 +342,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                             if (result.isSuccess()) loadPhotoData(result.getEvent_photo());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void loadPhotoData(List<EventPhoto> eventPhotos){
         for(EventPhoto eventPhoto : eventPhotos){
@@ -472,7 +476,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                             if (result.isSuccess()) addPhoto(result.getEvent().getId());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void updateEvent(MenuItem updateItem){
         updateEventData();
@@ -486,13 +492,17 @@ public class SetEventAddActivity extends AppCompatActivity {
                             if (result.isSuccess()) updatePhoto(updateItem);
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void deleteEvent(){
         DomainManager.getEventApiService().delete(DomainManager.getTokenHeader(), pk)
                 .subscribeOn(Schedulers.io())
                 .subscribe(result -> finish()
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void addPhoto(String pk){
@@ -512,7 +522,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {}
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         , () -> editPhotoFinishCheck()
                 );
     }
@@ -538,7 +550,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(result -> {}
-                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , e -> {
+                                //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                     , () -> editPhotoFinishCheck()
                             );
                 }
@@ -554,7 +568,9 @@ public class SetEventAddActivity extends AppCompatActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , e -> {
+                        //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                             , () -> editPhotoFinishCheck());
         }
 

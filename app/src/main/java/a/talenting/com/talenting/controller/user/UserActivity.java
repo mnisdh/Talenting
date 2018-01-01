@@ -91,7 +91,7 @@ public class UserActivity extends AppCompatActivity {
                             }
                         }
                         , error -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                 );
@@ -245,7 +245,9 @@ public class UserActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                            , error -> {
+                        //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
         }
         //endregion
 
@@ -260,7 +262,9 @@ public class UserActivity extends AppCompatActivity {
                             if (result.isSuccess()) loadMytripData(result.getMytrip());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void loadMytripData(List<MyTrip> mytrips){
         for(MyTrip mytrip : mytrips){
@@ -306,7 +310,9 @@ public class UserActivity extends AppCompatActivity {
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
 
         item.setOnClickListener(j -> {
             Intent intent = new Intent(this, UserActivity.class);

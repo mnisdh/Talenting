@@ -70,7 +70,9 @@ public class SignupThirdActivity extends AppCompatActivity {
                         if(profile.getImages() != null && profile.getImages().size() == 1) createPhoto();
                     }
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();}
-                , e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                , e -> {
+                //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
 
         NavUtils.navigateUpFromSameTask(this);
 
@@ -88,6 +90,8 @@ public class SignupThirdActivity extends AppCompatActivity {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(result -> {}
-                , e ->Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                , e -> {
+                //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
     }
 }

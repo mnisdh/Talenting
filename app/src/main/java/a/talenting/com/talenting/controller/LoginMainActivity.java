@@ -103,7 +103,7 @@ public class LoginMainActivity extends AppCompatActivity {
                     }
                 },
                 e -> {
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     autoLoginLayout.setVisibility(View.GONE);
 //                    if (e instanceof HttpException) {
 //                        LoginResponse result = new LoginResponse();

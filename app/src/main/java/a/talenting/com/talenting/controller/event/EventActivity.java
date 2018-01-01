@@ -256,7 +256,9 @@ public class EventActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
         //endregion
 
         adapter.refresh();
@@ -283,7 +285,9 @@ public class EventActivity extends AppCompatActivity {
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private ImageContentItem createItem(Event event, boolean useMatchParentWidth){
@@ -342,7 +346,9 @@ public class EventActivity extends AppCompatActivity {
                             if (result.isSuccess()) loadPhotoData(result.getEvent_photo());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void loadPhotoData(List<EventPhoto> eventPhotos){
         for(EventPhoto eventPhoto : eventPhotos){

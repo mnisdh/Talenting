@@ -83,7 +83,7 @@ public class SignupActivity extends AppCompatActivity {
                     else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                 },
                         e -> {
-                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
     }
 
@@ -104,7 +104,7 @@ public class SignupActivity extends AppCompatActivity {
                             }
                         },
                         e -> {
-                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
     }
 
