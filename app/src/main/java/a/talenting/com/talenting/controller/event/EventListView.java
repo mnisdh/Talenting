@@ -137,7 +137,9 @@ public class EventListView extends FrameLayout {
                                 if (result.isSuccess()) setData(result.getEvent());
                                 else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
-                            , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+                            , error -> {
+                        //Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
         }
         else{
             DomainManager.getPlaceApiService().select(place.getId(), "en", GooglePlaceApi.DETAIL_KEY)
@@ -160,7 +162,9 @@ public class EventListView extends FrameLayout {
                                                         if (result.isSuccess()) setData(result.getEvent());
                                                         else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
                                                     }
-                                                    , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+                                                    , error -> {
+                                                //Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    });
                                 }
                             }
                             , error -> {
@@ -243,7 +247,9 @@ public class EventListView extends FrameLayout {
                                     if(items.size() > 0) adapterTemp.addDataAndRefresh(new RecyclerItem(tempAddr, items));
                                 }
                             }
-                            , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+                            , error -> {
+                        //Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
         }
     }
 

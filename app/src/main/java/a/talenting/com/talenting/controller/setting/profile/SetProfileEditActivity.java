@@ -163,7 +163,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
 
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
 
     }
 
@@ -175,7 +177,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             if (result.isSuccess()) loadMytripData(result.getMytrip());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void loadMytripData(List<MyTrip> mytrips){
         for(MyTrip mytrip : mytrips){
@@ -523,7 +527,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void addPhoto(ThumbnailItem thumbnailItem){
@@ -537,7 +543,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {}
-                        , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                        , e -> {
+                    //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         , () -> editPhotoFinishCheck()
                 );
     }
@@ -558,7 +566,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , e -> {
+                        //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                             , () -> editPhotoFinishCheck()
                     );
         }
@@ -587,7 +597,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(result -> {}
-                                    , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    , e -> {
+                                //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                     , () -> editPhotoFinishCheck()
                             );
                 }
@@ -603,7 +615,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , e -> {
+                        //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                             , () -> editPhotoFinishCheck()
                     );
         }
@@ -617,7 +631,9 @@ public class SetProfileEditActivity extends AppCompatActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(result -> {}
-                            , e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                            , e -> {
+                        //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                             , () -> editPhotoFinishCheck()
                     );
         }

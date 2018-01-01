@@ -64,7 +64,9 @@ public class MessageListView extends FrameLayout {
                             if (result.isSuccess()) setData(result.getChat());
                             else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     public void setData(List<Chat> chats){

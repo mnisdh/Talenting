@@ -87,7 +87,7 @@ public class MessageActivity extends AppCompatActivity {
                             }
                         }
                         , error -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                             finish();
                         });
     }
@@ -107,7 +107,7 @@ public class MessageActivity extends AppCompatActivity {
                             }
                         }
                         , error -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                             finish();
                         });
     }
@@ -143,7 +143,9 @@ public class MessageActivity extends AppCompatActivity {
                             if (result.isSuccess()) setData(result.getMessages());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void setData(List<SentMessage> messages){
@@ -217,7 +219,9 @@ public class MessageActivity extends AppCompatActivity {
                                 edit_msg.setText("");
                             }
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private void updatePK(){
@@ -236,7 +240,7 @@ public class MessageActivity extends AppCompatActivity {
                         }
                         , error -> {
                             isFirst = true;
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                         });
     }
 }

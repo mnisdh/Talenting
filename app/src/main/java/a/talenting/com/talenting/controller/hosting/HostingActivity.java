@@ -99,7 +99,7 @@ public class HostingActivity extends AppCompatActivity {
                             }
                         }
                         , error -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                 );
@@ -314,7 +314,9 @@ public class HostingActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
         //endregion
 
         adapter.refresh();
@@ -341,7 +343,9 @@ public class HostingActivity extends AppCompatActivity {
                             }
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     private ImageContentItem createItem(Hosting hosting, boolean useMatchParentWidth){
@@ -400,7 +404,9 @@ public class HostingActivity extends AppCompatActivity {
                             if (result.isSuccess()) loadPhotoData(result.getHostingPhoto());
                             else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
     private void loadPhotoData(List<HostingPhoto> hostingPhotos){
         for(HostingPhoto hostingPhoto : hostingPhotos){

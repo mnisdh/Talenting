@@ -91,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> { }
-                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+                        , error -> {
+                    //Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
