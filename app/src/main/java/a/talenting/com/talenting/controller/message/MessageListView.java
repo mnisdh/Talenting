@@ -7,15 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
+import a.talenting.com.talenting.common.Constants;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
 import a.talenting.com.talenting.custom.adapter.ListRecyclerViewAdapter;
-import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MsgPreviewItem;
+import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.fcm.Chat;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by user on 2017-12-18.
@@ -27,7 +32,6 @@ public class MessageListView extends FrameLayout {
     private ActivityResultManager manager;
     private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
-    private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     public MessageListView(Activity activity, ActivityResultManager manager) {
         super(activity);
@@ -37,6 +41,8 @@ public class MessageListView extends FrameLayout {
         this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         init();
+
+        getData();
     }
 
     private void init(){
@@ -48,30 +54,42 @@ public class MessageListView extends FrameLayout {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-
     }
 
-    public void setSampleData(){
-        List<IDetailItem> items = new ArrayList<>();
+    public void getData(){
+        DomainManager.getFCMApiService().chatList(DomainManager.getTokenHeader())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) setData(result.getChat());
+                            else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(activity, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
-        MsgPreviewItem item;
-        for(int i = 0; i < 10; i++){
-            item = new MsgPreviewItem();
-            item.name=i+"";
-            item.content=i+"번째 메시지";
-            item.imageUrl = sampleImage;
-            item.lastTime = i+"분전";
-            item.useBottomLine=true;
+    public void setData(List<Chat> chats){
+        adapter.clearData();
 
-            item.setOnClickListener(j -> {
-                Intent intent = new Intent(this.getContext(), MessageActivity.class);
-                this.getContext().startActivity(intent);
-            });
-
-            items.add(item);
+        for(Chat chat : chats){
+            adapter.addDataAndRefresh(createItem(chat));
         }
-
-        adapter.addDataAndRefresh(items);
     }
 
+    private MsgPreviewItem createItem(Chat chat){
+        MsgPreviewItem item = new MsgPreviewItem();
+        item.name = "";
+        item.content = chat.getBody();
+        item.imageUrl = chat.getTarget_user().getImage();
+        item.lastTime = chat.getCreated_at();
+        item.useBottomLine = true;
+        item.setOnClickListener(j -> {
+            Intent intent = new Intent(this.getContext(), MessageActivity.class);
+            intent.putExtra(Constants.EXT_CHAT_PK, chat.getPk());
+            intent.putExtra(Constants.EXT_FROM_USER_PK, SharedPreferenceManager.getInstance().getPk());
+            intent.putExtra(Constants.EXT_TO_USER_PK, chat.getTarget_user().getPk());
+            this.getContext().startActivity(intent);
+        });
+
+        return item;
+    }
 }

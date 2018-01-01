@@ -11,11 +11,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a.talenting.com.talenting.R;
+import a.talenting.com.talenting.common.Constants;
 import a.talenting.com.talenting.controller.hosting.HostingActivity;
 import a.talenting.com.talenting.controller.setting.profile.SetProfileEditActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
@@ -23,6 +24,13 @@ import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.IItemClickListener;
 import a.talenting.com.talenting.custom.domain.detailItem.MsgMyItem;
 import a.talenting.com.talenting.custom.domain.detailItem.MsgOthersItem;
+import a.talenting.com.talenting.domain.DomainManager;
+import a.talenting.com.talenting.domain.fcm.Chat;
+import a.talenting.com.talenting.domain.fcm.FCMMessage;
+import a.talenting.com.talenting.domain.fcm.SentMessage;
+import a.talenting.com.talenting.domain.profile.Profile;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.view.View.VISIBLE;
 
@@ -31,21 +39,23 @@ import static android.view.View.VISIBLE;
  */
 
 public class MessageActivity extends AppCompatActivity {
+    private Profile toUser, fromUser;
+    private Boolean isFirst;
+    private String chatPK;
+
     private RecyclerView recyclerView;
     private DetailRecyclerViewAdapter adapter;
     private EditText edit_msg;
     private Button btn_send;
-
-    private String sampleImage = "https://firebasestorage.googleapis.com/v0/b/locationsharechat.appspot.com/o/profile%2FAvXoH1Ar9PQXDBXYBk6yrUFpfA22.jpg?alt=media&token=c1d5fa82-b535-4d97-af88-75043642f019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        init();
-        initListener();
-        setData();
+        chatPK = getIntent().getStringExtra(Constants.EXT_CHAT_PK);
+        initFromUser(getIntent().getStringExtra(Constants.EXT_FROM_USER_PK));
+        initToUser(getIntent().getStringExtra(Constants.EXT_TO_USER_PK));
     }
 
     private void init(){
@@ -58,16 +68,51 @@ public class MessageActivity extends AppCompatActivity {
         edit_msg = findViewById(R.id.edit_msg);
         btn_send = findViewById(R.id.btn_send);
 
+        initListener();
 
+        isFirst = chatPK == null || chatPK.equals("");
+
+        if(!isFirst) getData(chatPK);
+    }
+
+    private void initFromUser(String pk){
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) fromUser = result.getProfile();
+                            else {
+                                Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+                        , error -> {
+                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
+    }
+
+    private void initToUser(String pk){
+        DomainManager.getProfileApiService().retrieve(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                toUser = result.getProfile();
+                                init();
+                            }
+                            else {
+                                Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+                        , error -> {
+                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
     }
 
     private void initListener(){
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         edit_msg.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -90,26 +135,49 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void setData(){
-        List<IDetailItem> items = new ArrayList<>();
+    private void getData(String pk){
+        DomainManager.getFCMApiService().chat(DomainManager.getTokenHeader(), pk)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) setData(result.getMessages());
+                            else Toast.makeText(this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
-        MsgOthersItem msgOthersItem = new MsgOthersItem();
-        msgOthersItem.content = ("other item");
-        msgOthersItem.imageUrl = (sampleImage);
-        msgOthersItem.lastTime = ("1 minutes ago");
-        msgOthersItem.name = ("other");
-        msgOthersItem.setOnClickListener(hostMsgClickEvent);
-        items.add(msgOthersItem);
+    private void setData(List<SentMessage> messages){
+        //adapter.clearData();
 
-        MsgMyItem msgMyItem = new MsgMyItem();
-        msgMyItem.content = ("other item");
-        msgMyItem.imageUrl = (sampleImage);
-        msgMyItem.lastTime = ("2 minutes ago");
-        msgMyItem.name = ("me");
-        msgMyItem.setOnClickListener(guestMsgClickEvent);
-        items.add(msgMyItem);
+        for(int i = messages.size(); i >= 1; i--){
+            adapter.addData(createItem(messages.get(i - 1)));
+        }
 
-        adapter.addDataAndRefresh(items);
+        adapter.refresh();
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
+    private IDetailItem createItem(SentMessage message){
+        if(message.getFrom_user().getPk().equals(fromUser.getProfilePk())){
+            MsgOthersItem msgOthersItem = new MsgOthersItem();
+            msgOthersItem.content = message.getBody();
+            msgOthersItem.imageUrl = fromUser.getFirstImageUrl();
+            msgOthersItem.lastTime = message.getCreated_at();
+            msgOthersItem.name = message.getFrom_user().getLast_name() + " " + message.getFrom_user().getFirst_name();
+            msgOthersItem.setOnClickListener(hostMsgClickEvent);
+
+            return msgOthersItem;
+        }
+        else{
+            MsgMyItem msgMyItem = new MsgMyItem();
+            msgMyItem.content = message.getBody();
+            msgMyItem.imageUrl = toUser.getFirstImageUrl();
+            msgMyItem.lastTime = message.getCreated_at();
+            msgMyItem.name = message.getFrom_user().getLast_name() + " " + message.getFrom_user().getFirst_name();
+            msgMyItem.setOnClickListener(guestMsgClickEvent);
+
+            return msgMyItem;
+        }
     }
 
     private IItemClickListener hostMsgClickEvent = i -> {
@@ -122,4 +190,53 @@ public class MessageActivity extends AppCompatActivity {
         startActivity(intent);
     };
 
+    public void onSend(View v){
+        FCMMessage fcmMessage = new FCMMessage();
+        fcmMessage.setBody(edit_msg.getText().toString());
+        fcmMessage.setTo_user(toUser.getProfilePk());
+
+        DomainManager.getFCMApiService().sendMessage(DomainManager.getTokenHeader(), fcmMessage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                if (isFirst) {
+                                    isFirst = false;
+                                    updatePK();
+                                }
+
+                                MsgOthersItem msgOthersItem = new MsgOthersItem();
+                                msgOthersItem.content = result.getSent_message().getBody();
+                                msgOthersItem.imageUrl = fromUser.getFirstImageUrl();
+                                msgOthersItem.lastTime = result.getSent_message().getCreated_at();
+                                msgOthersItem.name = result.getSent_message().getFrom_user().getLast_name() + " " + result.getSent_message().getFrom_user().getFirst_name();
+                                msgOthersItem.setOnClickListener(hostMsgClickEvent);
+
+                                adapter.addDataAndRefresh(msgOthersItem);
+
+                                edit_msg.setText("");
+                            }
+                        }
+                        , error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void updatePK(){
+        DomainManager.getFCMApiService().chatList(DomainManager.getTokenHeader())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                            if (result.isSuccess()) {
+                                for(Chat chat : result.getChat()){
+                                    if(chat.getTarget_user().getPk().equals(toUser.getProfilePk())){
+                                        chatPK = chat.getPk();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        , error -> {
+                            isFirst = true;
+                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+    }
 }

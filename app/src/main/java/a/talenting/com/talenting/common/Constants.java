@@ -44,4 +44,7 @@ public class Constants {
     public static final String EXT_USER_PK = "user_pk";
     public static final String EXT_USER_TRIP_ADDR = "user_trip_address";
     public static final String EXT_EVENT_PK = "event_pk";
+    public static final String EXT_CHAT_PK = "chat_pk";
+    public static final String EXT_FROM_USER_PK = "from_user_pk";
+    public static final String EXT_TO_USER_PK = "to_user_pk";
 }

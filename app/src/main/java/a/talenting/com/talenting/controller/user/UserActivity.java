@@ -5,6 +5,7 @@ package a.talenting.com.talenting.controller.user;
  */
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,8 @@ import java.util.List;
 import a.talenting.com.talenting.R;
 import a.talenting.com.talenting.common.ActivityResultManager;
 import a.talenting.com.talenting.common.Constants;
+import a.talenting.com.talenting.common.SharedPreferenceManager;
+import a.talenting.com.talenting.controller.message.MessageActivity;
 import a.talenting.com.talenting.custom.adapter.DetailRecyclerViewAdapter;
 import a.talenting.com.talenting.custom.domain.detailItem.IDetailItem;
 import a.talenting.com.talenting.custom.domain.detailItem.ImageContentItem;
@@ -45,7 +48,7 @@ public class UserActivity extends AppCompatActivity {
 
     private ThumbnailsItem thumbnailsItem;
     private TextContentItem self_intro, talent_intro;
-    private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth;
+    private TitleAndValueItem first_name, last_name, city, occupation, gender, country, birth, message;
     private RecyclerItem available_languages, talent_category;
     private RecyclerItem recyclerItem;
 
@@ -121,6 +124,22 @@ public class UserActivity extends AppCompatActivity {
                 , profile.getLast_name());
         last_name.useBottomLine = true;
         adapter.addData(last_name);
+        //endregion
+        //region message
+        if(!pk.equals(SharedPreferenceManager.getInstance().getPk())){
+            message = new TitleAndValueItem(""
+                    , getResStrng(R.string.hosting_send_message)
+                    , i -> {
+                Intent intent = new Intent(this, MessageActivity.class);
+                intent.putExtra(Constants.EXT_CHAT_PK, "");
+                intent.putExtra(Constants.EXT_FROM_USER_PK, SharedPreferenceManager.getInstance().getPk());
+                intent.putExtra(Constants.EXT_TO_USER_PK, pk);
+                this.startActivity(intent);
+            });
+            message.valueStyle.setColor(Color.GREEN);
+            message.useBottomLine = true;
+            adapter.addData(message);
+        }
         //endregion
         //region birth
         birth = new TitleAndValueItem(getResStrng(R.string.profile_birth)
