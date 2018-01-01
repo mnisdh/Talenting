@@ -132,6 +132,7 @@ public class UserListView extends FrameLayout {
                             if (result.isSuccess()) {
                                 Profile profile = result.getProfile();
                                 item.imageUrl = profile.getImages().get(0).getImageUrl();
+
                                 item.title = profile.getFirst_name() + profile.getLast_name();
                                 item.isFavorite = profile.isWish();
 
@@ -144,6 +145,8 @@ public class UserListView extends FrameLayout {
                                     content+=BaseData.getLanguageText(language)+ " ";
                                 }
                                 item.content = content;
+
+                                if(recyclerView.getAdapter() == adapter) adapter.refresh(item);
                             }
                             else Toast.makeText(activity, result.getMsg(), Toast.LENGTH_SHORT).show();
                         }
